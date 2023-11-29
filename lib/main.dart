@@ -1,0 +1,204 @@
+/*
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Login Page',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: LoginPage(),
+    );
+  }
+}
+
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          children: <Widget>[
+            SizedBox(height: 80.0),
+            Column(
+              children: <Widget>[
+                Image.asset('assets/images/logo.png'),
+                SizedBox(height: 16.0),
+                Text('Welcome Back',
+                    style: Theme.of(context).textTheme.headlineSmall),
+              ],
+            ),
+            SizedBox(height: 120.0),
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(
+                labelText: 'Username',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+            ),
+            SizedBox(height: 40.0),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+              obscureText: true,
+            ),
+            SizedBox(height: 40.0),
+            ButtonBar(
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/signup');
+                  },
+                  child: Text('Create Account'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  },
+                  child: Text('Login'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/*
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Trip Tales',
+      theme: ThemeData(primarySwatch: Colors.purple),
+      home: LoginPage(),
+    );
+  }
+}
+
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          // The title text which will be shown on the action bar
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            /*
+            children: [
+              Text("Trip Tales"),
+            ],
+            */
+          ),
+        ),
+        body: Center(
+            child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                children: <Widget>[
+              SizedBox(height: 80.0),
+              Column(
+                children: <Widget>[
+                  Image.asset('assets/TripTales_logo.png'),
+                  SizedBox(height: 16.0),
+                  Text('Welcome Back',
+                      style: Theme.of(context).textTheme.headlineSmall),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  TextField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      labelText: 'Username',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  TextField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                        labelText: 'Password',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(10)),
+                    obscureText: true,
+                  ),
+                  
+                   Container(
+                    width: 300.0, // Set desired width
+                    height: 150.0, // Set desired height
+                    child: TextButton(
+                        onPressed: () {
+                          // Action to perform when the button is pressed
+                          print('Button Pressed');
+                        },)
+                  ElevatedButton(
+                    onPressed: () {
+                      // Login logic goes here
+                    },
+ Container(
+            width: 200.0, // Set desired width
+            height: 50.0, // Set desired height
+                    child: Text('Login'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Colors.black, // Set the background color here
+                      // Other properties like padding, shape, etc., can also be set using styleFrom
+                    ),
+                  ),
+                  
+                  SizedBox(height: 30),
+                  TextButton(
+                    onPressed: () {
+                      // Navigate to Signup page
+                    },
+                    child: Text('Create an account',
+                              style: TextStyle(
+                              fontSize: 20.0, // Set the desired font size
+                              // Other properties like fontWeight, color, etc., can also be set here
+                            ))),
+                    //    ],
+                  ),
+                ],
+              ),
+            ])));
+  }
+}
+*/
