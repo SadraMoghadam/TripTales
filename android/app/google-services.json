@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "203894246575",
+    "project_id": "triptales-4a732",
+    "storage_bucket": "triptales-4a732.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:203894246575:android:1f7c741e9f4f96b2be985a",
+        "android_client_info": {
+          "package_name": "com.example.trip_tales"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyMwzkrdp1gq8Y-Zi4HvqB7D_ZahDcqDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
