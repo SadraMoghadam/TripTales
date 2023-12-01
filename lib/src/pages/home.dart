@@ -8,11 +8,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ListView(
+        child: Column(
           children: <Widget>[
-            Expanded(
+            Flexible(
+              fit: FlexFit.tight,
               flex: 3,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Stack(
                     children: [
@@ -72,29 +74,39 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                child: ButtonBar(
-                  children: <Widget>[
-                    CustomButton(
-                        height: 20,
-                        width: 140,
-                        text: "Login",
+            Flexible(
+                fit: FlexFit.tight,
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(children: [
+                      OverflowBar(
+                        overflowAlignment: OverflowBarAlignment.start,
+                        alignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          CustomButton(
+                              height: 20,
+                              width: 140,
+                              text: "Login",
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(
+                                    context, '/login');
+                              })
+                        ],
+                      ),
+                      TextButton(
                         onPressed: () {
                           Navigator.pushReplacementNamed(context, '/register');
-                        })
-                    // TextButton(
-                    //   onPressed: () {
-                    //     Navigator.pushReplacementNamed(context, '/register');
-                    //   },
-                    //   child: Text('Create Account'),
-                    // ),
+                        },
+                        child: const Text('Create Account',
+                            style: TextStyle(
+                                color: Colors.black87,
+                                decoration: TextDecoration.underline)),
+                      ),
+                    ]),
                   ],
-                ),
-              ),
-            ),
+                )),
           ],
         ),
       ),
