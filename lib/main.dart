@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
-
+import 'src/pages/home.dart';
 
 Future<void> main() async {
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -14,18 +12,19 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Login Page',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginPage(),
+      theme: ThemeData(fontFamily: 'Nunito'),
+      home: HomePage(),
     );
   }
 }
 
+/*
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -95,3 +94,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+*/
