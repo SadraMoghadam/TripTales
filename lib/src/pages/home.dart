@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Flexible(
-              fit: FlexFit.tight,
+              fit: FlexFit.loose,
               flex: 3,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
