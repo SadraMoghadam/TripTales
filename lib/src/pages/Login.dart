@@ -9,7 +9,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Flexible(
               fit: FlexFit.tight,
-              flex: 3,
+              flex: 2,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const Text('Welcome Back',
                       style: TextStyle(
-                        color: Colors.black38,
+                        color: Colors.black54,
                         fontSize: 25,
                         fontWeight: FontWeight.w900
                       ),
@@ -47,28 +47,28 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Flexible(
                     fit: FlexFit.tight,
-                    flex: 1,
+                    flex: 2,
                     child: CustomTextField(
-                      controller: _usernameController,
-                      labelText: 'username',
-                      hintText: 'Enter your username',
-                      prefixIcon: Icons.person,
+                      controller: _emailController,
+                      labelText: 'Email',
+                      hintText: 'Enter your email',
+                      prefixIcon: Icons.email,
                       obscureText: true,
-                      keyboardType: TextInputType.visiblePassword,
+                      keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Password is required';
+                          return 'Email is required';
                         }
                         return null;
                       },
                     )),
                 Flexible(
                     fit: FlexFit.tight,
-                    flex: 1,
+                    flex: 2,
                     child: CustomTextField(
                       controller: _passwordController,
-                      labelText: 'password',
+                      labelText: 'Password',
                       hintText: 'Enter your password',
                       prefixIcon: Icons.password,
                       obscureText: true,
@@ -80,6 +80,18 @@ class _LoginPageState extends State<LoginPage> {
                         }
                         return null;
                       },
+                    )),
+                Flexible(
+                    fit: FlexFit.loose,
+                    flex: 1,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, '/register');
+                      },
+                      child: const Text('Forgot Password?',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              decoration: TextDecoration.underline)),
                     )),
               ],
             )),
@@ -96,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: <Widget>[
                           CustomButton(
                               height: 20,
-                              width: 140,
+                              width: 200,
                               text: "Login",
                               onPressed: () {
                                 Navigator.pushReplacementNamed(

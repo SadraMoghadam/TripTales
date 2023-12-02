@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:trip_tales/src/pages/Login.dart';
+import 'package:trip_tales/src/pages/register.dart';
 import 'firebase_options.dart';
 import 'src/pages/home.dart';
 
