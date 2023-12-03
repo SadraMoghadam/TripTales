@@ -46,7 +46,18 @@ class Validator {
       return defaultText;
     }
     if(checkPasswordStrength(value!) <= 2) {
-      return 'Pasword is not strong enough';
+      return 'Password is not strong enough';
+    }
+    return null;
+  }
+
+  String? confirmPasswordValidator(String? value, String password) {
+    String? defaultText = defaultValidator(value, 'Password');
+    if(defaultText != null) {
+      return defaultText;
+    }
+    if(password != value) {
+      return 'Password is not confirmed';
     }
     return null;
   }

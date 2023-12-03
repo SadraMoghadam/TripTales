@@ -10,8 +10,10 @@ class CustomTextField extends StatefulWidget {
   late final bool isPasswordVisible;
   final VoidCallback? onVisibilityPressed;
   final bool obscureText;
+  final bool readOnly;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final void Function()? onTap;
   final bool enabled;
   final TextInputType keyboardType;
   final TextInputAction? textInputAction;
@@ -33,8 +35,10 @@ class CustomTextField extends StatefulWidget {
     this.isPasswordVisible = false,
     this.onVisibilityPressed,
     this.obscureText = false,
+    this.readOnly = false,
     this.validator,
     this.onChanged,
+    this.onTap,
     this.enabled = true,
     this.keyboardType = TextInputType.text,
     this.textInputAction,
@@ -64,6 +68,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           textInputAction: widget.textInputAction,
           cursorColor: widget.focusedColor,
           autocorrect: widget.autocorrect,
+          readOnly: widget.readOnly,
           enableSuggestions: widget.enableSuggestions,
           decoration: InputDecoration(
             labelText: widget.labelText,
@@ -114,6 +119,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           validator: widget.validator,
           onChanged: widget.onChanged,
+          onTap: widget.readOnly ? widget.onTap : null,
           inputFormatters: widget.inputFormatters,
         ));
   }
