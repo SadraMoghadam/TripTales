@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:trip_tales/src/pages/login.dart';
 import 'package:trip_tales/src/pages/register.dart';
-import 'package:trip_tales/src/utils/device_info.dart';
 import 'firebase_options.dart';
 import 'src/pages/home.dart';
 
@@ -22,7 +21,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Login Page',
       theme: ThemeData(fontFamily: 'Nunito'),
-      home: RegisterPage(),
+      routes: {
+        '/': (context) => HomePage(),
+        '/loginPage': (context) => LoginPage(),
+        '/registerPage': (context) => RegisterPage(),
+      },
+      initialRoute: '/',
     );
   }
 }

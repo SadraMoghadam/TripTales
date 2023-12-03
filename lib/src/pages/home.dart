@@ -105,15 +105,11 @@ class HomePage extends StatelessWidget {
             children: <Widget>[
               CustomButton(
                   text: "Login",
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/login');
-                  })
+                  onPressed: () => Navigator.pushReplacementNamed(context, '/loginPage'))
             ],
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/register');
-            },
+            onPressed: () => Navigator.pushReplacementNamed(context, '/registerPage'),
             child: const Text('Create Account',
                 style: TextStyle(
                     color: Colors.black87,

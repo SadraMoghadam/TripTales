@@ -36,8 +36,8 @@ class _RegisterPageState extends State<RegisterPage> {
       print("byeeee");
       return;
     }
-    print("hiiii");
     _formKey.currentState?.save();
+    Navigator.pushReplacementNamed(context, '/loginPage');
   }
 
   void checkPasswordStrength(String value) {
@@ -295,7 +295,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/register');
+            Navigator.pushReplacementNamed(context, '/loginPage');
           },
           child: const Text('Already have an account?',
               style: TextStyle(

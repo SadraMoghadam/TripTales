@@ -27,11 +27,10 @@ class _LoginPageState extends State<LoginPage> {
   void _submit() {
     final isValid = _formKey.currentState?.validate();
     if (isValid == null || !isValid) {
-      print("byeeee");
       return;
     }
-    print("hiiii");
     _formKey.currentState?.save();
+    Navigator.pushReplacementNamed(context, '/');
   }
 
   void checkPasswordStrength(String value) {
@@ -213,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
           TextButton(
-            onPressed: _submit,
+            onPressed: () => Navigator.pushReplacementNamed(context, '/registerPage'),
             child: const Text('Create Account',
                 style: TextStyle(
                     color: Colors.black87,
