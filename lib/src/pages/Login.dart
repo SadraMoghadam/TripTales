@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 
-
+import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';
 import '../utils/validator.dart';
 import '../widgets/button.dart';
@@ -50,8 +50,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void onVisibilityPressed()
-  {
+  void onVisibilityPressed() {
     setState(() {
       _isPasswordVisible = !_isPasswordVisible;
     });
@@ -80,128 +79,148 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
     return Scaffold(
-      resizeToAvoidBottomInset : false,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              Flexible(
-                fit: FlexFit.tight,
-                flex: 3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      child: Image.asset(
-                        'assets/images/TripTales_logo.png',
-                        height: 200.0,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const Text(
-                      'Welcome Back',
-                      style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w900),
-                    ),
-                  ],
-                ),
+        child: Container(
+            height: device.height - 20,
+            width: device.width - 20,
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.all(10),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 4,
+                    child: buildHeader(),
+                  ),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 3,
+                    child: buildBody(),
+                  ),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 1,
+                    child: buildFooter(),
+                  ),
+                ],
               ),
-              Flexible(
-                flex: 2,
-                  child: Column(
-                    children: [
-                      Flexible(
-                          fit: FlexFit.tight,
-                          flex: 2,
-                          child: CustomTextField(
-                            controller: _emailController,
-                            labelText: 'Email',
-                            hintText: 'Enter your email',
-                            prefixIcon: Icons.email,
-                            obscureText: false,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            validator: _validator.emailValidator,
-                          )),
-                      Flexible(
-                          fit: FlexFit.tight,
-                          flex: 2,
-                          child: CustomTextField(
-                            controller: _passwordController,
-                            labelText: 'Password',
-                            hintText: 'Enter your password',
-                            prefixIcon: Icons.password,
-                            isPassword: true,
-                            isPasswordVisible: _isPasswordVisible,
-                            onVisibilityPressed: onVisibilityPressed,
-                            obscureText: !_isPasswordVisible,
-                            keyboardType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.next,
-                            validator: _validator.passwordValidator,
-                          )),
-                      Flexible(
-                        fit: FlexFit.tight,
-                        flex: 1,
-                          child: PasswordStrengthIndicator(
-                            hasUppercase: hasUppercase,
-                            hasLowercase: hasLowercase,
-                            hasDigits: hasDigits,
-                            hasSpecialCharacters: hasSpecialCharacters,
-                          ),
-                      ),
-                      Flexible(
-                          fit: FlexFit.tight,
-                          flex: 1,
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(context, '/register');
-                            },
-                            child: const Text('Forgot Password',
-                                style: TextStyle(
-                                    color: Colors.black87,
-                                    decoration: TextDecoration.underline)),
-                          )),
-                    ],
-                  )),
-              Flexible(
-                  fit: FlexFit.tight,
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(children: [
-                        OverflowBar(
-                          overflowAlignment: OverflowBarAlignment.start,
-                          alignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            CustomButton(
-                                height: 20,
-                                width: 200,
-                                text: "Login",
-                                onPressed: _submit
-                            )
-                          ],
-                        ),
-                        TextButton(
-                          onPressed: _submit,
-                          child: const Text('Create Account',
-                              style: TextStyle(
-                                  color: Colors.black87,
-                                  decoration: TextDecoration.underline)),
-                        ),
-                      ]),
-                    ],
-                  )),
+            )),
+      ),
+    );
+  }
+
+  Widget buildHeader() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.all(10),
+          child: Image.asset(
+            'assets/images/TripTales_logo.png',
+            height: 200.0,
+            fit: BoxFit.cover,
+          ),
+        ),
+        const Text(
+          'Welcome Back',
+          style: TextStyle(
+              color: Colors.black54, fontSize: 25, fontWeight: FontWeight.w900),
+        ),
+      ],
+    );
+  }
+
+  Widget buildBody() {
+    return Column(
+      children: [
+        Flexible(
+            fit: FlexFit.tight,
+            flex: 3,
+            child: CustomTextField(
+              controller: _emailController,
+              labelText: 'Email',
+              hintText: 'Enter your email',
+              prefixIcon: Icons.email,
+              obscureText: false,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              validator: _validator.emailValidator,
+            )),
+        Flexible(
+            fit: FlexFit.tight,
+            flex: 3,
+            child: CustomTextField(
+              controller: _passwordController,
+              labelText: 'Password',
+              hintText: 'Enter your password',
+              prefixIcon: Icons.password,
+              isPassword: true,
+              isPasswordVisible: _isPasswordVisible,
+              onVisibilityPressed: onVisibilityPressed,
+              obscureText: !_isPasswordVisible,
+              keyboardType: TextInputType.visiblePassword,
+              textInputAction: TextInputAction.next,
+              validator: _validator.passwordValidator,
+            )),
+        Flexible(
+            fit: FlexFit.tight,
+            flex: 4,
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              children: [
+                const Text(
+                  'Pasword Strength',
+                  textAlign: TextAlign.start,
+                ),
+                PasswordStrengthIndicator(
+                  hasUppercase: hasUppercase,
+                  hasLowercase: hasLowercase,
+                  hasDigits: hasDigits,
+                  hasSpecialCharacters: hasSpecialCharacters,
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('Forgot Password',
+                      style: TextStyle(
+                          color: Colors.black87,
+                          decoration: TextDecoration.underline)),
+                )
+              ],
+            )),
+      ],
+    );
+  }
+
+  Widget buildFooter() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(children: [
+          OverflowBar(
+            overflowAlignment: OverflowBarAlignment.start,
+            alignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              CustomButton(
+                  height: 20, width: 200, text: "Login", onPressed: _submit)
             ],
           ),
-        )
-
-      ),
+          TextButton(
+            onPressed: _submit,
+            child: const Text('Create Account',
+                style: TextStyle(
+                    color: Colors.black87,
+                    decoration: TextDecoration.underline)),
+          ),
+        ]),
+      ],
     );
   }
 }
