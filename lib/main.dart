@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'src/pages/home.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Login Page',
       theme: ThemeData(fontFamily: 'Nunito'),
-      home: RegisterPage(),
+      home: LoginPage(),
     );
   }
 }

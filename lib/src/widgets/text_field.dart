@@ -6,7 +6,9 @@ class CustomTextField extends StatefulWidget {
   final String labelText;
   final String? hintText;
   final IconData prefixIcon;
-  final IconData? suffixIcon;
+  final bool isPassword;
+  late final bool isPasswordVisible;
+  final VoidCallback? onVisibilityPressed;
   final bool obscureText;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
@@ -21,14 +23,15 @@ class CustomTextField extends StatefulWidget {
   final Color focusedColor;
   final Color enabledColor;
 
-
-  const CustomTextField({
+  CustomTextField({
     Key? key,
     required this.controller,
     required this.labelText,
     this.hintText,
     this.prefixIcon = Icons.person,
-    this.suffixIcon,
+    this.isPassword = false,
+    this.isPasswordVisible = false,
+    this.onVisibilityPressed,
     this.obscureText = false,
     this.validator,
     this.onChanged,
@@ -54,7 +57,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return SizedBox(
         width: 300,
         child: TextFormField(
-
           controller: widget.controller,
           obscureText: widget.obscureText,
           enabled: widget.enabled,
@@ -68,14 +70,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
             labelStyle: TextStyle(color: Colors.grey),
             hintText: widget.hintText,
             prefixIcon: Icon(widget.prefixIcon, color: Colors.deepPurple),
-            suffixIcon: widget.suffixIcon != null
-                ? Icon(widget.suffixIcon)
+            suffixIcon: widget.isPassword
+                ? IconButton(
+                    icon: Icon(widget.isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    color: Colors.deepPurple,
+                    onPressed: widget.onVisibilityPressed,
+                  )
                 : null,
             errorStyle: const TextStyle(
               fontSize: 10.0,
               height: 0.4,
-
-
             ),
             // border: OutlineInputBorder(
             //   borderRadius: BorderRadius.circular(25.0),
@@ -88,14 +94,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
               borderSide: BorderSide(
                 color: widget.enabledColor,
               ),
-              gapPadding: 10,
+              gapPadding: 5,
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(
                 color: widget.focusedColor,
               ),
-              gapPadding: 10,
+              gapPadding: 5,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
@@ -103,13 +109,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 style: BorderStyle.solid,
                 color: widget.enabledColor,
               ),
-              gapPadding: 10,
+              gapPadding: 5,
             ),
           ),
           validator: widget.validator,
           onChanged: widget.onChanged,
           inputFormatters: widget.inputFormatters,
-        )
-    );
+        ));
   }
 }

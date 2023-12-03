@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
 
+  bool _isPasswordVisible = false;
   bool hasUppercase = false;
   bool hasLowercase = false;
   bool hasDigits = false;
@@ -49,6 +50,13 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  void onVisibilityPressed()
+  {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
+  }
+
   @override
   void initState() {
     _emailController = TextEditingController()
@@ -73,6 +81,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -127,7 +136,10 @@ class _LoginPageState extends State<LoginPage> {
                             labelText: 'Password',
                             hintText: 'Enter your password',
                             prefixIcon: Icons.password,
-                            obscureText: true,
+                            isPassword: true,
+                            isPasswordVisible: _isPasswordVisible,
+                            onVisibilityPressed: onVisibilityPressed,
+                            obscureText: !_isPasswordVisible,
                             keyboardType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.next,
                             validator: _validator.passwordValidator,
