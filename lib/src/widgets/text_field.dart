@@ -21,6 +21,7 @@ class CustomTextField extends StatefulWidget {
   final Color focusedColor;
   final Color enabledColor;
 
+
   const CustomTextField({
     Key? key,
     required this.controller,
@@ -70,17 +71,31 @@ class _CustomTextFieldState extends State<CustomTextField> {
             suffixIcon: widget.suffixIcon != null
                 ? Icon(widget.suffixIcon)
                 : null,
+            errorStyle: const TextStyle(
+              fontSize: 10.0,
+              height: 0.4,
+
+
+            ),
             // border: OutlineInputBorder(
             //   borderRadius: BorderRadius.circular(25.0),
             //   borderSide: BorderSide(
             //     color: Colors.blue,
             //   ),
             // ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: BorderSide(
+                color: widget.enabledColor,
+              ),
+              gapPadding: 10,
+            ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(
                 color: widget.focusedColor,
               ),
+              gapPadding: 10,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
