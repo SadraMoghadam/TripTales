@@ -123,10 +123,13 @@ class _LoginPageState extends State<LoginPage> {
       children: <Widget>[
         Container(
           padding: const EdgeInsets.all(10),
-          child: Image.asset(
-            'assets/images/TripTales_logo.png',
-            height: 200.0,
-            fit: BoxFit.cover,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.asset(
+              'assets/images/TripTales_logo.png',
+              height: 200.0,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         const Text(
@@ -193,8 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {},
                   child: const Text('Forgot Password',
                       style: TextStyle(
-                          color: ctext2,
-                          decoration: TextDecoration.underline)),
+                          color: ctext2, decoration: TextDecoration.underline)),
                 )
               ],
             )),
@@ -216,11 +218,11 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
           TextButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, '/registerPage'),
+            onPressed: () =>
+                Navigator.pushReplacementNamed(context, '/registerPage'),
             child: const Text('Create Account',
                 style: TextStyle(
-                    color: ctext2,
-                    decoration: TextDecoration.underline)),
+                    color: ctext2, decoration: TextDecoration.underline)),
           ),
         ]),
       ],

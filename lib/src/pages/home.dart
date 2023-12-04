@@ -43,10 +43,13 @@ class HomePage extends StatelessWidget {
                 top: 40.0,
                 bottom: 170,
               ),
-              child: Image.asset(
-                'assets/images/TripTales_logo.png',
-                height: 250.0,
-                fit: BoxFit.cover,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.asset(
+                  'assets/images/TripTales_logo.png',
+                  height: 250.0,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             const Positioned(
@@ -106,11 +109,13 @@ class HomePage extends StatelessWidget {
             children: <Widget>[
               CustomButton(
                   text: "Login",
-                  onPressed: () => Navigator.pushReplacementNamed(context, '/loginPage'))
+                  onPressed: () =>
+                      Navigator.pushReplacementNamed(context, '/loginPage'))
             ],
           ),
           TextButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, '/registerPage'),
+            onPressed: () =>
+                Navigator.pushReplacementNamed(context, '/registerPage'),
             child: const Text('Create Account',
                 style: TextStyle(
                     color: Colors.black87,
