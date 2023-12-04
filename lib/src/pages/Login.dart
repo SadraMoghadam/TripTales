@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 
+import '../constants/color.dart';
 import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';
 import '../utils/validator.dart';
@@ -131,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
         const Text(
           'Welcome Back',
           style: TextStyle(
-              color: Colors.black54, fontSize: 25, fontWeight: FontWeight.w900),
+              color: ctext1, fontSize: 25, fontWeight: FontWeight.w900),
         ),
       ],
     );
@@ -178,6 +179,9 @@ class _LoginPageState extends State<LoginPage> {
                 const Text(
                   'Pasword Strength',
                   textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: ctext2,
+                  ),
                 ),
                 PasswordStrengthIndicator(
                   hasUppercase: hasUppercase,
@@ -189,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {},
                   child: const Text('Forgot Password',
                       style: TextStyle(
-                          color: Colors.black87,
+                          color: ctext2,
                           decoration: TextDecoration.underline)),
                 )
               ],
@@ -215,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: () => Navigator.pushReplacementNamed(context, '/registerPage'),
             child: const Text('Create Account',
                 style: TextStyle(
-                    color: Colors.black87,
+                    color: ctext2,
                     decoration: TextDecoration.underline)),
           ),
         ]),

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Login Page',
-      theme: ThemeData(fontFamily: 'Nunito'),
+      theme: ThemeData(fontFamily: 'WorkSans'),
       routes: {
         '/': (context) => HomePage(),
         '/loginPage': (context) => LoginPage(),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/color.dart';
+
 class CustomButton extends StatelessWidget {
   final double height;
   final double width;
@@ -20,8 +22,8 @@ class CustomButton extends StatelessWidget {
     this.height = 20,
     this.width = 200,
     this.fontSize = 18.0,
-    this.backgroundColor = Colors.orangeAccent,
-    this.textColor = Colors.black54,
+    this.backgroundColor = cmain2,
+    this.textColor = ctext1,
     this.borderRadius = 8.0,
     this.padding = 12.0,
     this.icon,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/color.dart';
+
 class PasswordStrengthIndicator extends StatelessWidget {
   final bool hasUppercase;
   final bool hasLowercase;
@@ -44,7 +46,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
       width: 40,
       height: 5,
       decoration: BoxDecoration(
-        color: strength >= indicator && strength >= 3 ? Colors.greenAccent : strength >= indicator && strength <= 2 ? Colors.redAccent : Colors.grey,
+        color: strength >= indicator && strength >= 3 ? Colors.greenAccent : strength >= indicator && strength <= 2 ? cmain3 : ctext3,
         borderRadius: BorderRadius.circular(2.5),
       ),
     );

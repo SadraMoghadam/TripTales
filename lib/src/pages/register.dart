@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:trip_tales/src/utils/device_info.dart';
 
+import '../constants/color.dart';
 import '../utils/password_strength_indicator.dart';
 import '../utils/validator.dart';
 import '../widgets/button.dart';
@@ -81,6 +82,7 @@ class _RegisterPageState extends State<RegisterPage> {
         _selectedDate = picked;
       });
     }
+    _birthDateController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!).toString();
   }
 
   @override
@@ -160,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return const Text(
       'Create your account for free',
       style: TextStyle(
-          color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w900),
+          color: ctext1, fontSize: 20, fontWeight: FontWeight.w900),
     );
   }
 
@@ -266,6 +268,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 const Text(
                   'Pasword Strength',
                   textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: ctext2,
+                  ),
                 ),
                 PasswordStrengthIndicator(
                   hasUppercase: hasUppercase,
@@ -299,7 +304,7 @@ class _RegisterPageState extends State<RegisterPage> {
           },
           child: const Text('Already have an account?',
               style: TextStyle(
-                  color: Colors.black87, decoration: TextDecoration.underline)),
+                  color: ctext2, decoration: TextDecoration.underline)),
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trip_tales/src/widgets/button.dart';
 
+import '../constants/color.dart';
 import '../utils/device_info.dart';
 
 class HomePage extends StatelessWidget {
@@ -56,8 +57,8 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 40,
-                  color: Colors.deepPurple,
-                  fontWeight: FontWeight.w900,
+                  color: cmain1,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
@@ -70,8 +71,8 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 40,
-                  color: Colors.redAccent,
-                  fontWeight: FontWeight.w900,
+                  color: cmain3,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
@@ -83,8 +84,8 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 40,
-                  color: Colors.orangeAccent,
-                  fontWeight: FontWeight.w900,
+                  color: cmain2,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),

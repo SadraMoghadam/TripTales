@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../constants/color.dart';
+
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
@@ -47,8 +49,8 @@ class CustomTextField extends StatefulWidget {
     this.border,
     this.focusedBorder,
     this.inputFormatters,
-    this.focusedColor = Colors.deepPurple,
-    this.enabledColor = Colors.deepPurple,
+    this.focusedColor = cmain1,
+    this.enabledColor = cmain1,
   }) : super(key: key);
 
   @override
@@ -72,15 +74,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
           enableSuggestions: widget.enableSuggestions,
           decoration: InputDecoration(
             labelText: widget.labelText,
-            labelStyle: TextStyle(color: Colors.grey),
+            labelStyle: TextStyle(color: ctext3),
             hintText: widget.hintText,
-            prefixIcon: Icon(widget.prefixIcon, color: Colors.deepPurple),
+            prefixIcon: Icon(widget.prefixIcon, color: cmain1),
             suffixIcon: widget.isPassword
                 ? IconButton(
                     icon: Icon(widget.isPasswordVisible
                         ? Icons.visibility
                         : Icons.visibility_off),
-                    color: Colors.deepPurple,
+                    color: cmain1,
                     onPressed: widget.onVisibilityPressed,
                   )
                 : null,
