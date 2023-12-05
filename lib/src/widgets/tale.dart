@@ -22,36 +22,30 @@ class _CustomTaleState extends State<CustomTale> {
   Widget build(BuildContext context) {
     return SizedBox(
         width: 300,
-        height: 80,
-        child: Stack(
-          // alignment: Alignment.topLeft,
-          children: [
-            Container(
+        height: 200,
+            child: Container(
               //   alignment: Alignment.topLeft,
-              margin: const EdgeInsets.all(1),
+              margin: const EdgeInsets.all(5),
               // padding: const EdgeInsets.all(3.0),
               decoration: BoxDecoration(
                 border: Border.all(color: ctext1),
                 borderRadius: BorderRadius.all(Radius.circular(
                         1.0) //                 <--- border radius here
                     ),
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image:AssetImage(
+                    widget.imagePath,
+                  ),
+                )
               ),
-              child: Image.asset(
-                widget.imagePath,
-                height: 250,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Container(
-                //      alignment: Alignment.bottomCenter,
-                child: Text(
+              child: Text(
               widget.text,
               style: TextStyle(
                   color: cmain2, fontWeight: FontWeight.bold, fontSize: 22.0),
-            )),
-          ],
-        ));
+            )
+            ),
+         );
   }
 }
     

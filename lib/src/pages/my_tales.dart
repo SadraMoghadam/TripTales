@@ -35,41 +35,40 @@ class _MyTalesPage extends State<MyTalesPage> {
           )),
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Container(
-            alignment: Alignment.bottomLeft,
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/images/background_tale.jpg'),
-                    fit: BoxFit.cover,
-                    opacity: 0.3)),
-            //  height: device.height - 10,
-            //  width: device.width - 10,
-            //padding: EdgeInsets.all(10),
-            //margin: EdgeInsets.all(10),
-            child: Form(
-              //  key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 1,
-                    child: buildHeader(),
-                  ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 10,
-                    child: buildBody(),
-                  ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 1,
-                    child: buildFooter(),
-                  ),
-                ],
-              ),
-            )),
-      ),
+          child: Container(
+        alignment: Alignment.topLeft,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/images/background_tale.jpg'),
+                fit: BoxFit.cover,
+                opacity: 0.3)),
+        //  height: device.height - 10,
+        //  width: device.width - 10,
+        //padding: EdgeInsets.all(10),
+        //margin: EdgeInsets.all(10),
+        //  key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 1,
+              child: buildHeader(),
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 10,
+              child: buildBody(),
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 1,
+              child: buildFooter(),
+            ),
+          ],
+        ),
+      )),
     );
   }
 
@@ -96,62 +95,108 @@ class _MyTalesPage extends State<MyTalesPage> {
   }
 
   Widget buildBody() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(
-            fit: FlexFit.tight,
-            flex: 3,
-            child: CustomTale(
-              imagePath: 'assets/images/tale_sample.jpg',
-              text: 'Summer holidays',
-            )),
-        Spacer(flex: 1),
-        Flexible(
-            fit: FlexFit.tight,
-            flex: 3,
-            child: CustomTale(
-              imagePath: 'assets/images/TripTales_logo.png',
-              text: 'Summer holidays',
-            )),
-        Spacer(flex: 1),
-        Flexible(
-            fit: FlexFit.tight,
-            flex: 3,
-            child: CustomTale(
-              imagePath: 'assets/images/tale_sample.jpg',
-              text: 'Summer holidays',
-            )),
-        Flexible(
-            fit: FlexFit.tight,
-            flex: 5,
-            child: CustomTale(
-              imagePath: 'assets/images/tale_sample.jpg',
-              text: 'Summer holidays',
-            )),
-        Flexible(
-            fit: FlexFit.tight,
-            flex: 5,
-            child: CustomTale(
-              imagePath: 'assets/images/tale_sample.jpg',
-              text: 'Summer holidays',
-            )),
-        Flexible(
-            fit: FlexFit.tight,
-            flex: 5,
-            child: CustomTale(
-              imagePath: 'assets/images/tale_sample.jpg',
-              text: 'Summer holidays',
-            )),
-        Flexible(
-            fit: FlexFit.tight,
-            flex: 5,
-            child: CustomTale(
-              imagePath: 'assets/images/tale_sample.jpg',
-              text: 'Summer holidays',
-            )),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          CustomTale(
+            imagePath: 'assets/images/tale_sample.jpg',
+            text: 'Summer holidays',
+          ),
+          // Flexible(
+          //     fit: FlexFit.tight,
+          //     flex: 3,
+          //     child: CustomTale(
+          //       imagePath: 'assets/images/tale_sample.jpg',
+          //       text: 'Summer holidays',
+          //     )),
+          // Spacer(flex: 1),
+          // Flexible(
+          //     fit: FlexFit.tight,
+          //     flex: 3,
+          //     child: CustomTale(
+          //       imagePath: 'assets/images/TripTales_logo.png',
+          //       text: 'Summer holidays',
+          //     )),
+          // Spacer(flex: 1),
+          // Flexible(
+          //     fit: FlexFit.tight,
+          //     flex: 3,
+          //     child: CustomTale(
+          //       imagePath: 'assets/images/tale_sample.jpg',
+          //       text: 'Summer holidays',
+          //     )),
+          // Flexible(
+          //     fit: FlexFit.tight,
+          //     flex: 5,
+          //     child: CustomTale(
+          //       imagePath: 'assets/images/tale_sample.jpg',
+          //       text: 'Summer holidays',
+          //     )),
+          // Flexible(
+          //     fit: FlexFit.tight,
+          //     flex: 5,
+          //     child: CustomTale(
+          //       imagePath: 'assets/images/tale_sample.jpg',
+          //       text: 'Summer holidays',
+          //     )),
+          // Flexible(
+          //     fit: FlexFit.tight,
+          //     flex: 5,
+          //     child: CustomTale(
+          //       imagePath: 'assets/images/tale_sample.jpg',
+          //       text: 'Summer holidays',
+          //     )),
+          // Flexible(
+          //     fit: FlexFit.tight,
+          //     flex: 5,
+          //     child: CustomTale(
+          //       imagePath: 'assets/images/tale_sample.jpg',
+          //       text: 'Summer holidays',
+          //     )),
+        ],
+      ),
     );
   }
 
