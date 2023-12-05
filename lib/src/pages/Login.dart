@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trip_tales/src/utils/validator.dart';
-
 import '../constants/color.dart';
 import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';

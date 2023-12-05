@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:trip_tales/src/pages/login.dart';
 import 'package:trip_tales/src/pages/register.dart';
+import 'package:trip_tales/src/pages/my_tales.dart';
 import 'firebase_options.dart';
 import 'src/pages/home.dart';
 
@@ -22,12 +23,15 @@ class MyApp extends StatelessWidget {
       title: 'Login Page',
       theme: ThemeData(fontFamily: 'WorkSans'),
       routes: {
-        '/': (context) => HomePage(),
+        '/': (context) => MyTalesPage(),
+        //  '/': (context) => HomePage(),
+        /*
         '/loginPage': (context) => LoginPage(),
         '/registerPage': (context) => RegisterPage(),
+        '/myTalesPage': (context) => MyTalesPage(),
+        */
       },
       initialRoute: '/',
     );
   }
 }
-
