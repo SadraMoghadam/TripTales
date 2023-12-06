@@ -20,16 +20,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Login Page',
       theme: ThemeData(fontFamily: 'WorkSans'),
       routes: {
         '/': (context) => MyTalesPage(),
         //  '/': (context) => HomePage(),
-        /*
         '/loginPage': (context) => LoginPage(),
         '/registerPage': (context) => RegisterPage(),
         '/myTalesPage': (context) => MyTalesPage(),
-        */
       },
       initialRoute: '/',
     );

@@ -67,6 +67,9 @@ flutter:
    - assets/images/TripTales_logo.png
    - assets/images/background_tale.jpg
    - assets/images/tale_sample.jpg
+   - assets/images/createTale_background.jpg
+   - assets/images/winter_tale.jpg
+   - assets/images/london_tale.jpg
    
 
   # An image asset can refer to one or more resolution-specific "variants", see

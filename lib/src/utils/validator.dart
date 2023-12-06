@@ -20,7 +20,7 @@ class Validator {
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(value.toString());
     String? defaultText = defaultValidator(value, 'Email');
-    if(defaultText != null) {
+    if (defaultText != null) {
       return defaultText;
     }
 
@@ -30,22 +30,22 @@ class Validator {
     return null;
   }
 
-
   int checkPasswordStrength(String value) {
     int hasUppercase = value.contains(RegExp(r'[A-Z]')) ? 1 : 0;
     int hasLowercase = value.contains(RegExp(r'[a-z]')) ? 1 : 0;
     int hasDigits = value.contains(RegExp(r'[0-9]')) ? 1 : 0;
-    int hasSpecialCharacters = value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')) ? 1 : 0;
+    int hasSpecialCharacters =
+        value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')) ? 1 : 0;
 
     return hasUppercase + hasLowercase + hasDigits + hasSpecialCharacters;
   }
 
   String? passwordValidator(String? value) {
     String? defaultText = defaultValidator(value, 'Password');
-    if(defaultText != null) {
+    if (defaultText != null) {
       return defaultText;
     }
-    if(checkPasswordStrength(value!) <= 2) {
+    if (checkPasswordStrength(value!) <= 2) {
       return 'Password is not strong enough';
     }
     return null;
@@ -53,10 +53,10 @@ class Validator {
 
   String? confirmPasswordValidator(String? value, String password) {
     String? defaultText = defaultValidator(value, 'Password');
-    if(defaultText != null) {
+    if (defaultText != null) {
       return defaultText;
     }
-    if(password != value) {
+    if (password != value) {
       return 'Password is not confirmed';
     }
     return null;
