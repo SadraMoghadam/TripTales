@@ -49,8 +49,8 @@ class PasswordStrengthIndicator extends StatelessWidget {
         color: strength >= indicator && strength >= 3
             ? Colors.greenAccent
             : strength >= indicator && strength <= 2
-                ? cmain3
-                : ctext3,
+                ? AppColors.main3
+                : AppColors.text3,
         borderRadius: BorderRadius.circular(2.5),
       ),
     );

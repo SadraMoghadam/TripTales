@@ -34,7 +34,7 @@ class _CustomTaleState extends State<CustomTale> {
           child: Container(
             margin: EdgeInsets.only(bottom: 12, top: 5, left: 5, right: 5),
             decoration: BoxDecoration(
-                border: Border.all(color: ctext1),
+                border: Border.all(color: AppColors.text1),
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 image: DecorationImage(
                   fit: BoxFit.fill,

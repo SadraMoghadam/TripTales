@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
         const Text(
           'Welcome Back',
           style: TextStyle(
-              color: ctext1, fontSize: 25, fontWeight: FontWeight.w900),
+              color: AppColors.text1, fontSize: 25, fontWeight: FontWeight.w900),
         ),
       ],
     );
@@ -182,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                   'Pasword Strength',
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    color: ctext2,
+                    color: AppColors.text2,
                   ),
                 ),
                 PasswordStrengthIndicator(
@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {},
                   child: const Text('Forgot Password',
                       style: TextStyle(
-                          color: ctext2, decoration: TextDecoration.underline)),
+                          color: AppColors.text2, decoration: TextDecoration.underline)),
                 )
               ],
             )),
@@ -221,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.pushReplacementNamed(context, '/registerPage'),
             child: const Text('Create Account',
                 style: TextStyle(
-                    color: ctext2, decoration: TextDecoration.underline)),
+                    color: AppColors.text2, decoration: TextDecoration.underline)),
           ),
         ]),
       ],

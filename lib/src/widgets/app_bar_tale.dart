@@ -25,7 +25,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           body: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
               SliverAppBar(
-                backgroundColor: cmain1,
+                backgroundColor: AppColors.main1,
                 automaticallyImplyLeading: true,
                 title: Row(
                   children: <Widget>[

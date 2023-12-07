@@ -60,7 +60,7 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 40,
-                  color: cmain1,
+                  color: AppColors.main1,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -74,7 +74,7 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 40,
-                  color: cmain3,
+                  color: AppColors.main3,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -87,7 +87,7 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 40,
-                  color: cmain2,
+                  color: AppColors.main2,
                   fontWeight: FontWeight.w700,
                 ),
               ),

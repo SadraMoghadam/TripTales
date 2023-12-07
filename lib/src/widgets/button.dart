@@ -22,8 +22,8 @@ class CustomButton extends StatelessWidget {
     this.height = 20,
     this.width = 200,
     this.fontSize = 18.0,
-    this.backgroundColor = cmain2,
-    this.textColor = ctext1,
+    this.backgroundColor = AppColors.main2,
+    this.textColor = AppColors.text1,
     this.borderRadius = 8.0,
     this.padding = 12.0,
     this.icon,
@@ -39,6 +39,8 @@ class CustomButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           primary: backgroundColor,
           onPrimary: textColor,
+          shadowColor: Colors.grey,
+          elevation: 10,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
@@ -51,6 +53,8 @@ class CustomButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           primary: backgroundColor,
           onPrimary: textColor,
+          shadowColor: Colors.grey,
+          elevation: 10,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),

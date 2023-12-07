@@ -162,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return const Text(
       'Create your account for free',
       style: TextStyle(
-          color: ctext1, fontSize: 20, fontWeight: FontWeight.w900),
+          color: AppColors.text1, fontSize: 20, fontWeight: FontWeight.w900),
     );
   }
 
@@ -269,7 +269,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   'Pasword Strength',
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    color: ctext2,
+                    color: AppColors.text2,
                   ),
                 ),
                 PasswordStrengthIndicator(
@@ -304,7 +304,7 @@ class _RegisterPageState extends State<RegisterPage> {
           },
           child: const Text('Already have an account?',
               style: TextStyle(
-                  color: ctext2, decoration: TextDecoration.underline)),
+                  color: AppColors.text2, decoration: TextDecoration.underline)),
         ),
       ],
     );

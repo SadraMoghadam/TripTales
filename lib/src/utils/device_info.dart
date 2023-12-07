@@ -13,3 +13,8 @@ class DeviceInfo {
     width = size.width;
   }
 }
+
+class GlobalContextService {
+  static GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
+}

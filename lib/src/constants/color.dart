@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+class AppColors{
+  static const main1 = Colors.deepPurple;
+  static const main2 = Colors.orangeAccent;
+  static const main3 = Colors.redAccent;
 
-const cmain1 = Colors.deepPurple;
-const cmain2 = Colors.orangeAccent;
-const cmain3 = Colors.redAccent;
-
-const ctext1 = Color.fromRGBO(50, 50, 50, 1);
-const ctext2 = Color.fromRGBO(70, 70, 70, 1);
-const ctext3 = Colors.grey;
+  static const text1 = Color.fromRGBO(50, 50, 50, 1);
+  static const text2 = Color.fromRGBO(70, 70, 70, 1);
+  static const text3 = Colors.grey;
+}

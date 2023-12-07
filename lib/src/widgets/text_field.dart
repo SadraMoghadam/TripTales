@@ -49,8 +49,8 @@ class CustomTextField extends StatefulWidget {
     this.border,
     this.focusedBorder,
     this.inputFormatters,
-    this.focusedColor = cmain1,
-    this.enabledColor = cmain1,
+    this.focusedColor = AppColors.main1,
+    this.enabledColor = AppColors.main1,
   }) : super(key: key);
 
   @override
@@ -74,15 +74,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
           enableSuggestions: widget.enableSuggestions,
           decoration: InputDecoration(
             labelText: widget.labelText,
-            labelStyle: TextStyle(color: ctext3),
+            labelStyle: TextStyle(color: AppColors.text3),
             hintText: widget.hintText,
-            prefixIcon: Icon(widget.prefixIcon, color: cmain1),
+            prefixIcon: Icon(widget.prefixIcon, color: AppColors.main1),
             suffixIcon: widget.isPassword
                 ? IconButton(
                     icon: Icon(widget.isPasswordVisible
                         ? Icons.visibility
                         : Icons.visibility_off),
-                    color: cmain1,
+                    color: AppColors.main1,
                     onPressed: widget.onVisibilityPressed,
                   )
                 : null,

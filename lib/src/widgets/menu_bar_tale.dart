@@ -38,7 +38,7 @@ class _CustomMenuState extends State<CustomMenu> {
                 child: IconButton(
                     icon: Icon(
                       Icons.home,
-                      color: ctext2,
+                      color: AppColors.text2,
                     ), //
                     onPressed: () {
                       // Implement action for Home button
@@ -50,7 +50,7 @@ class _CustomMenuState extends State<CustomMenu> {
                 child: IconButton(
                     icon: Icon(
                       Icons.add_circle_outline,
-                      color: ctext2,
+                      color: AppColors.text2,
                     ), //
                     onPressed: () {
                       // Implement action for Home button
@@ -62,7 +62,7 @@ class _CustomMenuState extends State<CustomMenu> {
                 child: IconButton(
                     icon: Icon(
                       Icons.search,
-                      color: ctext2,
+                      color: AppColors.text2,
                     ), //
                     onPressed: () {
                       // Implement action for Home button
