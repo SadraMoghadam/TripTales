@@ -65,6 +65,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   # To add assets to your application, add an assets section, like this:
   assets:
+   - assets/animations/add_button.json
+   - assets/animations/add_button_square.json
+   - assets/animations/add_button_circle.json
    - assets/images/profile_pic.png
    - assets/images/TripTales_logo.png
    - assets/images/background_tale.jpg
