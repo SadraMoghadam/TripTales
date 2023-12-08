@@ -6,10 +6,12 @@ import '../widgets/menu_bar_tale.dart';
 
 class CustomAppBar extends StatefulWidget {
   final Widget body_tale;
+  final bool isPinned;
 
   CustomAppBar({
     Key? key,
     required this.body_tale,
+    this.isPinned = false,
   }) : super(key: key);
 
   @override
@@ -24,7 +26,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
         home: Scaffold(
           body: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
-              SliverAppBar(
+              SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+              context),
+              sliver: SliverAppBar(
                 backgroundColor: AppColors.main1,
                 automaticallyImplyLeading: true,
                 title: Row(
@@ -52,6 +57,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   onPressed: () =>
                       Navigator.pushReplacementNamed(context, '/loginPage'),
                 ),
+                elevation: 10,
+                shadowColor: Colors.grey,
+                forceElevated: true,
+                pinned: widget.isPinned,
+              ),
               ),
             ],
             body: widget.body_tale,

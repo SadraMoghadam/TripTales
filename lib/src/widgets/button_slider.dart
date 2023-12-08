@@ -30,50 +30,49 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Stack(
-          children: [
-            buildButton(Icons.image, const Offset(0.0, -1.3)),
-            buildButton(Icons.video_library_rounded, const Offset(0.0, -2.45)),
-            buildButton(Icons.text_snippet_rounded, const Offset(0.0, -3.6)),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: AnimatedContainer(
-                duration: Duration(seconds: 0),
-                child: GestureDetector(
-                  key: ValueKey<int>(0),
-                  onTap: () {
-                    setState(() {
-                      isMenuOpen = !isMenuOpen;
-                    });
-                    if (isMenuOpen) {
-                      _controller.animateTo(0.5, duration: Duration(milliseconds: 500));
-                    } else {
-                      _controller.animateTo(0, duration: Duration(milliseconds: 500));
-                    }
+    return Container(
+      child: Stack(
+        children: [
+          buildButton(Icons.text_snippet_rounded, const Offset(0.0, -3.6)),
+          buildButton(Icons.video_library_rounded, const Offset(0.0, -2.45)),
+          buildButton(Icons.image, const Offset(0.0, -1.3)),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: AnimatedContainer(
+              duration: Duration(seconds: 0),
+              child: GestureDetector(
+                key: ValueKey<int>(0),
+                onTap: () {
+                  setState(() {
+                    isMenuOpen = !isMenuOpen;
+                  });
+                  if (isMenuOpen) {
+                    _controller.animateTo(0.5,
+                        duration: Duration(milliseconds: 500));
+                  } else {
+                    _controller.animateTo(0,
+                        duration: Duration(milliseconds: 500));
+                  }
+                },
+                child: Lottie.asset(
+                  "assets/animations/add_button_circle.json",
+                  width: 100,
+                  height: 100,
+                  controller: _controller,
+                  onLoaded: (composition) {
+                    _controller.duration = composition.duration;
                   },
-                  child: Lottie.asset(
-                    "assets/animations/add_button_circle.json",
-                    width: 100,
-                    height: 100,
-                    controller: _controller,
-                    onLoaded: (composition) {
-                      _controller.duration = composition.duration;
-                    },
-                  ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget buildButton(IconData icon, Offset finalPosition)
-  {
+  Widget buildButton(IconData icon, Offset finalPosition) {
     return Positioned(
       bottom: 0,
       right: 0,
