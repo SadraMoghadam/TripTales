@@ -43,11 +43,6 @@ class TalePage extends StatelessWidget {
               ],
             ),
           ),
-          Flexible(
-            fit: FlexFit.tight,
-            flex: 1,
-            child: buildFooter(),
-          ),
         ],
       ),
     );
@@ -67,10 +62,6 @@ class TalePage extends StatelessWidget {
   Widget buildAddMemory()
   {
     return ButtonSlider();
-  }
-
-  Widget buildFooter() {
-    return CustomMenu();
   }
 }
 

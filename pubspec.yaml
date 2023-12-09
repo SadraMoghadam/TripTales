@@ -68,6 +68,8 @@ flutter:
    - assets/animations/add_button.json
    - assets/animations/add_button_square.json
    - assets/animations/add_button_circle.json
+   - assets/animations/placeholder.json
+   - assets/animations/place_here.json
    - assets/images/profile_pic.png
    - assets/images/TripTales_logo.png
    - assets/images/background_tale.jpg
