@@ -7,15 +7,17 @@ import '../utils/device_info.dart';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 
-class MemoryCard extends StatelessWidget {
+class MemoryCard extends StatefulWidget {
 
+  final Function(Size) onSizeChanged;
   final GlobalKey cardKey;
   final MemoryCardType type;
-  final Size size;
+  late final Size size;
   final String imagePath;
   final String videoPath;
   var position;
   var rotation;
+  // var currentSize;
 
   double maxScale = 2;
   double minScale = 0.75;
@@ -26,14 +28,18 @@ class MemoryCard extends StatelessWidget {
     required this.cardKey,
     required this.type,
     required this.size,
+    required this.onSizeChanged,
     this.position = const (0, 0, 0),
     this.rotation,
     this.imagePath = 'assets/images/canvas1.jpg',
     this.videoPath = 'assets/images/canvas1.jpg',
   });
-
   @override
+  State<MemoryCard> createState() => _MemoryCardState();
+}
 
+class _MemoryCardState extends State<MemoryCard> {
+  @override
 
   @override
   Widget build(BuildContext context) {
@@ -41,26 +47,41 @@ class MemoryCard extends StatelessWidget {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return MatrixGestureDetector(
-      key: cardKey,
+      key: widget.cardKey,
       onMatrixUpdate: (m, tm, sm, rm) {
         notifier.value = m;
         double scale = m.getMaxScaleOnAxis();
-        position = m.getTranslation();
-        rotation = rm.getRotation();
+        widget.size = getContainerSize();
+        // onSizeChanged(currentSize);
+        widget.position = m.getTranslation();
+        widget.rotation = rm.getRotation();
+        if (widget.size.height > 500) {
+          print("sehufbvhsbvfesjh");
+          widget.size = Size(500, 500);
+        }else if (widget.size.height < 50) {
 
-        if (scale > maxScale) {
-          m.scale(maxScale / scale);
-        }else if (scale < minScale) {
-          m.scale(minScale / scale);
+          print("yotjkitjhty");
+          widget.size = Size(50, 50);
+        }
+        // if (scale > maxScale) {
+        //   m.scale(maxScale / scale);
+        // }else if (scale < minScale) {
+        //   m.scale(minScale / scale);
+        // }
+
+        if (widget.position[0] < 0) {
+          m.setTranslationRaw(0, widget.position[1], widget.position[2]);
+        } else if (widget.position[0] > device.width - 50) {
+          m.setTranslationRaw(device.width - 50, widget.position[1], widget.position[2]);
+        } else if (widget.position[1] < 0) {
+          m.setTranslationRaw(widget.position[0], 0, widget.position[2]);
         }
 
-        if (position[0] < 0) {
-          m.setTranslationRaw(0, position[1], position[2]);
-        } else if (position[0] > device.width - size.width) {
-          m.setTranslationRaw(device.width - size.width, position[1], position[2]);
-        } else if (position[1] < 0) {
-          m.setTranslationRaw(position[0], 0, position[2]);
-        }
+        setState(() {
+          widget.size = getContainerSize();
+          widget.position = m.getTranslation();
+          widget.rotation = rm.getRotation();
+        });
 
         // if (position[0] < 0) {
         //   m.setTranslationRaw(0, position[1], position[2]);
@@ -74,7 +95,7 @@ class MemoryCard extends StatelessWidget {
         print("---------");
         print(m.getTranslation());
         print("+++++++++");
-        print(rotation);
+        print(widget.rotation);
         print("%%%%%%%%%");
       },
       child: AnimatedBuilder(
@@ -87,9 +108,9 @@ class MemoryCard extends StatelessWidget {
               transform: notifier.value,
               child: Stack(
                 children: <Widget>[
-                  if (type == MemoryCardType.image)
+                  if (widget.type == MemoryCardType.image)
                     ImageMemory()
-                  else if (type == MemoryCardType.video)
+                  else if (widget.type == MemoryCardType.video)
                     VideoMemory()
                   else
                     TextMemory()
@@ -104,15 +125,15 @@ class MemoryCard extends StatelessWidget {
 
   Widget ImageMemory() {
     return Container(
-      height: size.height,
-      width: size.width,
+      height: widget.size.height,
+      width: widget.size.width,
       decoration: BoxDecoration(
           border: Border.all(color: AppColors.main1),
           borderRadius: const BorderRadius.all(Radius.circular(10.0)),
           image: DecorationImage(
             fit: BoxFit.fill,
             image: AssetImage(
-              imagePath,
+              widget.imagePath,
             ),
           )),
     );
@@ -120,23 +141,23 @@ class MemoryCard extends StatelessWidget {
 
   Widget VideoMemory() {
     return Container(
-      height: size.height,
-      width: size.width,
+      height: widget.size.height,
+      width: widget.size.width,
       color: Colors.red,
     );
   }
 
   Widget TextMemory() {
     return Container(
-      height: size.height,
-      width: size.width,
+      height: widget.size.height,
+      width: widget.size.width,
       color: Colors.green,
     );
   }
 
   Size getContainerSize() {
-    RenderBox renderBox = cardKey.currentContext!.findRenderObject() as RenderBox;
+    RenderBox renderBox = widget.cardKey.currentContext!.findRenderObject() as RenderBox;
     return renderBox.size;
   }
-
 }
+
