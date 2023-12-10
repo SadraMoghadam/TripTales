@@ -19,44 +19,44 @@ class CustomAppBar extends StatefulWidget {
 class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) => [
-              SliverAppBar(
-                backgroundColor: cmain1,
-                automaticallyImplyLeading: true,
-                title: Row(
-                  children: <Widget>[
-                    // ignore: prefer_const_constructors
-                    Center(
-                      child: const Text(
-                        'Trip Tales',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          //      color: Colors.white,
-                          fontSize: 22,
-                        ),
-                      ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverAppBar(
+            pinned: false,
+            backgroundColor: cmain1,
+            automaticallyImplyLeading: true,
+            title: Row(
+              children: <Widget>[
+                // ignore: prefer_const_constructors
+                Center(
+                  child: const Text(
+                    'Trip Tales',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      //      color: Colors.white,
+                      fontSize: 22,
                     ),
-                    Flexible(
-                      fit: FlexFit.tight,
-                      flex: 1,
-                      child: buildHeader(),
-                    ),
-                  ],
+                  ),
                 ),
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () =>
-                      Navigator.pushReplacementNamed(context, '/loginPage'),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 1,
+                  child: buildHeader(),
                 ),
-              ),
-            ],
-            body: widget.body_tale,
+              ],
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, '/loginPage'),
+            ),
           ),
-        ));
+        ],
+        body: widget.body_tale,
+      ),
+    );
   }
 
   Widget buildHeader() {

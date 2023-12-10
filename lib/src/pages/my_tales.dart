@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:trip_tales/src/utils/validator.dart';
+import 'package:trip_tales/src/widgets/app_bar_tale.dart';
 import 'package:trip_tales/src/widgets/tale_card.dart';
-import '../constants/color.dart';
 import '../utils/device_info.dart';
-import '../utils/password_strength_indicator.dart';
-import '../utils/validator.dart';
-import '../widgets/button.dart';
-import '../widgets/text_field.dart';
-import '../widgets/tale_card.dart';
 import '../widgets/menu_bar_tale.dart';
-import '../widgets/app_bar_tale.dart';
 
 class MyTalesPage extends StatefulWidget {
   @override
@@ -22,10 +15,12 @@ class _MyTalesPage extends State<MyTalesPage> {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: CustomAppBar(
-          body_tale: buildBody(),
-        ));
+      debugShowCheckedModeBanner: false,
+      home: CustomAppBar(
+        body_tale: buildBody(),
+      ),
+    );
+    //  );
   }
 
   Widget buildBody() {

@@ -1,4 +1,4 @@
-# trip_tales
+# trip_tale
 
 A new Flutter project.
 
