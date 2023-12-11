@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:trip_tales/src/constants/color.dart';
@@ -9,15 +11,14 @@ import 'dart:ui' as ui;
 import 'dart:math' as math;
 
 class MemoryCard extends StatefulWidget {
-  final Function(Size) onSizeChanged;
+  // final Function(Size) onSizeChanged;
   final GlobalKey cardKey;
   final MemoryCardType type;
   final int order;
   Size size;
   final String imagePath;
   final String videoPath;
-  var position;
-  var rotation;
+  Matrix4 initTransform;
 
   // var currentSize;
 
@@ -29,11 +30,10 @@ class MemoryCard extends StatefulWidget {
     required this.order,
     required this.type,
     required this.size,
-    required this.onSizeChanged,
-    this.position = const (0, 0, 0),
-    this.rotation,
+    // required this.onSizeChanged,
+    required this.initTransform,
     this.imagePath = 'assets/images/canvas1.jpg',
-    this.videoPath = 'assets/images/canvas1.jpg',
+    this.videoPath = 'assets/videos/1.mp4',
   });
 
   @override
@@ -48,20 +48,38 @@ class _MemoryCardState extends State<MemoryCard> {
   double minScale = 0.75;
   double maxSize = 300;
   double minSize = 50;
+  late Matrix4 transform;
+  var position;
+  var rotation;
+  late Size imageActualSize;
+  late Size videoActualSize;
+
+  // late ImageInfo _imageInfo;
+  final Completer<ImageInfo> _imageInfoCompleter = Completer<ImageInfo>();
 
   @override
   void initState() {
-    _videoController = VideoPlayerController.networkUrl(Uri.parse(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-    ));
-    _initializeVideoPlayerFuture = _videoController.initialize();
+    if (widget.type == MemoryCardType.video) {
+      _videoController = VideoPlayerController.networkUrl(Uri.parse(
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+      ));
+      // _videoController = VideoPlayerController.asset(widget.videoPath);
+      // _videoController = VideoPlayerController.network('assets/videos/1.mp4');
+      _initializeVideoPlayerFuture = _videoController.initialize();
+    }
+    if (widget.type == MemoryCardType.image){
+      loadImageInfo(widget.imagePath);
+    }
     super.initState();
     currentSize = widget.size;
+    transform = widget.initTransform;
   }
 
   @override
   void dispose() {
-    _videoController.dispose();
+    if (widget.type == MemoryCardType.video) {
+      _videoController.dispose();
+    }
     super.dispose();
   }
 
@@ -72,7 +90,6 @@ class _MemoryCardState extends State<MemoryCard> {
 
     // Calculate the new container size based on scaling
     double newContainerSize = widget.size.height;
-    print(newContainerSize);
 
     // Apply size limits
     if (newContainerSize > maxSize) {
@@ -85,6 +102,17 @@ class _MemoryCardState extends State<MemoryCard> {
     widget.size = new Size(newContainerSize, newContainerSize);
   }
 
+  Future<void> loadImageInfo(String imageUrl) async {
+    final ImageStream imageStream =
+        Image.network(imageUrl).image.resolve(ImageConfiguration.empty);
+    final ImageStreamListener listener =
+        ImageStreamListener((ImageInfo info, bool _) {
+      _imageInfoCompleter.complete(info);
+    });
+
+    imageStream.addListener(listener);
+  }
+
   @override
   Widget build(BuildContext context) {
     final ValueNotifier<Matrix4> notifier = ValueNotifier(Matrix4.identity());
@@ -92,14 +120,15 @@ class _MemoryCardState extends State<MemoryCard> {
     device.computeDeviceInfo(context);
     return MatrixGestureDetector(
       key: widget.cardKey,
-
       onMatrixUpdate: (m, tm, sm, rm) {
         notifier.value = m;
+        transform = m;
         double scale = m.getMaxScaleOnAxis();
-        // updateContainerSize(sm);
+        updateContainerSize(sm);
         // onSizeChanged(currentSize);
-        widget.position = m.getTranslation();
-        widget.rotation = rm.getRotation();
+        position = m.getTranslation();
+        rotation = rm.getRotation();
+        updateContainerSize(sm);
 
         // if (scale > maxScale) {
         //   m.scale(maxScale / scale);
@@ -107,20 +136,19 @@ class _MemoryCardState extends State<MemoryCard> {
         //   m.scale(minScale / scale);
         // }
 
-        if (widget.position[0] < 0) {
-          m.setTranslationRaw(0, widget.position[1], widget.position[2]);
-        } else if (widget.position[0] > device.width - 50) {
-          m.setTranslationRaw(
-              device.width - 50, widget.position[1], widget.position[2]);
-        } else if (widget.position[1] < 0) {
-          m.setTranslationRaw(widget.position[0], 0, widget.position[2]);
+        if (position[0] < 0) {
+          m.setTranslationRaw(0, position[1], position[2]);
+        } else if (position[0] > device.width) {
+          m.setTranslationRaw(device.width, position[1], position[2]);
+        } else if (position[1] < 0) {
+          m.setTranslationRaw(position[0], 0, position[2]);
         }
 
-        // setState(() {
-        //   widget.size = Size(100, 100);
-        //   widget.position = m.getTranslation();
-        //   widget.rotation = rm.getRotation();
-        // });
+        setState(() {
+          position = m.getTranslation();
+          rotation = rm.getRotation();
+          widget.initTransform = m;
+        });
 
         // if (position[0] < 0) {
         //   m.setTranslationRaw(0, position[1], position[2]);
@@ -164,73 +192,127 @@ class _MemoryCardState extends State<MemoryCard> {
 
   Widget imageMemory() {
     return Container(
+      transform: transform,
       height: widget.size.height,
       width: widget.size.width,
-      decoration: BoxDecoration(
-          border: Border.all(color: AppColors.main1, width: 3),
-          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-          image: DecorationImage(
-            fit: BoxFit.fill,
-            image: AssetImage(
-              widget.imagePath,
-            ),
-          )),
+      decoration: const BoxDecoration(
+        // color: Colors.red,
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),
+      child: FutureBuilder<ImageInfo>(
+        future: _imageInfoCompleter.future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            final imageInfo = snapshot.data!;
+            if (imageInfo.image.width > imageInfo.image.height)
+              imageActualSize = Size(widget.size.width, widget.size.width * imageInfo.image.height / imageInfo.image.width);
+            else if (imageInfo.image.width < imageInfo.image.height)
+              imageActualSize = Size(widget.size.height * imageInfo.image.width / imageInfo.image.height, widget.size.height);
+            else
+              imageActualSize = Size(widget.size.width, widget.size.height);
+            return Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                      widget.imagePath,
+                      width: imageActualSize.width,
+                      height: imageActualSize.height,
+                      fit: BoxFit.cover),
+                ),
+            );
+          } else {
+            return Center(
+              child: Container(
+                height: widget.size.height / 2,
+                width: widget.size.height / 2,
+                child: CircularProgressIndicator(
+                  color: AppColors.main3,
+                ),
+              ),
+            );
+          }
+        },
+      ),
     );
+
   }
 
   Widget videoMemory() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (_videoController.value.isPlaying) {
-            _videoController.pause();
-          } else {
-            _videoController.play();
-          }
-        });
-
-      },
-      child: Stack(
-        children: [
-          Container(
-            height: widget.size.height,
-            width: widget.size.width,
-            decoration: BoxDecoration(
-                border: Border.all(color: AppColors.main2, width: 3),
-                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+    return Container(
+      transform: transform,
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            if (_videoController.value.isPlaying) {
+              _videoController.pause();
+            } else {
+              _videoController.play();
+            }
+          });
+        },
+        child: Stack(
+          children: [
+            Container(
+              height: widget.size.height,
+              width: widget.size.width,
+              // decoration: const BoxDecoration(
+              //   borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              // ),
+              child: FutureBuilder(
+                future: _initializeVideoPlayerFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (_videoController.value.size.width > _videoController.value.size.height)
+                      videoActualSize = Size(widget.size.width, widget.size.width * _videoController.value.size.height / _videoController.value.size.width);
+                    else if (_videoController.value.size.width < _videoController.value.size.height)
+                      videoActualSize = Size(widget.size.height * _videoController.value.size.width / _videoController.value.size.height, widget.size.height);
+                    else
+                      videoActualSize = Size(widget.size.width, widget.size.height);
+                      return Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            height: videoActualSize.height,
+                            width: videoActualSize.width,
+                            child: VideoPlayer(_videoController),
+                          ),
+                        ),
+                    );
+                  } else {
+                    return Center(
+                      child: Container(
+                        height: widget.size.height / 2,
+                        width: widget.size.height / 2,
+                        child: CircularProgressIndicator(
+                          color: AppColors.main3,
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
             ),
-            child: FutureBuilder(
-              future: _initializeVideoPlayerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return AspectRatio(
-                    aspectRatio: _videoController.value.aspectRatio,
-                    child: VideoPlayer(_videoController),
-                  );
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
+            Container(
+              height: widget.size.height,
+              width: widget.size.width,
+              alignment: Alignment.center,
+              child: Icon(
+                size: widget.size.height / 4,
+                color: AppColors.main2,
+                _videoController.value.isPlaying
+                    ? null
+                    : Icons.play_circle_outline,
+              ),
             ),
-          ),
-          Container(
-            height: widget.size.height,
-            width: widget.size.width,
-            alignment: Alignment.center,
-
-            child: Icon(
-              size: widget.size.height / 4,
-              color: AppColors.main2,
-              _videoController.value.isPlaying ? null : Icons.play_circle_outline,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget textMemory() {
     return Container(
+      transform: transform,
       height: widget.size.height,
       width: widget.size.width,
       color: Colors.green,
