@@ -46,7 +46,7 @@ class _MemoryCardState extends State<MemoryCard> {
   Size currentSize = Size(200, 200);
   double maxScale = 2;
   double minScale = 0.75;
-  double maxSize = 300;
+  double maxSize = 1000;
   double minSize = 50;
   late Matrix4 transform;
   var position;
@@ -67,7 +67,7 @@ class _MemoryCardState extends State<MemoryCard> {
       // _videoController = VideoPlayerController.network('assets/videos/1.mp4');
       _initializeVideoPlayerFuture = _videoController.initialize();
     }
-    if (widget.type == MemoryCardType.image){
+    if (widget.type == MemoryCardType.image) {
       loadImageInfo(widget.imagePath);
     }
     super.initState();
@@ -128,7 +128,6 @@ class _MemoryCardState extends State<MemoryCard> {
         // onSizeChanged(currentSize);
         position = m.getTranslation();
         rotation = rm.getRotation();
-        updateContainerSize(sm);
 
         // if (scale > maxScale) {
         //   m.scale(maxScale / scale);
@@ -193,8 +192,6 @@ class _MemoryCardState extends State<MemoryCard> {
   Widget imageMemory() {
     return Container(
       transform: transform,
-      height: widget.size.height,
-      width: widget.size.width,
       decoration: const BoxDecoration(
         // color: Colors.red,
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -205,26 +202,32 @@ class _MemoryCardState extends State<MemoryCard> {
           if (snapshot.connectionState == ConnectionState.done) {
             final imageInfo = snapshot.data!;
             if (imageInfo.image.width > imageInfo.image.height)
-              imageActualSize = Size(widget.size.width, widget.size.width * imageInfo.image.height / imageInfo.image.width);
+              imageActualSize = Size(
+                  widget.size.width,
+                  widget.size.width *
+                      imageInfo.image.height /
+                      imageInfo.image.width);
             else if (imageInfo.image.width < imageInfo.image.height)
-              imageActualSize = Size(widget.size.height * imageInfo.image.width / imageInfo.image.height, widget.size.height);
+              imageActualSize = Size(
+                  widget.size.height *
+                      imageInfo.image.width /
+                      imageInfo.image.height,
+                  widget.size.height);
             else
               imageActualSize = Size(widget.size.width, widget.size.height);
-            return Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                      widget.imagePath,
-                      width: imageActualSize.width,
-                      height: imageActualSize.height,
-                      fit: BoxFit.cover),
-                ),
+            return Container(
+              width: imageActualSize.width,
+              height: imageActualSize.height,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(widget.imagePath, fit: BoxFit.cover),
+              ),
             );
           } else {
             return Center(
               child: Container(
-                height: widget.size.height / 2,
-                width: widget.size.height / 2,
+                height: widget.size.height / 3,
+                width: widget.size.height / 3,
                 child: CircularProgressIndicator(
                   color: AppColors.main3,
                 ),
@@ -234,7 +237,6 @@ class _MemoryCardState extends State<MemoryCard> {
         },
       ),
     );
-
   }
 
   Widget videoMemory() {
@@ -253,8 +255,6 @@ class _MemoryCardState extends State<MemoryCard> {
         child: Stack(
           children: [
             Container(
-              height: widget.size.height,
-              width: widget.size.width,
               // decoration: const BoxDecoration(
               //   borderRadius: BorderRadius.all(Radius.circular(10.0)),
               // ),
@@ -262,27 +262,52 @@ class _MemoryCardState extends State<MemoryCard> {
                 future: _initializeVideoPlayerFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
-                    if (_videoController.value.size.width > _videoController.value.size.height)
-                      videoActualSize = Size(widget.size.width, widget.size.width * _videoController.value.size.height / _videoController.value.size.width);
-                    else if (_videoController.value.size.width < _videoController.value.size.height)
-                      videoActualSize = Size(widget.size.height * _videoController.value.size.width / _videoController.value.size.height, widget.size.height);
+                    if (_videoController.value.size.width >
+                        _videoController.value.size.height)
+                      videoActualSize = Size(
+                          widget.size.width,
+                          widget.size.width *
+                              _videoController.value.size.height /
+                              _videoController.value.size.width);
+                    else if (_videoController.value.size.width <
+                        _videoController.value.size.height)
+                      videoActualSize = Size(
+                          widget.size.height *
+                              _videoController.value.size.width /
+                              _videoController.value.size.height,
+                          widget.size.height);
                     else
-                      videoActualSize = Size(widget.size.width, widget.size.height);
-                      return Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Container(
-                            height: videoActualSize.height,
-                            width: videoActualSize.width,
+                      videoActualSize =
+                          Size(widget.size.width, widget.size.height);
+                    return Stack(
+                      children: [
+                        Container(
+                          height: videoActualSize.height,
+                          width: videoActualSize.width,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
                             child: VideoPlayer(_videoController),
                           ),
                         ),
+                        Container(
+                          height: videoActualSize.height,
+                          width: videoActualSize.width,
+                          alignment: Alignment.center,
+                          child: Icon(
+                            size: widget.size.height / 4,
+                            color: AppColors.main2,
+                            _videoController.value.isPlaying
+                                ? null
+                                : Icons.play_circle_outline,
+                          ),
+                        ),
+                      ],
                     );
                   } else {
                     return Center(
                       child: Container(
-                        height: widget.size.height / 2,
-                        width: widget.size.height / 2,
+                        height: widget.size.height / 3,
+                        width: widget.size.height / 3,
                         child: CircularProgressIndicator(
                           color: AppColors.main3,
                         ),
@@ -290,18 +315,6 @@ class _MemoryCardState extends State<MemoryCard> {
                     );
                   }
                 },
-              ),
-            ),
-            Container(
-              height: widget.size.height,
-              width: widget.size.width,
-              alignment: Alignment.center,
-              child: Icon(
-                size: widget.size.height / 4,
-                color: AppColors.main2,
-                _videoController.value.isPlaying
-                    ? null
-                    : Icons.play_circle_outline,
               ),
             ),
           ],
