@@ -66,9 +66,9 @@ class _TaleBuilderState extends State<TaleBuilder>
             // for (int i = 0; i < numOfContainers; i++)
             //   MemoryCard(cardKey: _widgetKeyList[i], type: MemoryCardType.image,)
 
-                MemoryCard(cardKey: _widgetKeyList[0], type: MemoryCardType.image, imagePath: "assets/images/london_tale.jpg", size: containersSize[0], onSizeChanged: (newSize) {containersSize[0] = newSize;}, ),
-                MemoryCard(cardKey: _widgetKeyList[1], type: MemoryCardType.image, imagePath: "assets/images/winter_tale.jpg", size: containersSize[1], onSizeChanged: (newSize) {containersSize[1] = newSize;}, ),
-                MemoryCard(cardKey: _widgetKeyList[2], type: MemoryCardType.video, size: containersSize[2], onSizeChanged: (newSize) {containersSize[2] = newSize;}, ),
+                MemoryCard(cardKey: _widgetKeyList[0], order: 2, type: MemoryCardType.image, imagePath: "assets/images/london_tale.jpg", size: containersSize[0], onSizeChanged: (newSize) {containersSize[0] = newSize;}, ),
+                MemoryCard(cardKey: _widgetKeyList[1], order: 2, type: MemoryCardType.image, imagePath: "assets/images/winter_tale.jpg", size: containersSize[1], onSizeChanged: (newSize) {containersSize[1] = newSize;}, ),
+                MemoryCard(cardKey: _widgetKeyList[2], order: 1, type: MemoryCardType.video, size: containersSize[2], onSizeChanged: (newSize) {containersSize[2] = newSize;}, ),
                 // MemoryCard(cardKey: _widgetKeyList[3], type: MemoryCardType.text,),
           ],
           )

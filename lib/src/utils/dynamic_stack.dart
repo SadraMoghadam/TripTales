@@ -9,10 +9,16 @@ class DynamicStack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Sort the containers based on size in ascending order
+    // children.sort((a, b) {
+    //   double sizeA = (a as MemoryCard).size.height;
+    //   double sizeB = (b as MemoryCard).size.height;
+    //   return sizeB.compareTo(sizeA);
+    // });
+
     children.sort((a, b) {
-      double sizeA = (a as MemoryCard).size.height;
-      double sizeB = (b as MemoryCard).size.height;
-      return sizeB.compareTo(sizeA);
+      int orderA = (a as MemoryCard).order;
+      int orderB = (b as MemoryCard).order;
+      return orderB.compareTo(orderA);
     });
 
     return Stack(
