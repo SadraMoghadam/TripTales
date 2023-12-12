@@ -12,20 +12,17 @@ class HomePage extends StatelessWidget {
     device.computeDeviceInfo(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Container(
-          height: device.height - 20,
-          width: device.width - 20,
-          alignment: Alignment.center,
-          padding: EdgeInsets.all(10),
-          margin: EdgeInsets.all(10),
-          child: Column(
-            children: <Widget>[
-              Flexible(fit: FlexFit.loose, flex: 7, child: buildHome()),
-              Flexible(
-                  fit: FlexFit.tight, flex: 1, child: buildButtons(context)),
-            ],
-          ),
+      body: Container(
+        height: device.height - 20,
+        width: device.width - 20,
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Flexible(fit: FlexFit.loose, flex: 7, child: buildHome()),
+            Flexible(fit: FlexFit.tight, flex: 1, child: buildButtons(context)),
+          ],
         ),
       ),
     );

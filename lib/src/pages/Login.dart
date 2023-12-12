@@ -81,8 +81,8 @@ class _LoginPageState extends State<LoginPage> {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
         child: Container(
             height: device.height - 20,
             width: device.width - 20,
@@ -134,7 +134,9 @@ class _LoginPageState extends State<LoginPage> {
         const Text(
           'Welcome Back',
           style: TextStyle(
-              color: AppColors.text1, fontSize: 25, fontWeight: FontWeight.w900),
+              color: AppColors.text1,
+              fontSize: 25,
+              fontWeight: FontWeight.w900),
         ),
       ],
     );
@@ -195,7 +197,8 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {},
                   child: const Text('Forgot Password',
                       style: TextStyle(
-                          color: AppColors.text2, decoration: TextDecoration.underline)),
+                          color: AppColors.text2,
+                          decoration: TextDecoration.underline)),
                 )
               ],
             )),
@@ -221,7 +224,8 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.pushReplacementNamed(context, '/registerPage'),
             child: const Text('Create Account',
                 style: TextStyle(
-                    color: AppColors.text2, decoration: TextDecoration.underline)),
+                    color: AppColors.text2,
+                    decoration: TextDecoration.underline)),
           ),
         ]),
       ],

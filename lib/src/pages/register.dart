@@ -82,7 +82,8 @@ class _RegisterPageState extends State<RegisterPage> {
         _selectedDate = picked;
       });
     }
-    _birthDateController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!).toString();
+    _birthDateController.text =
+        DateFormat('yyyy-MM-dd').format(_selectedDate!).toString();
   }
 
   @override
@@ -131,8 +132,8 @@ class _RegisterPageState extends State<RegisterPage> {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
         child: Container(
           height: device.height - 20,
           width: device.width - 20,
@@ -144,12 +145,12 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Flexible(fit: FlexFit.tight, flex: 1, child: buildHeader()),
-                Flexible(fit: FlexFit.tight, flex: 11, child: buildBody()),
+                Flexible(fit: FlexFit.tight, flex: 3, child: buildHeader()),
+                Flexible(fit: FlexFit.tight, flex: 24, child: buildBody()),
                 Spacer(
                   flex: 1,
                 ),
-                Flexible(fit: FlexFit.tight, flex: 2, child: buildFooter())
+                Flexible(fit: FlexFit.tight, flex: 4, child: buildFooter())
               ],
             ),
           ),
@@ -159,10 +160,12 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget buildHeader() {
-    return const Text(
-      'Create your account for free',
-      style: TextStyle(
-          color: AppColors.text1, fontSize: 20, fontWeight: FontWeight.w900),
+    return const Center(
+      child: Text(
+        'Create your account for free',
+        style: TextStyle(
+            color: AppColors.text1, fontSize: 20, fontWeight: FontWeight.w900),
+      ),
     );
   }
 
@@ -244,42 +247,43 @@ class _RegisterPageState extends State<RegisterPage> {
               validator: _validator.passwordValidator,
             )),
         Flexible(
-            fit: FlexFit.tight,
-            flex: 1,
-            child: CustomTextField(
-              controller: _confirmPasswordController,
-              labelText: 'Confirm Password',
-              hintText: 'Enter your password again',
-              prefixIcon: Icons.password,
-              isPassword: true,
-              isPasswordVisible: _isConfirmPasswordVisible,
-              onVisibilityPressed: onConfirmPasswordVisibilityPressed,
-              obscureText: !_isConfirmPasswordVisible,
-              keyboardType: TextInputType.visiblePassword,
-              textInputAction: TextInputAction.next,
-              validator: (value) => _validator.confirmPasswordValidator(
-                  value, _passwordController.text),
-            ),),
+          fit: FlexFit.tight,
+          flex: 1,
+          child: CustomTextField(
+            controller: _confirmPasswordController,
+            labelText: 'Confirm Password',
+            hintText: 'Enter your password again',
+            prefixIcon: Icons.password,
+            isPassword: true,
+            isPasswordVisible: _isConfirmPasswordVisible,
+            onVisibilityPressed: onConfirmPasswordVisibilityPressed,
+            obscureText: !_isConfirmPasswordVisible,
+            keyboardType: TextInputType.visiblePassword,
+            textInputAction: TextInputAction.next,
+            validator: (value) => _validator.confirmPasswordValidator(
+                value, _passwordController.text),
+          ),
+        ),
         Flexible(
             child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              alignment: WrapAlignment.center,
-              children: [
-                const Text(
-                  'Pasword Strength',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    color: AppColors.text2,
-                  ),
-                ),
-                PasswordStrengthIndicator(
-                  hasUppercase: hasUppercase,
-                  hasLowercase: hasLowercase,
-                  hasDigits: hasDigits,
-                  hasSpecialCharacters: hasSpecialCharacters,
-                ),
-              ],
-            ))
+          crossAxisAlignment: WrapCrossAlignment.center,
+          alignment: WrapAlignment.center,
+          children: [
+            const Text(
+              'Pasword Strength',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                color: AppColors.text2,
+              ),
+            ),
+            PasswordStrengthIndicator(
+              hasUppercase: hasUppercase,
+              hasLowercase: hasLowercase,
+              hasDigits: hasDigits,
+              hasSpecialCharacters: hasSpecialCharacters,
+            ),
+          ],
+        ))
       ],
     );
   }
@@ -304,7 +308,8 @@ class _RegisterPageState extends State<RegisterPage> {
           },
           child: const Text('Already have an account?',
               style: TextStyle(
-                  color: AppColors.text2, decoration: TextDecoration.underline)),
+                  color: AppColors.text2,
+                  decoration: TextDecoration.underline)),
         ),
       ],
     );
