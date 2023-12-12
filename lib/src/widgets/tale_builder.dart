@@ -22,7 +22,7 @@ class _TaleBuilderState extends State<TaleBuilder>
   late final AnimationController _controller;
   late final AnimationController _controller_place_here;
 
-  List<Size> containersSize = [Size(200, 500), Size(200, 200), Size(200, 200)];
+  List<Size> containersSize = [Size(300, 300), Size(300, 300), Size(300, 300)];
 
   static const int numOfContainers = 4;
 

@@ -17,8 +17,8 @@ class TalePage extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: CustomAppBar(
-          body_tale: buildBody(device),
-          isPinned: false,
+          bodyTale: buildBody(device),
+          showIcon: true,
         ));
   }
 

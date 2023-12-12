@@ -33,12 +33,11 @@ dependencies:
   lottie: ^2.7.0
   flutter:
     sdk: flutter
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  scroll_snap_list: ^0.9.1
+  image_picker: ^1.0.4
+  image_cropper: ^5.0.1
+  firebase_core: ^2.24.2
   cupertino_icons: ^1.0.2
-  firebase_core: ^2.24.0
   matrix_gesture_detector: ^0.2.0-nullsafety.1
   video_player: ^2.8.1
 
@@ -80,6 +79,15 @@ flutter:
    - assets/images/winter_tale.jpg
    - assets/images/london_tale.jpg
    - assets/videos/1.mp4
+   - assets/images/roadTrip_tale.jpg
+   - assets/images/china_tale.jpg
+   - assets/images/solo_tale.jpg
+   - assets/images/canvas1.jpg
+   - assets/images/canvas2.jpg
+   - assets/images/canvas3.jpg
+   - assets/images/canvas4.jpg
+   - assets/images/canvas5.jpg
+   - assets/images/canvas6.jpg
    
 
   # An image asset can refer to one or more resolution-specific "variants", see

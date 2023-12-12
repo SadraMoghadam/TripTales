@@ -26,11 +26,11 @@ class _LoginPageState extends State<LoginPage> {
 
   void _submit() {
     final isValid = _formKey.currentState?.validate();
-    if (isValid == null || !isValid) {
-      return;
-    }
+    // if (isValid == null || !isValid) {
+    //   return;
+    // }
     _formKey.currentState?.save();
-    Navigator.pushReplacementNamed(context, '/');
+    Navigator.pushReplacementNamed(context, '/customMenu');
   }
 
   void checkPasswordStrength(String value) {
