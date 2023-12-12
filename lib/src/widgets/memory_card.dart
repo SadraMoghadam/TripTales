@@ -53,12 +53,15 @@ class _MemoryCardState extends State<MemoryCard> {
   var rotation;
   late Size imageActualSize;
   late Size videoActualSize;
+  // late List<GlobalKey> _widgetKeyList;
 
   // late ImageInfo _imageInfo;
   final Completer<ImageInfo> _imageInfoCompleter = Completer<ImageInfo>();
 
   @override
   void initState() {
+    // _widgetKeyList = List.generate(3,
+    //         (index) => GlobalObjectKey<FormState>(index*1000 + widget.cardKey.hashCode.hashCode));
     if (widget.type == MemoryCardType.video) {
       _videoController = VideoPlayerController.networkUrl(Uri.parse(
         'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
@@ -112,7 +115,19 @@ class _MemoryCardState extends State<MemoryCard> {
 
     imageStream.addListener(listener);
   }
+  void _getWidgetInfo(GlobalKey key) {
+    final RenderBox renderBox =
+    key.currentContext?.findRenderObject() as RenderBox;
+    key.currentContext?.size;
 
+    final Size size = renderBox.size;
+    print('Size: ${size.width}, ${size.height}');
+
+    // final Offset offset = renderBox.localToGlobal(Offset.zero);
+    // print('Offset: ${offset.dx}, ${offset.dy}');
+    // print(
+    //     'Position: ${(offset.dx + size.width) / 2}, ${(offset.dy + size.height) / 2}');
+  }
   @override
   Widget build(BuildContext context) {
     final ValueNotifier<Matrix4> notifier = ValueNotifier(Matrix4.identity());
@@ -124,7 +139,7 @@ class _MemoryCardState extends State<MemoryCard> {
         notifier.value = m;
         transform = m;
         double scale = m.getMaxScaleOnAxis();
-        updateContainerSize(sm);
+        // updateContainerSize(sm);
         // onSizeChanged(currentSize);
         position = m.getTranslation();
         rotation = rm.getRotation();
@@ -134,14 +149,18 @@ class _MemoryCardState extends State<MemoryCard> {
         // }else if (scale < minScale) {
         //   m.scale(minScale / scale);
         // }
+        // _getWidgetInfo(_widgetKeyList[0]);
 
-        if (position[0] < 0) {
-          m.setTranslationRaw(0, position[1], position[2]);
-        } else if (position[0] > device.width) {
-          m.setTranslationRaw(device.width, position[1], position[2]);
-        } else if (position[1] < 0) {
-          m.setTranslationRaw(position[0], 0, position[2]);
-        }
+        // if (position[0] < 0) {
+        //   m.setTranslationRaw(0, position[1], position[2]);
+        // } else if (position[0] > device.width - 50) {
+        //   m.setTranslationRaw(device.width - 50, position[1], position[2]);
+        // } else if (position[1] < 0) {
+        //   m.setTranslationRaw(position[0], 0, position[2]);
+        // }
+        if (position[1] < 0) {
+            m.setTranslationRaw(position[0], 0, position[2]);
+          }
 
         setState(() {
           position = m.getTranslation();
@@ -201,21 +220,24 @@ class _MemoryCardState extends State<MemoryCard> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             final imageInfo = snapshot.data!;
-            if (imageInfo.image.width > imageInfo.image.height)
+            if (imageInfo.image.width > imageInfo.image.height) {
               imageActualSize = Size(
                   widget.size.width,
                   widget.size.width *
                       imageInfo.image.height /
                       imageInfo.image.width);
-            else if (imageInfo.image.width < imageInfo.image.height)
+            } else if (imageInfo.image.width < imageInfo.image.height) {
               imageActualSize = Size(
                   widget.size.height *
                       imageInfo.image.width /
                       imageInfo.image.height,
                   widget.size.height);
-            else
+            }
+            else {
               imageActualSize = Size(widget.size.width, widget.size.height);
+            }
             return Container(
+              // key: _widgetKeyList[0],
               width: imageActualSize.width,
               height: imageActualSize.height,
               child: ClipRRect(
@@ -228,7 +250,7 @@ class _MemoryCardState extends State<MemoryCard> {
               child: Container(
                 height: widget.size.height / 3,
                 width: widget.size.height / 3,
-                child: CircularProgressIndicator(
+                child: const CircularProgressIndicator(
                   color: AppColors.main3,
                 ),
               ),
@@ -263,25 +285,28 @@ class _MemoryCardState extends State<MemoryCard> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (_videoController.value.size.width >
-                        _videoController.value.size.height)
+                        _videoController.value.size.height) {
                       videoActualSize = Size(
                           widget.size.width,
                           widget.size.width *
                               _videoController.value.size.height /
                               _videoController.value.size.width);
-                    else if (_videoController.value.size.width <
-                        _videoController.value.size.height)
+                    } else if (_videoController.value.size.width <
+                        _videoController.value.size.height) {
                       videoActualSize = Size(
                           widget.size.height *
                               _videoController.value.size.width /
                               _videoController.value.size.height,
                           widget.size.height);
-                    else
+                    }
+                    else {
                       videoActualSize =
                           Size(widget.size.width, widget.size.height);
+                    }
                     return Stack(
                       children: [
                         Container(
+                          // key: _widgetKeyList[1],
                           height: videoActualSize.height,
                           width: videoActualSize.width,
                           child: ClipRRect(
@@ -308,7 +333,7 @@ class _MemoryCardState extends State<MemoryCard> {
                       child: Container(
                         height: widget.size.height / 3,
                         width: widget.size.height / 3,
-                        child: CircularProgressIndicator(
+                        child: const CircularProgressIndicator(
                           color: AppColors.main3,
                         ),
                       ),
@@ -325,10 +350,20 @@ class _MemoryCardState extends State<MemoryCard> {
 
   Widget textMemory() {
     return Container(
+        // key: _widgetKeyList[2],
       transform: transform,
-      height: widget.size.height,
-      width: widget.size.width,
-      color: Colors.green,
+        child: const FittedBox(
+          fit: BoxFit.fill,
+          child:
+          Text(
+            "TEST 123 !@# ",
+            style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.w600,
+                color: AppColors.text1,
+                fontStyle: FontStyle.italic,
+            ),
+          ),)
     );
   }
 

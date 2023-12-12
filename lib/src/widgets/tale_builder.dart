@@ -19,13 +19,12 @@ class _TaleBuilderState extends State<TaleBuilder>
       numOfContainers, (index) => GlobalObjectKey<FormState>(index));
   double containerTop = 0.0;
   double containerLeft = 0.0;
-  double safeAreaSpace = 70.0 - 2;
   late final AnimationController _controller;
   late final AnimationController _controller_place_here;
 
   List<Size> containersSize = [Size(200, 500), Size(200, 200), Size(200, 200)];
 
-  static const int numOfContainers = 3;
+  static const int numOfContainers = 4;
 
   @override
   void initState() {
@@ -69,6 +68,7 @@ class _TaleBuilderState extends State<TaleBuilder>
                 MemoryCard(cardKey: _widgetKeyList[0], order: 1, type: MemoryCardType.image, initTransform: Matrix4.identity(), imagePath: "https://picsum.photos/200/300", size: containersSize[0]),
                 MemoryCard(cardKey: _widgetKeyList[1], order: 3, type: MemoryCardType.image, initTransform: Matrix4.identity(), imagePath: "https://picsum.photos/900/500", size: containersSize[1]),
                 MemoryCard(cardKey: _widgetKeyList[2], order: 2, type: MemoryCardType.video, initTransform: Matrix4.identity(), size: containersSize[2]),
+                MemoryCard(cardKey: _widgetKeyList[3], order: 0, type: MemoryCardType.text, initTransform: Matrix4.identity(), size: containersSize[2]),
                 // MemoryCard(cardKey: _widgetKeyList[3], type: MemoryCardType.text,),
           ],
           )
