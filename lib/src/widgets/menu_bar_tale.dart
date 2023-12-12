@@ -2,123 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trip_tales/src/pages/Login.dart';
 import 'package:trip_tales/src/pages/create_tale_page.dart';
+import 'package:trip_tales/src/pages/favorite_tales.dart';
 import 'package:trip_tales/src/pages/my_tales.dart';
 import 'package:trip_tales/src/pages/register.dart';
 import 'package:trip_tales/src/utils/device_info.dart';
 import '../constants/color.dart';
 
 class CustomMenu extends StatefulWidget {
-  const CustomMenu({Key? key}) : super(key: key);
-
   @override
   _CustomMenuState createState() => _CustomMenuState();
 }
 
 class _CustomMenuState extends State<CustomMenu> {
-  int _currentIndex = 0;
-  // List pages = [MyTalesPage(), CreateTalePage(), RegisterPage()];
-
-  void onTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
+  int index = 0;
+  final screens = [MyTalesPage(), FavoriteTales(const []), LoginPage()];
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: _bottomNavigationBar(),
-      //body: pages[_currentIndex],
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        body: screens[index],
+        bottomNavigationBar: _bottomNavigationBar(),
+      );
 
   _bottomNavigationBar() {
     return NavigationBar(
       backgroundColor: Colors.white,
       animationDuration: const Duration(seconds: 1),
       labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-      height: 60,
-      // selectedIndex: MyTalesPage();
-      // _currentIndex,
-      onDestinationSelected: onTap,
+      height: 48,
+      selectedIndex: index,
+      onDestinationSelected: (index) => setState(() => this.index = index),
       destinations: const [
         NavigationDestination(
+          icon: Icon(Icons.home_outlined),
           selectedIcon: Icon(Icons.home),
-          icon: Icon(Icons.home),
           label: "Home",
+          tooltip: "Home Page",
         ),
         NavigationDestination(
-          icon: Icon(Icons.add_circle_outline_rounded),
-          label: "Add",
+          icon: Icon(Icons.favorite_border_rounded),
+          selectedIcon: Icon(Icons.favorite),
+          label: "Favorite",
+          tooltip: "Favorite Tales",
         ),
         NavigationDestination(
+          icon: CircleAvatar(
+            radius: 15.0,
+            backgroundImage: AssetImage(
+              'assets/images/profile_pic.png',
+            ),
+          ),
+          label: 'Profile',
+          tooltip: "Profile Settings",
+        ),
+/*
           icon: Icon(Icons.search),
+          selectedIcon: Icon(Icons.saved_search),
           label: "Search",
-        ),
+         
+        ),  */
       ],
     );
   }
-/*
-  _getPages() {
-    switch (_currentIndex) {
-      case 0:
-        return MyTalesPage();
-      case 1:
-        return LoginPage(); // Create Tale Page
-      case 2:
-        return RegisterPage(); // Search tale in current page
-    }
-  }
-}
-*/
-  /*
-     MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Container(),
-
-        color: Color.fromARGB(255, 255, 255, 255),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: IconButton(
-                    icon: Icon(
-                      Icons.home,
-                      color: ctext2,
-                    ), //
-                    onPressed: () {
-                      // Implement action for Home button
-                    }),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: IconButton(
-                    icon: Icon(
-                      Icons.add_circle_outline,
-                      color: ctext2,
-                    ), //
-                    onPressed: () {
-                      // Implement action for Home button
-                    }),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: IconButton(
-                    icon: Icon(
-                      Icons.search,
-                      color: ctext2,
-                    ), //
-                    onPressed: () {
-                      // Implement action for Home button
-                    }),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-    */
 }

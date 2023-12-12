@@ -73,6 +73,9 @@ flutter:
    - assets/images/createTale_background.jpg
    - assets/images/winter_tale.jpg
    - assets/images/london_tale.jpg
+   - assets/images/roadTrip_tale.jpg
+   - assets/images/china_tale.jpg
+   - assets/images/solo_tale.jpg
    - assets/images/canvas1.jpg
    - assets/images/canvas2.jpg
    - assets/images/canvas3.jpg

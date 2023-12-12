@@ -35,7 +35,7 @@ class SelectPhoto extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: ctext2,
+              color: Colors.white,
             ),
             const SizedBox(
               width: 14,
@@ -43,9 +43,9 @@ class SelectPhoto extends StatelessWidget {
             Text(
               textLabel,
               style: const TextStyle(
-                fontSize: 18,
-                color: ctext2,
-              ),
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
             )
           ],
         ),

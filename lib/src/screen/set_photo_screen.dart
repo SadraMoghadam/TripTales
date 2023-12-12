@@ -126,10 +126,8 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                 ),
               ],
             ),
-            //   ),
           ],
         ),
-        //    ),
       ),
     );
   }

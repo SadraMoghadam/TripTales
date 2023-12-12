@@ -17,6 +17,7 @@ class _CreateTalePage extends State<CreateTalePage> {
   //final Validator _validator = Validator();
   late final TextEditingController _taleNameController;
   final _formKey = GlobalKey<FormState>();
+  int selectedIndex = -1; // Initially no item is selected
 
   void _submit() {
     final isValid = _formKey.currentState?.validate();
@@ -24,7 +25,7 @@ class _CreateTalePage extends State<CreateTalePage> {
       return;
     }
     _formKey.currentState?.save();
-    Navigator.pushReplacementNamed(context, '/');
+    Navigator.pushNamed(context, '/');
   }
 
   @override
@@ -46,10 +47,10 @@ class _CreateTalePage extends State<CreateTalePage> {
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CustomAppBar(
-        body_tale: buildBody(),
+    return Scaffold(
+      body: CustomAppBar(
+        bodyTale: buildBody(),
+        showIcon: true,
       ),
     );
   }
@@ -63,11 +64,6 @@ class _CreateTalePage extends State<CreateTalePage> {
           fit: FlexFit.tight,
           flex: 11,
           child: buildScreen(),
-        ),
-        Flexible(
-          fit: FlexFit.tight,
-          flex: 1,
-          child: buildFooter(),
         ),
       ],
     );
@@ -126,13 +122,13 @@ class _CreateTalePage extends State<CreateTalePage> {
           SizedBox(
             height: 50,
             child: CustomButton(
-              fontSize: 30,
-              padding: 2,
-              onPressed: () => _submit,
-              backgroundColor: cmain2,
-              textColor: Colors.white,
-              text: "Start Creating",
-            ),
+                fontSize: 30,
+                padding: 2,
+                backgroundColor: cmain2,
+                textColor: Colors.white,
+                text: "Start Creating",
+                onPressed: () => Navigator.pushNamed(
+                    context, '/loginPage')), //should be changed with TALE PAGE
           ),
           const SizedBox(
             height: 10,
@@ -152,34 +148,66 @@ class _CreateTalePage extends State<CreateTalePage> {
             CustomCanvas(
               talePath: 'assets/images/canvas1.jpg',
               taleName: 'Nostalgic',
+              onTap: () {
+                setState(() {
+                  selectedIndex = 0; // Mark this item as selected
+                });
+              },
+              isSelected: selectedIndex == 0, // Check if this item is selected
             ),
             CustomCanvas(
               talePath: 'assets/images/canvas2.jpg',
               taleName: 'Village',
+              onTap: () {
+                setState(() {
+                  selectedIndex = 1; // Mark this item as selected
+                });
+              },
+              isSelected: selectedIndex == 1, // Check if this item is selected
             ),
             CustomCanvas(
               talePath: 'assets/images/canvas3.jpg',
               taleName: 'Cities',
+              onTap: () {
+                setState(() {
+                  selectedIndex = 2; // Mark this item as selected
+                });
+              },
+              isSelected: selectedIndex == 2, // Check if this item is selected
             ),
             CustomCanvas(
               talePath: 'assets/images/canvas4.jpg',
               taleName: 'Winter',
+              onTap: () {
+                setState(() {
+                  selectedIndex = 3; // Mark this item as selected
+                });
+              },
+              isSelected: selectedIndex == 3, // Check if this item is selected
             ),
             CustomCanvas(
               talePath: 'assets/images/canvas5.jpg',
               taleName: 'Summer',
+              onTap: () {
+                setState(() {
+                  selectedIndex = 4; // Mark this item as selected
+                });
+              },
+              isSelected: selectedIndex == 4, // Check if this item is selected
             ),
             CustomCanvas(
               talePath: 'assets/images/canvas6.jpg',
               taleName: 'Spring',
+              onTap: () {
+                setState(() {
+                  selectedIndex = 5; // Mark this item as selected
+                });
+              },
+              isSelected: selectedIndex == 5, // Check if this item is selected
             ),
           ],
         ),
       ),
     );
-  }
-
-  Widget buildFooter() {
-    return const CustomMenu();
   }
 }
