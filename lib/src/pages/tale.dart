@@ -14,9 +14,9 @@ class TalePage extends StatelessWidget {
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: CustomAppBar(
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: CustomAppBar(
           bodyTale: buildBody(device),
           showIcon: true,
         ));

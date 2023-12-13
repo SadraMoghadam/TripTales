@@ -129,13 +129,7 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      /*
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5, top: 5),
-          child: */
-      body: SizedBox(
+    return SizedBox(
         height: 320,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,7 +206,6 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
             ),
           ],
         ),
-      ),
     );
   }
 }

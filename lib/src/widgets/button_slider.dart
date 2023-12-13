@@ -62,6 +62,19 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
             bottom: 0,
             right: 0,
             child: AnimatedContainer(
+              height: 100,
+              width: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 80,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
               duration: Duration(seconds: 0),
               child: GestureDetector(
                 key: ValueKey<int>(0),
@@ -106,7 +119,15 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
         child: Container(
           padding: const EdgeInsets.all(12),
           margin: const EdgeInsets.all(23),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
             shape: BoxShape.circle,
             color: AppColors.main2,
           ),

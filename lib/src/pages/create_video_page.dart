@@ -47,12 +47,14 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return AlertDialog(
+      elevation: 10,
+      shadowColor: Colors.grey,
       title: const Center(
           child: Text(
-            'Add new video',
-            style: TextStyle(
-                color: AppColors.main1, fontSize: 25, fontWeight: FontWeight.w700),
-          )),
+        'Add new video',
+        style: TextStyle(
+            color: AppColors.main1, fontSize: 25, fontWeight: FontWeight.w700),
+      )),
       insetPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
@@ -71,51 +73,52 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
   }
 
   Widget buildBody(DeviceInfo device) {
-    return Container(
-      height: device.height,
-      width: device.width,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            Flexible(
-                flex: 3,
+    return SingleChildScrollView(
+      child: Container(
+        height: device.height - 240,
+        width: device.width,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Flexible(
+                  flex: 3,
+                  fit: FlexFit.tight,
+                  child: Center(
+                    child: CustomTextField(
+                      controller: _nameController,
+                      labelText: 'Video name',
+                      hintText: 'Enter your video name',
+                      prefixIcon: Icons.abc,
+                      obscureText: false,
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.next,
+                      validator: _validator.nameValidator,
+                    ),
+                  )),
+              Flexible(
+                flex: 11,
+                fit: FlexFit.tight,
+                child: Container(
+                  height: 310,
+                  child: SetPhotoScreen(isImage: false),
+                ),
+              ),
+              Flexible(
+                flex: 2,
                 fit: FlexFit.tight,
                 child: Center(
-                  child: CustomTextField(
-                    controller: _nameController,
-                    labelText: 'Video name',
-                    hintText: 'Enter your video name',
-                    prefixIcon: Icons.abc,
-                    obscureText: false,
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
-                    validator: _validator.nameValidator,
-                  ),
-                )),
-            Flexible(
-              flex: 11,
-              fit: FlexFit.tight,
-              child: Container(
-                height: 310,
-                child: SetPhotoScreen(isImage: false),
-              ),
-            ),
-            Flexible(
-              flex: 2,
-              fit: FlexFit.tight,
-              child: Center(
-                  child: CustomButton(
-                      height: 20,
-                      width: 200,
-                      text: "Submit",
-                      textColor: Colors.white,
-                      onPressed: () => Navigator.of(context).pop())),
-            )
-          ],
+                    child: CustomButton(
+                        height: 20,
+                        width: 200,
+                        text: "Submit",
+                        textColor: Colors.white,
+                        onPressed: () => Navigator.of(context).pop())),
+              )
+            ],
+          ),
         ),
       ),
     );
   }
-
 }
