@@ -5,10 +5,17 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/widgets/button.dart';
+import 'package:video_player/video_player.dart';
 import 'select_photo_options_screen.dart';
 
 class SetPhotoScreen extends StatefulWidget {
-  const SetPhotoScreen({super.key});
+  final bool isImage;
+
+  const SetPhotoScreen({
+    super.key,
+    this.isImage = true,
+  });
+
   static const id = 'set_photo_screen';
 
   @override
@@ -17,6 +24,26 @@ class SetPhotoScreen extends StatefulWidget {
 
 class _SetPhotoScreenState extends State<SetPhotoScreen> {
   File? _image;
+  XFile? _video;
+  late VideoPlayerController _videoController;
+
+  @override
+  void initState() {
+    if (!widget.isImage) {
+      _videoController = VideoPlayerController.networkUrl(Uri.parse(
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+      ));
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (!widget.isImage) {
+      _videoController.dispose();
+    }
+    super.dispose();
+  }
 
   Future _pickImage(ImageSource source) async {
     try {
@@ -26,6 +53,25 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
       img = await _cropImage(imageFile: img);
       setState(() {
         _image = img;
+        Navigator.of(context).pop();
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future _pickVideo(ImageSource source) async {
+    try {
+      final video = await ImagePicker().pickVideo(source: source);
+      if (video == null) return;
+      setState(() {
+        _video = video;
+        _videoController = VideoPlayerController.file(File(video.path))
+          ..initialize().then((_) {
+            setState(() {});
+            _videoController.play();
+          });
         Navigator.of(context).pop();
       });
     } on PlatformException catch (e) {
@@ -61,6 +107,26 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
     );
   }
 
+  void _showSelectVideoOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.28,
+          maxChildSize: 0.4,
+          minChildSize: 0.28,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: SelectPhotoOptionsScreen(
+                onTap: _pickVideo,
+              ),
+            );
+          }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +145,9 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
-                  _showSelectPhotoOptions(context);
+                  widget.isImage
+                      ? _showSelectPhotoOptions(context)
+                      : _showSelectVideoOptions(context);
                 },
                 child: Center(
                   child: Container(
@@ -90,22 +158,36 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                       borderRadius: BorderRadius.circular(15),
                       color: Colors.grey.shade200,
                     ),
-                    child: Center(
-                      child: _image == null
-                          ? const Text(
-                              'No Tale image selected',
-                              style: TextStyle(fontSize: 20),
-                            )
-                          : Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: FileImage(_image!),
-                                ),
-                              ),
-                            ),
-                    ),
+                    child: widget.isImage
+                        ? Center(
+                            child: _image == null
+                                ? const Text(
+                                    'No image selected',
+                                    style: TextStyle(fontSize: 20),
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: FileImage(_image!),
+                                      ),
+                                    ),
+                                  ),
+                          )
+                        : Center(
+                            child: _video == null
+                                ? const Text(
+                                    'No video selected',
+                                    style: TextStyle(fontSize: 20),
+                                  )
+                                : Container(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: VideoPlayer(_videoController),
+                                    ),
+                                  ),
+                          ),
                   ),
                 ),
               ),
@@ -119,10 +201,12 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
               children: [
                 CustomButton(
                   padding: 10,
-                  onPressed: () => _showSelectPhotoOptions(context),
+                  onPressed: () => widget.isImage
+                      ? _showSelectPhotoOptions(context)
+                      : _showSelectVideoOptions(context),
                   backgroundColor: AppColors.main2,
                   textColor: Colors.white,
-                  text: 'Add a Photo',
+                  text: widget.isImage ? 'Add Image' : 'Add Video',
                 ),
               ],
             ),

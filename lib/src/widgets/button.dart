@@ -89,8 +89,8 @@ class CustomButton extends StatelessWidget {
             if (icon != null) SizedBox(width: 8.0),
             Text(
               text,
-              style: const TextStyle(
-                fontSize: 18,
+              style: TextStyle(
+                fontSize: this.fontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),

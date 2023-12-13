@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:lottie/lottie.dart';
+import 'package:trip_tales/src/constants/memory_card_type.dart';
+import 'package:trip_tales/src/pages/create_image_page.dart';
+
+import '../pages/create_video_page.dart';
 
 class ButtonSlider extends StatefulWidget {
   @override
@@ -12,6 +16,24 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
   static const String buttonText = 'Add Memory';
   late final AnimationController _controller;
   late Animation<Offset> _slideAnimation;
+
+  Future<void> onImageButtonClick() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CreateImagePage();
+        }
+    );
+  }
+
+  Future<void> onVideoButtonClick() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CreateVideoPage();
+        }
+    );
+  }
 
   @override
   void initState() {
@@ -33,9 +55,9 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
     return Container(
       child: Stack(
         children: [
-          buildButton(Icons.text_snippet_rounded, const Offset(0.0, -3.6)),
-          buildButton(Icons.video_library_rounded, const Offset(0.0, -2.45)),
-          buildButton(Icons.image, const Offset(0.0, -1.3)),
+          buildButton(MemoryCardType.text, Icons.text_snippet_rounded, const Offset(0.0, -3.6)),
+          buildButton(MemoryCardType.video, Icons.video_library_rounded, const Offset(0.0, -2.45)),
+          buildButton(MemoryCardType.image, Icons.image, const Offset(0.0, -1.3)),
           Positioned(
             bottom: 0,
             right: 0,
@@ -72,7 +94,7 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildButton(IconData icon, Offset finalPosition) {
+  Widget buildButton(MemoryCardType type, IconData icon, Offset finalPosition) {
     return Positioned(
       bottom: 0,
       right: 0,
@@ -89,8 +111,16 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
             color: AppColors.main2,
           ),
           child: GestureDetector(
-            onTap: () {
-              // Your button action here
+            onTap: () async{
+              if (type == MemoryCardType.image) {
+                await onImageButtonClick();
+              }
+              else if (type == MemoryCardType.video) {
+                await onVideoButtonClick();
+              }
+              else if (type == MemoryCardType.text) {
+                await onVideoButtonClick();
+              }
             },
             child: Icon(
               icon,

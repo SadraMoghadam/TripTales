@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         '/talePage': (context) => TalePage(),
         '/favoriteTalesPage': (context) => FavoriteTales([]),
       },
-      initialRoute: '/',
+      initialRoute: '/talePage',
     );
   }
 }
