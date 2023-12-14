@@ -362,6 +362,7 @@ class _MemoryCardState extends State<MemoryCard> {
                 fontWeight: FontWeight.w600,
                 color: AppColors.text1,
                 fontStyle: FontStyle.italic,
+
             ),
           ),)
     );

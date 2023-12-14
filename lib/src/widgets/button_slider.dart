@@ -3,6 +3,7 @@ import 'package:trip_tales/src/constants/color.dart';
 import 'package:lottie/lottie.dart';
 import 'package:trip_tales/src/constants/memory_card_type.dart';
 import 'package:trip_tales/src/pages/create_image_page.dart';
+import 'package:trip_tales/src/pages/create_text_page.dart';
 
 import '../pages/create_video_page.dart';
 
@@ -31,6 +32,15 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
         context: context,
         builder: (BuildContext context) {
           return CreateVideoPage();
+        }
+    );
+  }
+
+  Future<void> onTextButtonClick() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CreateTextPage();
         }
     );
   }
@@ -66,14 +76,6 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
               width: 100,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 80,
-                    offset: Offset(0, 3),
-                  ),
-                ],
               ),
               duration: Duration(seconds: 0),
               child: GestureDetector(
@@ -122,7 +124,7 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.black12.withOpacity(0.2),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: Offset(0, 3), // changes position of shadow
@@ -140,7 +142,7 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
                 await onVideoButtonClick();
               }
               else if (type == MemoryCardType.text) {
-                await onVideoButtonClick();
+                await onTextButtonClick();
               }
             },
             child: Icon(

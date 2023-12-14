@@ -40,6 +40,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   matrix_gesture_detector: ^0.2.0-nullsafety.1
   video_player: ^2.8.1
+  dropdown_button2: ^2.3.9
+  flutter_colorpicker: ^1.0.3
+
 
 
 

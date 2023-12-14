@@ -6,7 +6,10 @@ import '../constants/color.dart';
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
+  final Color labelTextColor;
   final String? hintText;
+  final Color? hintTextColor;
+  final int maxLines;
   final IconData prefixIcon;
   final bool isPassword;
   late final bool isPasswordVisible;
@@ -26,12 +29,21 @@ class CustomTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Color focusedColor;
   final Color enabledColor;
+  final Color fillColor;
+  final bool filled;
+  final Color iconColor;
+  final Color textColor;
+  final double fontSize;
+  final FontStyle fontStyle;
 
   CustomTextField({
     Key? key,
     required this.controller,
     required this.labelText,
     this.hintText,
+    this.labelTextColor = AppColors.text3,
+    this.hintTextColor = AppColors.text3,
+    this.maxLines = 1,
     this.prefixIcon = Icons.person,
     this.isPassword = false,
     this.isPasswordVisible = false,
@@ -51,6 +63,12 @@ class CustomTextField extends StatefulWidget {
     this.inputFormatters,
     this.focusedColor = AppColors.main1,
     this.enabledColor = AppColors.main1,
+    this.fillColor = AppColors.main1,
+    this.iconColor = AppColors.main1,
+    this.filled = false,
+    this.textColor = AppColors.text1,
+    this.fontSize = 16,
+    this.fontStyle = FontStyle.normal,
   }) : super(key: key);
 
   @override
@@ -63,6 +81,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return SizedBox(
         width: 300,
         child: TextFormField(
+          style: TextStyle(
+            color: widget.textColor,
+            fontSize: widget.fontSize,
+            fontStyle: widget.fontStyle,
+          ),
           controller: widget.controller,
           obscureText: widget.obscureText,
           enabled: widget.enabled,
@@ -70,13 +93,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
           textInputAction: widget.textInputAction,
           cursorColor: widget.focusedColor,
           autocorrect: widget.autocorrect,
+          maxLines: widget.maxLines,
           readOnly: widget.readOnly,
           enableSuggestions: widget.enableSuggestions,
           decoration: InputDecoration(
             labelText: widget.labelText,
-            labelStyle: TextStyle(color: AppColors.text3),
+            filled: widget.filled,
+            fillColor: widget.fillColor,
+            labelStyle: TextStyle(color: widget.labelTextColor),
             hintText: widget.hintText,
-            prefixIcon: Icon(widget.prefixIcon, color: AppColors.main1),
+            hintStyle: TextStyle(color: widget.hintTextColor),
+            prefixIcon: Icon(widget.prefixIcon, color: widget.iconColor),
             suffixIcon: widget.isPassword
                 ? IconButton(
                     icon: Icon(widget.isPasswordVisible
