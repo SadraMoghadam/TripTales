@@ -55,7 +55,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
         style: TextStyle(
             color: AppColors.main1, fontSize: 25, fontWeight: FontWeight.w700),
       )),
-      insetPadding: EdgeInsets.all(10),
+      insetPadding: const EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       content: buildBody(device),
@@ -111,7 +111,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
                     child: CustomButton(
                         height: 20,
                         width: 200,
-                        text: "Submit",
+                        text: "Delete",
                         textColor: Colors.white,
                         onPressed: () => Navigator.of(context).pop())),
               )

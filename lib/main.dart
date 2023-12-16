@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:trip_tales/src/pages/create_tale_page.dart';
 import 'package:trip_tales/src/pages/favorite_tales.dart';
 import 'package:trip_tales/src/pages/login.dart';
+import 'package:trip_tales/src/pages/profile.dart';
 import 'package:trip_tales/src/pages/register.dart';
 import 'package:trip_tales/src/pages/my_tales.dart';
 import 'package:trip_tales/src/pages/tale.dart';
@@ -38,8 +39,9 @@ class MyApp extends StatelessWidget {
         '/createTalePage': (context) => CreateTalePage(),
         '/talePage': (context) => TalePage(),
         '/favoriteTalesPage': (context) => FavoriteTales([]),
+        '/profilePage': (context) => ProfilePage(),
       },
-      initialRoute: '/talePage',
+      initialRoute: '/',
     );
   }
 }

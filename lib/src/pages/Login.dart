@@ -216,7 +216,11 @@ class _LoginPageState extends State<LoginPage> {
             alignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CustomButton(
-                  height: 20, width: 200, text: "Login", onPressed: _submit)
+                  height: 20,
+                  width: 200,
+                  text: "Login",
+                  textColor: Colors.white,
+                  onPressed: _submit)
             ],
           ),
           TextButton(

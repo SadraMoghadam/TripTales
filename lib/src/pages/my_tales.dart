@@ -27,11 +27,13 @@ class _MyTalesPage extends State<MyTalesPage> {
 
   Widget buildBody() {
     return Container(
+      /*
       decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/images/background_tale.jpg'),
               fit: BoxFit.cover,
               opacity: 0.3)),
+              */
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

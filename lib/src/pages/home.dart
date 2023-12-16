@@ -104,6 +104,7 @@ class HomePage extends StatelessWidget {
             alignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CustomButton(
+                  textColor: Colors.white,
                   text: "Login",
                   onPressed: () =>
                       Navigator.pushReplacementNamed(context, '/loginPage'))

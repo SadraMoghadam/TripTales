@@ -122,16 +122,15 @@ class _CreateTalePage extends State<CreateTalePage> {
           SizedBox(
             height: 50,
             child: CustomButton(
-                fontSize: 30,
-                padding: 2,
-                backgroundColor: AppColors.main2,
-                textColor: Colors.white,
-                text: "Start Creating",
-                onPressed: () => {
-                  print("hfsbhesfu"),
-                  Navigator.of(context).pushNamed('/talePage'),
-                  print("hfsbhesfu"),
-                },),
+              fontSize: 18,
+              padding: 2,
+              backgroundColor: AppColors.main2,
+              textColor: Colors.white,
+              text: "Start Creating",
+              onPressed: () => {
+                Navigator.of(context).pushNamed('/talePage'),
+              },
+            ),
           ),
           const SizedBox(
             height: 10,
