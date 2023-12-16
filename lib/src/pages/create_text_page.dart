@@ -172,6 +172,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
                 child: Center(
                   child: CustomTextField(
                     controller: _colorController,
+                    isFieldColor: true,
                     labelText: 'Text color',
                     hintText: 'Text color',
                     // labelTextColor: _selectedColor,
@@ -192,6 +193,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
                 child: Center(
                   child: CustomTextField(
                     controller: _backgroundColorController,
+                    isFieldColor: true,
                     labelText: 'Background color',
                     hintText: 'Background color',
                     // labelTextColor: _selectedBackgroundColor,
@@ -236,53 +238,53 @@ class _CreateTextPageState extends State<CreateTextPage> {
                       child: Stack(
                         alignment: Alignment.topCenter,
                         children: [
-                          const Text("Font size", style: TextStyle(
-                            color: AppColors.text1,
-                            decoration: TextDecoration.underline
-
-                          )),
+                          const Text("Font size",
+                              style: TextStyle(
+                                  color: AppColors.text1,
+                                  decoration: TextDecoration.underline)),
                           SliderTheme(
                             data: SliderThemeData(
-                                thumbColor: AppColors.main1,
-                                trackHeight: 10,
-                                trackShape: RoundedRectSliderTrackShape(),
-                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10, pressedElevation: 10),
+                              thumbColor: AppColors.main1,
+                              trackHeight: 10,
+                              trackShape: RoundedRectSliderTrackShape(),
+                              thumbShape: RoundSliderThumbShape(
+                                  enabledThumbRadius: 10, pressedElevation: 10),
                               inactiveTrackColor: AppColors.main1.shade100,
                               activeTrackColor: AppColors.main1,
                               overlayColor: AppColors.main1.shade200,
-                              overlayShape: RoundSliderThumbShape(enabledThumbRadius: 11, pressedElevation: 11),
-
+                              overlayShape: RoundSliderThumbShape(
+                                  enabledThumbRadius: 11, pressedElevation: 11),
                             ),
                             child: Slider(
-                            // thumbColor: AppColors.main1,
-                            // activeColor: AppColors.main1,
-                            // inactiveColor: AppColors.main1.shade100,
-                            value: _fontSize,
-                            min: 5,
-                            max: 40,
-                            divisions: 40 - 5,
-                            label: _fontSize.round().toString(),
-                            onChanged: (double value) {
-                              setState(() {
-                                _fontSize = value;
-                              });
-                            },
-                          ),)
-
+                              // thumbColor: AppColors.main1,
+                              // activeColor: AppColors.main1,
+                              // inactiveColor: AppColors.main1.shade100,
+                              value: _fontSize,
+                              min: 5,
+                              max: 40,
+                              divisions: 40 - 5,
+                              label: _fontSize.round().toString(),
+                              onChanged: (double value) {
+                                setState(() {
+                                  _fontSize = value;
+                                });
+                              },
+                            ),
+                          )
                         ],
                       )
-                    //   child: CustomTextField(
-                    //     controller: _fontSizeController,
-                    //     labelText: 'Font size',
-                    //     hintText: 'Enter the font size',
-                    //     prefixIcon: Icons.format_size,
-                    //     obscureText: false,
-                    //     keyboardType: TextInputType.number,
-                    //     textInputAction: TextInputAction.next,
-                    //     validator: _validator.nameValidator,
-                    //   ),
-                    // )
-                  ),
+                      //   child: CustomTextField(
+                      //     controller: _fontSizeController,
+                      //     labelText: 'Font size',
+                      //     hintText: 'Enter the font size',
+                      //     prefixIcon: Icons.format_size,
+                      //     obscureText: false,
+                      //     keyboardType: TextInputType.number,
+                      //     textInputAction: TextInputAction.next,
+                      //     validator: _validator.nameValidator,
+                      //   ),
+                      // )
+                      ),
                 ),
               ),
               Flexible(

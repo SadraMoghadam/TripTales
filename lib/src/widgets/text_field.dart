@@ -35,6 +35,7 @@ class CustomTextField extends StatefulWidget {
   final Color textColor;
   final double fontSize;
   final FontStyle fontStyle;
+  final bool isFieldColor;
 
   CustomTextField({
     Key? key,
@@ -69,6 +70,7 @@ class CustomTextField extends StatefulWidget {
     this.textColor = AppColors.text1,
     this.fontSize = 16,
     this.fontStyle = FontStyle.normal,
+    this.isFieldColor = false,
   }) : super(key: key);
 
   @override
@@ -79,7 +81,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
+        height: 50,
         width: 300,
         child: TextFormField(
           style: TextStyle(
@@ -104,7 +106,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
             labelStyle: TextStyle(color: widget.labelTextColor),
             hintText: widget.hintText,
             hintStyle: TextStyle(color: widget.hintTextColor),
-            prefixIcon: Icon(widget.prefixIcon, color: widget.iconColor, shadows: [Shadow(color: Colors.grey, offset: Offset(-2, 2))]),
+            prefixIcon: Icon(widget.prefixIcon,
+                color: widget.iconColor,
+                shadows: widget.isFieldColor
+                    ? [const Shadow(color: Colors.grey, offset: Offset(-2, 2))]
+                    : null),
             suffixIcon: widget.isPassword
                 ? IconButton(
                     icon: Icon(widget.isPasswordVisible

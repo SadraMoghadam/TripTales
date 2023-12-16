@@ -84,11 +84,11 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Container(
-            height: device.height - 20,
-            width: device.width - 20,
+            height: device.height,
+            width: device.width,
             alignment: Alignment.center,
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.all(10),
+            //padding: const EdgeInsets.all(10),
+            //margin: const EdgeInsets.all(10),
             child: Form(
               key: _formKey,
               child: Column(

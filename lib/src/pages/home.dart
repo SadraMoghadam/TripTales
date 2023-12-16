@@ -13,14 +13,14 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        height: device.height - 20,
-        width: device.width - 20,
+        height: device.height,
+        width: device.width,
         alignment: Alignment.center,
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(10),
+        //padding: const EdgeInsets.all(10),
+        //margin: const EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
-            Flexible(fit: FlexFit.loose, flex: 7, child: buildHome()),
+            Flexible(fit: FlexFit.tight, flex: 7, child: buildHome()),
             Flexible(fit: FlexFit.tight, flex: 1, child: buildButtons(context)),
           ],
         ),

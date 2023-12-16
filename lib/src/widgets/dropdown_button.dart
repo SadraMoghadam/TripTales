@@ -30,7 +30,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
               Icons.list,
               size: 24,
               color: AppColors.main1,
-                shadows: [Shadow(color: Colors.grey, offset: Offset(-2, 2))]
+              //shadows: [Shadow(color: Colors.grey, offset: Offset(-2, 2))]
             ),
             const SizedBox(
               width: 12,
@@ -55,7 +55,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
                         Icons.list,
                         size: 24,
                         color: AppColors.main1,
-                        shadows: [Shadow(color: Colors.grey, offset: Offset(0, 3))]
+                        //shadows: [Shadow(color: Colors.grey, offset: Offset(0, 3))]
                       ),
                       const SizedBox(
                         width: 12,
@@ -91,7 +91,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         ),
         iconStyleData: const IconStyleData(
           icon: Icon(
-              Icons.arrow_forward_ios_outlined,
+            Icons.arrow_forward_ios_outlined,
           ),
           iconSize: 14,
           iconEnabledColor: AppColors.text3,
