@@ -50,8 +50,8 @@ class _ProfilePageState extends State<ProfilePage> {
       MaterialPageRoute(
         builder: (context) => SetPhotoScreen(
           isImage: true,
-          //contDef: true,
-          //containerWidget: _profilePictureContainer(),
+          contDef: true,
+          // containerWidget: _profilePictureContainer(),
         ),
       ),
     );
@@ -189,13 +189,13 @@ class _ProfilePageState extends State<ProfilePage> {
     device.computeDeviceInfo(context);
     return Scaffold(
       body: CustomAppBar(
-        bodyTale: buildBody(),
+        bodyTale: buildBody(context),
         showIcon: false,
       ),
     );
   }
 
-  Widget buildBody() {
+  Widget buildBody(context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return /*Container(
@@ -229,7 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget buildHeader() {
+  Widget buildHeader(context) {
     return Center(
       child: Stack(
         children: [
@@ -254,7 +254,12 @@ class _ProfilePageState extends State<ProfilePage> {
             child: FloatingActionButton(
               backgroundColor: AppColors.main2,
               onPressed: () {
-                _changeProfilePicture(); // Invoke method to change profile picture
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return modifyProfileImage();
+                    });
+                //  _changeProfilePicture(); // Invoke method to change profile picture
               },
               child: const Icon(
                 Icons.camera_alt_rounded,
@@ -265,45 +270,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
-/*
-  Widget buildHeader() {
-    return Center(
-      child: Stack(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(
-                3), // Adjust the padding to control the width of the border
-            decoration: const BoxDecoration(
-              color: AppColors.main2, // Set the color of the border
-              shape: BoxShape.circle, // Ensure the container is circular
-            ),
-            child: CircleAvatar(
-              radius: 70,
-              backgroundImage: AssetImage('assets/images/profile_pic.png'),
-              backgroundColor: AppColors.main2,
-            ),
-          ),
-          Positioned(
-            width: 50,
-            height: 50,
-            bottom: 0,
-            right: 0,
-            child: FloatingActionButton(
-              backgroundColor: AppColors.main2,
-              onPressed: () {
-                // Implement edit profile picture functionality
-              },
-              child: const Icon(
-                Icons.camera_alt_rounded,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  */
 
   Widget buildScreen() {
     return SingleChildScrollView(
@@ -312,7 +278,7 @@ class _ProfilePageState extends State<ProfilePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 20),
-          buildHeader(),
+          buildHeader(context),
           const SizedBox(height: 20),
           /* Flexible(
             fit: FlexFit.tight,
@@ -463,24 +429,82 @@ class _ProfilePageState extends State<ProfilePage> {
             flex: 1,
             child: */
           CustomButton(
-              fontSize: 15,
-              height: 12,
-              width: 20,
-              text: "Edit Profile",
-              textColor: Colors.white,
-              onPressed: () {
-                setState(
-                  () {
-                    readOnlyTextField = !readOnlyTextField;
-                  },
-                );
-              }
-              //_submit,
-
-              //   ),
-              ),
+            fontSize: 15,
+            height: 12,
+            width: 20,
+            text: "Edit Profile",
+            textColor: Colors.white,
+            onPressed: () {
+              setState(
+                () {
+                  readOnlyTextField = !readOnlyTextField;
+                },
+              );
+            },
+          ),
           const SizedBox(height: 20),
         ],
+      ),
+    );
+  }
+
+  Widget modifyProfileImage() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    return AlertDialog(
+      elevation: 10,
+      shadowColor: Colors.grey,
+      insetPadding: const EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      content: buildProfileBody(device),
+      actions: <Widget>[
+        CustomButton(
+            height: 5,
+            width: 30,
+            fontSize: 12,
+            backgroundColor: AppColors.main3,
+            text: "close",
+            textColor: Colors.white,
+            onPressed: () => Navigator.of(context).pop())
+      ],
+    );
+  }
+
+  Widget buildProfileBody(DeviceInfo device) {
+    return SingleChildScrollView(
+      child: Container(
+        height: 200,
+        width: device.width,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Flexible(
+                flex: 8,
+                fit: FlexFit.tight,
+                child: Container(
+                  height: 310,
+                  child: SetPhotoScreen(
+                    isImage: true,
+                    contDef: true,
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 5,
+                fit: FlexFit.tight,
+                child: Center(
+                    child: CustomButton(
+                        height: 18,
+                        width: 200,
+                        text: "Delete",
+                        textColor: Colors.white,
+                        onPressed: () => Navigator.of(context).pop())),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

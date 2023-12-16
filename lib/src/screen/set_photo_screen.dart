@@ -10,10 +10,12 @@ import 'select_photo_options_screen.dart';
 
 class SetPhotoScreen extends StatefulWidget {
   final bool isImage;
+  final bool contDef;
 
   const SetPhotoScreen({
     super.key,
     this.isImage = true,
+    this.contDef = false,
   });
 
   static const id = 'set_photo_screen';
@@ -130,82 +132,86 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 320,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  widget.isImage
-                      ? _showSelectPhotoOptions(context)
-                      : _showSelectVideoOptions(context);
-                },
-                child: Center(
-                  child: Container(
-                    height: 250.0,
-                    width: 370.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.grey.shade200,
-                    ),
-                    child: widget.isImage
-                        ? Center(
-                            child: _image == null
-                                ? const Text(
-                                    'No image selected',
-                                    style: TextStyle(fontSize: 20),
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: FileImage(_image!),
+      height: 320,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                widget.isImage
+                    ? _showSelectPhotoOptions(context)
+                    : _showSelectVideoOptions(context);
+              },
+              child: Center(
+                child: widget.contDef
+                    ? Container()
+                    : Container(
+                        height: 250.0,
+                        width: 370.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.grey.shade200,
+                        ),
+                        child: widget.isImage
+                            ? Center(
+                                child: _image == null
+                                    ? const Text(
+                                        'No image selected',
+                                        style: TextStyle(fontSize: 20),
+                                      )
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: FileImage(_image!),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                          )
-                        : Center(
-                            child: _video == null
-                                ? const Text(
-                                    'No video selected',
-                                    style: TextStyle(fontSize: 20),
-                                  )
-                                : Container(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: VideoPlayer(_videoController),
-                                    ),
-                                  ),
-                          ),
-                  ),
-                ),
+                              )
+                            : Center(
+                                child: _video == null
+                                    ? const Text(
+                                        'No video selected',
+                                        style: TextStyle(fontSize: 20),
+                                      )
+                                    : Container(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: VideoPlayer(_videoController),
+                                        ),
+                                      ),
+                              ),
+                      ),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomButton(
-                  padding: 10,
-                  onPressed: () => widget.isImage
-                      ? _showSelectPhotoOptions(context)
-                      : _showSelectVideoOptions(context),
-                  backgroundColor: AppColors.main2,
-                  textColor: Colors.white,
-                  text: widget.isImage ? 'Add Image' : 'Add Video',
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CustomButton(
+                padding: 10,
+                onPressed: () => widget.isImage
+                    ? _showSelectPhotoOptions(context)
+                    : _showSelectVideoOptions(context),
+                backgroundColor: AppColors.main2,
+                textColor: Colors.white,
+                text: widget.isImage ? 'Add Image' : 'Add Video',
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
