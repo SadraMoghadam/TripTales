@@ -21,9 +21,9 @@ class _CreateTextPageState extends State<CreateTextPage> {
   late final TextEditingController _textController;
   late final TextEditingController _colorController;
   late final TextEditingController _backgroundColorController;
-  late final TextEditingController _fontSizeController;
-  Color _selectedColor = AppColors.main1;
-  Color _selectedBackgroundColor = AppColors.main1;
+  double _fontSize = 16;
+  Color _selectedColor = AppColors.main2;
+  Color _selectedBackgroundColor = Colors.white;
 
   // late final TextEditingController _passwordController;
 
@@ -36,7 +36,6 @@ class _CreateTextPageState extends State<CreateTextPage> {
     Navigator.of(context).pop();
   }
 
-
   void _showColorPicker(bool isColor) {
     showDialog(
       context: context,
@@ -48,7 +47,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
               pickerColor: isColor ? _selectedColor : _selectedBackgroundColor,
               onColorChanged: (color) {
                 setState(() {
-                  if(isColor)
+                  if (isColor)
                     _selectedColor = color;
                   else
                     _selectedBackgroundColor = color;
@@ -87,12 +86,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
       });
     _backgroundColorController = TextEditingController()
       ..addListener(() {
-        if (_selectedBackgroundColor == Colors.white)
-        setState(() {});
-      });
-    _fontSizeController = TextEditingController(text: "16.0")
-      ..addListener(() {
-        setState(() {});
+        if (_selectedBackgroundColor == Colors.white) setState(() {});
       });
     super.initState();
   }
@@ -147,8 +141,8 @@ class _CreateTextPageState extends State<CreateTextPage> {
                   child: Center(
                     child: CustomTextField(
                       controller: _nameController,
-                      labelText: 'Memory name',
-                      hintText: 'Enter your memory name',
+                      labelText: 'Text name',
+                      hintText: 'Enter your text name',
                       prefixIcon: Icons.abc,
                       obscureText: false,
                       keyboardType: TextInputType.name,
@@ -157,23 +151,19 @@ class _CreateTextPageState extends State<CreateTextPage> {
                     ),
                   )),
               Flexible(
-                  flex: 4,
+                  flex: 2,
                   fit: FlexFit.tight,
                   child: Center(
                     child: CustomTextField(
                       controller: _textController,
-                      labelText: 'Memory',
-                      hintText: 'Enter your memory',
+                      labelText: 'Text',
+                      hintText: 'Enter your text',
                       prefixIcon: Icons.text_snippet_rounded,
                       obscureText: false,
                       maxLines: 5,
                       keyboardType: TextInputType.multiline,
                       textInputAction: TextInputAction.newline,
                       validator: _validator.nameValidator,
-                      filled: true,
-                      fillColor: _selectedBackgroundColor,
-                      textColor: _selectedColor,
-                      fontSize: _fontSizeController.text.isEmpty ? 16.0 : double.parse(_fontSizeController.text),
                     ),
                   )),
               Flexible(
@@ -184,8 +174,8 @@ class _CreateTextPageState extends State<CreateTextPage> {
                     controller: _colorController,
                     labelText: 'Text color',
                     hintText: 'Text color',
-                    labelTextColor: _selectedColor,
-                    hintTextColor: _selectedColor,
+                    // labelTextColor: _selectedColor,
+                    // hintTextColor: _selectedColor,
                     readOnly: true,
                     iconColor: _selectedColor,
                     onTap: () => _showColorPicker(true),
@@ -204,8 +194,8 @@ class _CreateTextPageState extends State<CreateTextPage> {
                     controller: _backgroundColorController,
                     labelText: 'Background color',
                     hintText: 'Background color',
-                    labelTextColor: _selectedBackgroundColor,
-                    hintTextColor: _selectedBackgroundColor,
+                    // labelTextColor: _selectedBackgroundColor,
+                    // hintTextColor: _selectedBackgroundColor,
                     readOnly: true,
                     iconColor: _selectedBackgroundColor,
                     onTap: () => _showColorPicker(false),
@@ -217,32 +207,86 @@ class _CreateTextPageState extends State<CreateTextPage> {
                 ),
               ),
               Flexible(
-                  flex: 2,
-                  fit: FlexFit.tight,
-                  child: Center(
-                    child: CustomTextField(
-                      controller: _fontSizeController,
-                      labelText: 'Font size',
-                      hintText: 'Enter the font size',
-                      prefixIcon: Icons.format_size,
-                      obscureText: false,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      validator: _validator.nameValidator,
-                    ),
-                  )),
+                flex: 2,
+                fit: FlexFit.tight,
+                child: Center(
+                  child: CustomDropdownButton(
+                    label: 'Font style',
+                    items: ['Normal', 'Italic'],
+                  ),
+                ),
+              ),
               Flexible(
                 flex: 2,
                 fit: FlexFit.tight,
                 child: Center(
                   child: CustomDropdownButton(
-                    label: 'Font Style',
-                    items: ['Normal', 'Bold', 'Italic'],
+                    label: 'Font weight',
+                    items: ['XSmall', 'Small', 'Medium', 'Large', 'XLarge'],
                   ),
                 ),
               ),
               Flexible(
-                flex: 3,
+                flex: 2,
+                fit: FlexFit.tight,
+                child: Center(
+                  child: Container(
+                      width: 320,
+                      height: 60,
+                      child: Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          const Text("Font size", style: TextStyle(
+                            color: AppColors.text1,
+                            decoration: TextDecoration.underline
+
+                          )),
+                          SliderTheme(
+                            data: SliderThemeData(
+                                thumbColor: AppColors.main1,
+                                trackHeight: 10,
+                                trackShape: RoundedRectSliderTrackShape(),
+                                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10, pressedElevation: 10),
+                              inactiveTrackColor: AppColors.main1.shade100,
+                              activeTrackColor: AppColors.main1,
+                              overlayColor: AppColors.main1.shade200,
+                              overlayShape: RoundSliderThumbShape(enabledThumbRadius: 11, pressedElevation: 11),
+
+                            ),
+                            child: Slider(
+                            // thumbColor: AppColors.main1,
+                            // activeColor: AppColors.main1,
+                            // inactiveColor: AppColors.main1.shade100,
+                            value: _fontSize,
+                            min: 5,
+                            max: 40,
+                            divisions: 40 - 5,
+                            label: _fontSize.round().toString(),
+                            onChanged: (double value) {
+                              setState(() {
+                                _fontSize = value;
+                              });
+                            },
+                          ),)
+
+                        ],
+                      )
+                    //   child: CustomTextField(
+                    //     controller: _fontSizeController,
+                    //     labelText: 'Font size',
+                    //     hintText: 'Enter the font size',
+                    //     prefixIcon: Icons.format_size,
+                    //     obscureText: false,
+                    //     keyboardType: TextInputType.number,
+                    //     textInputAction: TextInputAction.next,
+                    //     validator: _validator.nameValidator,
+                    //   ),
+                    // )
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 2,
                 fit: FlexFit.tight,
                 child: Center(
                     child: CustomButton(
@@ -251,7 +295,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
                         text: "Submit",
                         textColor: Colors.white,
                         onPressed: () => Navigator.of(context).pop())),
-              )
+              ),
             ],
           ),
         ),

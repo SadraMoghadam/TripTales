@@ -79,6 +79,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: 50,
         width: 300,
         child: TextFormField(
           style: TextStyle(
@@ -103,7 +104,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             labelStyle: TextStyle(color: widget.labelTextColor),
             hintText: widget.hintText,
             hintStyle: TextStyle(color: widget.hintTextColor),
-            prefixIcon: Icon(widget.prefixIcon, color: widget.iconColor),
+            prefixIcon: Icon(widget.prefixIcon, color: widget.iconColor, shadows: [Shadow(color: Colors.grey, offset: Offset(-2, 2))]),
             suffixIcon: widget.isPassword
                 ? IconButton(
                     icon: Icon(widget.isPasswordVisible
