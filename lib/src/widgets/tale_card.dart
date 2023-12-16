@@ -25,9 +25,11 @@ class _CustomTaleState extends State<CustomTale> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: widget.talePos
+      alignment: Alignment.center,
+      /*widget.talePos
           ? AlignmentDirectional.topStart
           : AlignmentDirectional.topEnd,
+          */
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamed('/createTalePage');
@@ -38,8 +40,8 @@ class _CustomTaleState extends State<CustomTale> {
           */
         },
         child: SizedBox(
-          width: 280,
-          height: 200,
+          width: 320,
+          height: 220,
           child: Stack(
             children: [
               Container(

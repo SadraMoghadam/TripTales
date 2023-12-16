@@ -50,8 +50,8 @@ class _ProfilePageState extends State<ProfilePage> {
       MaterialPageRoute(
         builder: (context) => SetPhotoScreen(
           isImage: true,
-          contDef: true,
-          containerWidget: _profilePictureContainer(),
+          //contDef: true,
+          //containerWidget: _profilePictureContainer(),
         ),
       ),
     );

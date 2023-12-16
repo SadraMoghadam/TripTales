@@ -298,6 +298,7 @@ class _RegisterPageState extends State<RegisterPage> {
           children: <Widget>[
             CustomButton(
               text: "Create Account",
+              textColor: Colors.white,
               onPressed: _submit,
             ),
           ],
