@@ -83,36 +83,34 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        child: Container(
-            height: device.height,
-            width: device.width,
-            alignment: Alignment.center,
-            //padding: const EdgeInsets.all(10),
-            //margin: const EdgeInsets.all(10),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 4,
-                    child: buildHeader(),
-                  ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 3,
-                    child: buildBody(),
-                  ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 1,
-                    child: buildFooter(),
-                  ),
-                ],
-              ),
-            )),
-      ),
+          child: Container(
+        height: device.height,
+        width: device.width,
+        alignment: Alignment.center,
+        /*child: Form(
+              key: _formKey,*/
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 4,
+              child: buildHeader(),
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 3,
+              child: buildBody(),
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 2,
+              child: buildFooter(),
+            ),
+          ],
+        ),
+      )),
+      //   ),
     );
   }
 
@@ -149,6 +147,7 @@ class _LoginPageState extends State<LoginPage> {
             fit: FlexFit.tight,
             flex: 3,
             child: CustomTextField(
+              key: const Key('emailCustomTextField'),
               controller: _emailController,
               labelText: 'Email',
               hintText: 'Enter your email',
@@ -162,6 +161,7 @@ class _LoginPageState extends State<LoginPage> {
             fit: FlexFit.tight,
             flex: 3,
             child: CustomTextField(
+              key: const Key('passwordCustomTextField'),
               controller: _passwordController,
               labelText: 'Password',
               hintText: 'Enter your password',
@@ -175,33 +175,36 @@ class _LoginPageState extends State<LoginPage> {
               validator: _validator.passwordValidator,
             )),
         Flexible(
-            fit: FlexFit.tight,
-            flex: 4,
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                const Text(
-                  'Pasword Strength',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    color: AppColors.text2,
-                  ),
+          fit: FlexFit.tight,
+          flex: 4,
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            children: [
+              const Text(
+                key: Key('passwordStrengthKey'),
+                'Pasword Strength',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: AppColors.text2,
                 ),
-                PasswordStrengthIndicator(
-                  hasUppercase: hasUppercase,
-                  hasLowercase: hasLowercase,
-                  hasDigits: hasDigits,
-                  hasSpecialCharacters: hasSpecialCharacters,
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Forgot Password',
-                      style: TextStyle(
-                          color: AppColors.text2,
-                          decoration: TextDecoration.underline)),
-                )
-              ],
-            )),
+              ),
+              PasswordStrengthIndicator(
+                hasUppercase: hasUppercase,
+                hasLowercase: hasLowercase,
+                hasDigits: hasDigits,
+                hasSpecialCharacters: hasSpecialCharacters,
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text('Forgot Password',
+                    key: Key('forgotPasswordKey'),
+                    style: TextStyle(
+                        color: AppColors.text2,
+                        decoration: TextDecoration.underline)),
+              )
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -216,6 +219,7 @@ class _LoginPageState extends State<LoginPage> {
             alignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CustomButton(
+                  key: const Key('loginButtonKey'),
                   height: 20,
                   width: 200,
                   text: "Login",
@@ -226,10 +230,12 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, '/registerPage'),
-            child: const Text('Create Account',
-                style: TextStyle(
-                    color: AppColors.text2,
-                    decoration: TextDecoration.underline)),
+            child: const Text(
+              'Create Account',
+              key: Key('createAccountButtonKey'),
+              style: TextStyle(
+                  color: AppColors.text2, decoration: TextDecoration.underline),
+            ),
           ),
         ]),
       ],

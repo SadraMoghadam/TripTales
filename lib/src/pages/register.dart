@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:trip_tales/src/utils/device_info.dart';
-
 import '../constants/color.dart';
 import '../utils/password_strength_indicator.dart';
 import '../utils/validator.dart';
@@ -138,24 +137,27 @@ class _RegisterPageState extends State<RegisterPage> {
           height: device.height,
           width: device.width,
           alignment: Alignment.center,
-          //padding: const EdgeInsets.all(10),
-          //margin: const EdgeInsets.all(10),
+          /*
           child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Flexible(fit: FlexFit.tight, flex: 3, child: buildHeader()),
-                Flexible(fit: FlexFit.tight, flex: 24, child: buildBody()),
-                const Spacer(
-                  flex: 1,
-                ),
-                Flexible(fit: FlexFit.tight, flex: 4, child: buildFooter())
-              ],
-            ),
+            key: _formKey,*/
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              //  Flexible(fit: FlexFit.tight, flex: 3, child: buildHeader()),
+              //  Flexible(fit: FlexFit.tight, flex: 24, child: buildBody()),
+              Expanded(flex: 3, child: buildHeader()),
+              Expanded(flex: 15, child: buildBody()),
+              /* const Spacer(
+                flex: 1,
+              ),*/
+              //const SizedBox(height: 10),
+              //Flexible(fit: FlexFit.tight, flex: 4, child: buildFooter())
+              Expanded(flex: 4, child: buildFooter()),
+            ],
           ),
         ),
       ),
+      // ),
     );
   }
 
@@ -171,13 +173,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget buildBody() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      // mainAxisAlignment: MainAxisAlignment.center,
+      // crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Flexible(
-            fit: FlexFit.tight,
+        // Flexible(
+        //     fit: FlexFit.tight,
+        Expanded(
             flex: 1,
             child: CustomTextField(
+              key: const Key('nameCustomTextFieldKey'),
               controller: _nameController,
               labelText: 'Name',
               hintText: 'Enter your name',
@@ -187,10 +191,12 @@ class _RegisterPageState extends State<RegisterPage> {
               textInputAction: TextInputAction.next,
               validator: _validator.nameValidator,
             )),
-        Flexible(
-            fit: FlexFit.tight,
+        // Flexible(
+        //     fit: FlexFit.tight,
+        Expanded(
             flex: 1,
             child: CustomTextField(
+              key: const Key('surnameCustomTextFieldKey'),
               controller: _surnameController,
               labelText: 'Surname',
               hintText: 'Enter your Surname',
@@ -200,10 +206,12 @@ class _RegisterPageState extends State<RegisterPage> {
               textInputAction: TextInputAction.next,
               validator: _validator.nameValidator,
             )),
-        Flexible(
-            fit: FlexFit.tight,
+        // Flexible(
+        //    fit: FlexFit.tight,
+        Expanded(
             flex: 1,
             child: CustomTextField(
+              key: const Key('emailCustomTextFieldKey'),
               controller: _emailController,
               labelText: 'Email',
               hintText: 'Enter your username',
@@ -213,10 +221,12 @@ class _RegisterPageState extends State<RegisterPage> {
               textInputAction: TextInputAction.next,
               validator: _validator.emailValidator,
             )),
-        Flexible(
-            fit: FlexFit.tight,
+        // Flexible(
+        //    fit: FlexFit.tight,
+        Expanded(
             flex: 1,
             child: CustomTextField(
+              key: const Key('dateBirthCustomTextFieldKey'),
               controller: _birthDateController,
               labelText: 'Date of birth',
               hintText: _selectedDate != null
@@ -230,10 +240,12 @@ class _RegisterPageState extends State<RegisterPage> {
               textInputAction: TextInputAction.next,
               validator: _validator.dateValidator,
             )),
-        Flexible(
-            fit: FlexFit.tight,
+        // Flexible(
+        //    fit: FlexFit.tight,
+        Expanded(
             flex: 1,
             child: CustomTextField(
+              key: const Key('passwordCustomTextFieldKey'),
               controller: _passwordController,
               labelText: 'Password',
               hintText: 'Enter your password',
@@ -246,10 +258,12 @@ class _RegisterPageState extends State<RegisterPage> {
               textInputAction: TextInputAction.next,
               validator: _validator.passwordValidator,
             )),
-        Flexible(
-          fit: FlexFit.tight,
+        // Flexible(
+        //  fit: FlexFit.tight,
+        Expanded(
           flex: 1,
           child: CustomTextField(
+            key: const Key('confirmPasswordCustomTextFieldKey'),
             controller: _confirmPasswordController,
             labelText: 'Confirm Password',
             hintText: 'Enter your password again',
@@ -264,26 +278,28 @@ class _RegisterPageState extends State<RegisterPage> {
                 value, _passwordController.text),
           ),
         ),
-        Flexible(
+        //Flexible(
+        Expanded(
+            flex: 1,
             child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          alignment: WrapAlignment.center,
-          children: [
-            const Text(
-              'Pasword Strength',
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                color: AppColors.text2,
-              ),
-            ),
-            PasswordStrengthIndicator(
-              hasUppercase: hasUppercase,
-              hasLowercase: hasLowercase,
-              hasDigits: hasDigits,
-              hasSpecialCharacters: hasSpecialCharacters,
-            ),
-          ],
-        ))
+              crossAxisAlignment: WrapCrossAlignment.center,
+              alignment: WrapAlignment.center,
+              children: [
+                const Text(
+                  'Password Strength',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: AppColors.text2,
+                  ),
+                ),
+                PasswordStrengthIndicator(
+                  hasUppercase: hasUppercase,
+                  hasLowercase: hasLowercase,
+                  hasDigits: hasDigits,
+                  hasSpecialCharacters: hasSpecialCharacters,
+                ),
+              ],
+            ))
       ],
     );
   }
@@ -297,6 +313,7 @@ class _RegisterPageState extends State<RegisterPage> {
           alignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             CustomButton(
+              key: const Key('createAccountCustomButtonKey'),
               text: "Create Account",
               textColor: Colors.white,
               onPressed: _submit,
@@ -308,6 +325,7 @@ class _RegisterPageState extends State<RegisterPage> {
             Navigator.pushReplacementNamed(context, '/loginPage');
           },
           child: const Text('Already have an account?',
+              key: Key('loginTextKey'),
               style: TextStyle(
                   color: AppColors.text2,
                   decoration: TextDecoration.underline)),

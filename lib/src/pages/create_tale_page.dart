@@ -5,7 +5,6 @@ import '../constants/color.dart';
 import '../utils/device_info.dart';
 import '../widgets/button.dart';
 import '../widgets/text_field.dart';
-import '../widgets/menu_bar_tale.dart';
 import '../widgets/app_bar_tale.dart';
 
 class CreateTalePage extends StatefulWidget {
@@ -71,21 +70,25 @@ class _CreateTalePage extends State<CreateTalePage> {
 
   Widget buildScreen() {
     return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(
             height: 15,
           ),
           const SizedBox(
-            height: 310,
+            height: 320,
             child: SetPhotoScreen(),
           ),
           const SizedBox(
-            height: 20,
+            height: 30,
           ),
           SizedBox(
             height: 60,
+            width: 330,
             child: CustomTextField(
+              key: const Key('taleNameCustomTextFieldKey'),
               controller: _taleNameController,
               labelText: 'Tale Name',
               hintText: 'Enter your Tale Name',
@@ -98,8 +101,10 @@ class _CreateTalePage extends State<CreateTalePage> {
           const SizedBox(
             height: 20,
           ),
-          SizedBox(
-            height: 305,
+          //SizedBox(
+          // height: 305,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,6 +127,7 @@ class _CreateTalePage extends State<CreateTalePage> {
           SizedBox(
             height: 50,
             child: CustomButton(
+              key: const Key('startCreatingCustomButtonKey'),
               fontSize: 18,
               padding: 2,
               backgroundColor: AppColors.main2,

@@ -73,7 +73,7 @@ class _MyTalesPage extends State<MyTalesPage> {
           */
           CustomTale(
             talePath: 'assets/images/createTale_background.jpg',
-            taleName: '+ Create Tale',
+            taleName: 'Create new Tale',
             talePos: true,
             index: 0,
             //taleOnPressed :

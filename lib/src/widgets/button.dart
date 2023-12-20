@@ -15,6 +15,7 @@ class CustomButton extends StatelessWidget {
   final IconData? icon;
   final bool isLoading;
   final bool isDisabled;
+  final Key? key;
 
   CustomButton({
     required this.text,
@@ -29,6 +30,7 @@ class CustomButton extends StatelessWidget {
     this.icon,
     this.isLoading = false,
     this.isDisabled = false,
+    this.key,
   });
 
   @override

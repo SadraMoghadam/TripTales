@@ -33,7 +33,10 @@ class CustomAppBar extends StatelessWidget {
             leading: showIcon
                 ? Builder(
                     builder: (context) => IconButton(
-                      icon: const Icon(Icons.arrow_back_rounded),
+                      icon: const Icon(
+                        Icons.arrow_back_rounded,
+                        color: Colors.white,
+                      ),
                       onPressed: () {
                         Navigator.maybePop(context);
                       },
@@ -52,15 +55,3 @@ class CustomAppBar extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-

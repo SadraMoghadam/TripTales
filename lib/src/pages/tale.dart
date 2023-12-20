@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
 import 'package:trip_tales/src/widgets/button_slider.dart';
-import 'package:trip_tales/src/widgets/container_movement_handler.dart';
-import '../constants/color.dart';
 import '../utils/device_info.dart';
-import '../widgets/menu_bar_tale.dart';
 import '../widgets/tale_builder.dart';
 
 class TalePage extends StatelessWidget {

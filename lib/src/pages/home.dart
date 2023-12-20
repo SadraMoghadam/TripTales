@@ -12,17 +12,19 @@ class HomePage extends StatelessWidget {
     device.computeDeviceInfo(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        height: device.height,
-        width: device.width,
-        alignment: Alignment.center,
-        //padding: const EdgeInsets.all(10),
-        //margin: const EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            Flexible(fit: FlexFit.tight, flex: 7, child: buildHome()),
-            Flexible(fit: FlexFit.tight, flex: 1, child: buildButtons(context)),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          key: const Key('container1Key'),
+          height: device.height,
+          width: device.width,
+          alignment: Alignment.center,
+          child: Column(
+            children: <Widget>[
+              Flexible(fit: FlexFit.tight, flex: 7, child: buildHome()),
+              Flexible(
+                  fit: FlexFit.tight, flex: 2, child: buildButtons(context)),
+            ],
+          ),
         ),
       ),
     );
@@ -42,6 +44,7 @@ class HomePage extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Image.asset(
+                  key: const Key('logoKey'),
                   'assets/images/TripTales_logo.png',
                   height: 250.0,
                   fit: BoxFit.cover,
@@ -104,6 +107,7 @@ class HomePage extends StatelessWidget {
             alignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CustomButton(
+                  key: const Key('loginCustomButtonKey'),
                   textColor: Colors.white,
                   text: "Login",
                   onPressed: () =>
@@ -114,6 +118,7 @@ class HomePage extends StatelessWidget {
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, '/registerPage'),
             child: const Text('Create Account',
+                key: Key('createAccountCustomButtonKey'),
                 style: TextStyle(
                     color: Colors.black87,
                     decoration: TextDecoration.underline)),

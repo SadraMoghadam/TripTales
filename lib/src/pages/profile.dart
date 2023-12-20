@@ -160,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {});
       });
     _bioController =
-        TextEditingController(text: "Live a Life you will remember")
+        TextEditingController(text: " - Live a Life you will remember - ")
           ..addListener(() {
             setState(() {});
           });
@@ -261,8 +261,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     });
                 //  _changeProfilePicture(); // Invoke method to change profile picture
               },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(28.0),
+              ),
               child: const Icon(
                 Icons.camera_alt_rounded,
+                color: Colors.white,
               ),
             ),
           ),
@@ -277,7 +281,10 @@ class _ProfilePageState extends State<ProfilePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 20),
+          const SizedBox(
+            height: 20,
+            key: Key('abc'),
+          ),
           buildHeader(context),
           const SizedBox(height: 20),
           /* Flexible(
@@ -285,10 +292,11 @@ class _ProfilePageState extends State<ProfilePage> {
             flex: 1,
             child: */
           CustomTextField(
+            key: const Key('nameCustomTextFieldKey'),
             readOnly: readOnlyTextField,
             controller: _nameController,
             labelText: 'Name',
-            // hintText: 'Angelo',
+            hintText: 'Enter your Name',
             prefixIcon: Icons.abc_rounded,
             obscureText: false,
             keyboardType: TextInputType.emailAddress,
@@ -302,10 +310,11 @@ class _ProfilePageState extends State<ProfilePage> {
             flex: 1,
             child: */
           CustomTextField(
+            key: const Key('surnameCustomTextFieldKey'),
             readOnly: readOnlyTextField,
             controller: _surnameController,
             labelText: 'Surname',
-            // hintText: 'Tulbure',
+            hintText: 'Enter your Surname',
             prefixIcon: Icons.abc_rounded,
             obscureText: false,
             keyboardType: TextInputType.emailAddress,
@@ -319,6 +328,7 @@ class _ProfilePageState extends State<ProfilePage> {
             flex: 1,
             child: */
           CustomTextField(
+            key: const Key('birthDateCustomTextFieldKey'),
             readOnly: readOnlyTextField,
             controller: _birthDateController,
             labelText: 'Date of birth',
@@ -339,11 +349,11 @@ class _ProfilePageState extends State<ProfilePage> {
             flex: 1,
             child: */
           CustomTextField(
-            // textInputAction: 'angelomaximilian.tulbure@mail.polimi.it',
+            key: const Key('emailCustomTextFieldKey'),
             readOnly: readOnlyTextField,
             controller: _emailController,
             labelText: 'Email',
-            hintText: 'at@gmail.com',
+            hintText: 'Enter your Email',
             prefixIcon: Icons.email,
             obscureText: false,
             keyboardType: TextInputType.emailAddress,
@@ -357,10 +367,11 @@ class _ProfilePageState extends State<ProfilePage> {
             flex: 1,
             child: */
           CustomTextField(
+            key: const Key('passwordCustomTextFieldKey'),
             readOnly: readOnlyTextField,
             controller: _passwordController,
             labelText: 'Password',
-            hintText: 'At123',
+            hintText: 'Enter your Password',
             prefixIcon: Icons.password,
             isPassword: true,
             isPasswordVisible: _isPasswordVisible,
@@ -377,10 +388,11 @@ class _ProfilePageState extends State<ProfilePage> {
             flex: 1,
             child: */
           CustomTextField(
+            key: const Key('phoneNumberCustomTextFieldKey'),
             readOnly: readOnlyTextField,
             controller: _phoneNumberController,
             labelText: 'Phone Number',
-            // hintText: '+39 3203298110',
+            hintText: 'Enter your phone number',
             prefixIcon: Icons.local_phone_rounded,
             obscureText: false,
             keyboardType: TextInputType.emailAddress,
@@ -394,14 +406,15 @@ class _ProfilePageState extends State<ProfilePage> {
             flex: 1,
             child:*/
           CustomTextField(
+            key: const Key('genderCustomTextFieldKey'),
             readOnly: readOnlyTextField,
             controller: _genderController,
             labelText: 'Gender',
-            // hintText: 'Male',
+            hintText: 'Enter your Gender',
             prefixIcon: Icons.male_rounded,
             obscureText: false,
             keyboardType: TextInputType.emailAddress,
-            //textInputAction: TextInputAction.next,
+            textInputAction: TextInputAction.next,
             validator: _validator.emailValidator,
           ),
           // ),
@@ -410,11 +423,14 @@ class _ProfilePageState extends State<ProfilePage> {
             fit: FlexFit.tight,
             flex: 1,
             child: */
+
           CustomTextField(
+            key: const Key('bioCustomTextFieldKey'),
+            maxLines: 6,
             readOnly: readOnlyTextField,
             controller: _bioController,
             labelText: 'Bio',
-            // hintText: 'Live a Life you will remember',
+            hintText: 'Enter your Bio',
             prefixIcon: Icons.textsms_rounded,
             obscureText: false,
             keyboardType: TextInputType.emailAddress,
@@ -429,10 +445,11 @@ class _ProfilePageState extends State<ProfilePage> {
             flex: 1,
             child: */
           CustomButton(
+            key: const Key('editSaveCustomButtonKey'),
             fontSize: 15,
             height: 12,
             width: 20,
-            text: "Edit Profile",
+            text: readOnlyTextField ? "Edit Profile" : "Save modifications",
             textColor: Colors.white,
             onPressed: () {
               setState(
@@ -452,14 +469,16 @@ class _ProfilePageState extends State<ProfilePage> {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return AlertDialog(
+      key: const Key('alertDialogKey'),
       elevation: 10,
       shadowColor: Colors.grey,
       insetPadding: const EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          borderRadius: BorderRadius.all(Radius.circular(30.0))),
       content: buildProfileBody(device),
       actions: <Widget>[
         CustomButton(
+            key: const Key('closeCustomButtonKey'),
             height: 5,
             width: 30,
             fontSize: 12,
@@ -496,6 +515,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 fit: FlexFit.tight,
                 child: Center(
                     child: CustomButton(
+                        key: const Key('deleteCustomButtonKey'),
                         height: 18,
                         width: 200,
                         text: "Delete",
