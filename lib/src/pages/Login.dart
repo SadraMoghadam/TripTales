@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import '../constants/color.dart';
+import '../controllers/auth_controller.dart';
 import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';
 import '../utils/validator.dart';
@@ -17,6 +20,8 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
+  final AuthController authController = Get.find<AuthController>();
+
 
   bool _isPasswordVisible = false;
   bool hasUppercase = false;
@@ -24,13 +29,23 @@ class _LoginPageState extends State<LoginPage> {
   bool hasDigits = false;
   bool hasSpecialCharacters = false;
 
-  void _submit() {
+  void _submit() async {
     final isValid = _formKey.currentState?.validate();
-    // if (isValid == null || !isValid) {
-    //   return;
-    // }
-    _formKey.currentState?.save();
-    Navigator.pushReplacementNamed(context, '/customMenu');
+    if (isValid == null || !isValid) {
+      return;
+    }
+    int result = await authController.signInWithEmailAndPassword(
+      _emailController.text,
+      _passwordController.text,
+    );
+    if(result == 200) {
+      Navigator.pushReplacementNamed(context, '/customMenu');
+      _formKey.currentState?.save();
+    }
+    else{
+      print("Wrong credentials");
+      return;
+    }
   }
 
   void checkPasswordStrength(String value) {
@@ -87,8 +102,8 @@ class _LoginPageState extends State<LoginPage> {
         height: device.height,
         width: device.width,
         alignment: Alignment.center,
-        /*child: Form(
-              key: _formKey,*/
+        child: Form(
+              key: _formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -111,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       )),
       //   ),
-    );
+    ),);
   }
 
   Widget buildHeader() {

@@ -46,6 +46,8 @@ dependencies:
   get_storage: ^2.1.1
   flutter_native_splash: ^2.3.7
   get: ^4.6.6
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
 
 
 
