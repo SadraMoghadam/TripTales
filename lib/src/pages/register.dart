@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:trip_tales/src/utils/device_info.dart';
 import '../constants/color.dart';
+import '../controllers/auth_controller.dart';
 import '../utils/password_strength_indicator.dart';
 import '../utils/validator.dart';
 import '../widgets/button.dart';
@@ -21,6 +24,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late final TextEditingController _birthDateController;
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
+  final AuthController authController = Get.find<AuthController>();
 
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -30,14 +34,27 @@ class _RegisterPageState extends State<RegisterPage> {
   bool hasSpecialCharacters = false;
   DateTime? _selectedDate;
 
-  void _submit() {
+  void _submit() async {
     final isValid = _formKey.currentState?.validate();
     if (isValid == null || !isValid) {
-      print("byeeee");
       return;
     }
-    _formKey.currentState?.save();
-    Navigator.pushReplacementNamed(context, '/loginPage');
+    print("Registered");
+    int result = await authController.registerWithEmailAndPassword(
+      _emailController.text,
+      _passwordController.text,
+      _nameController.text,
+      _surnameController.text,
+      _birthDateController.text,
+    );
+    if (result == 200) {
+      print("Registered");
+      Navigator.pushReplacementNamed(context, '/customMenu');
+      _formKey.currentState?.save();
+    } else {
+      print("Unable to register");
+      return;
+    }
   }
 
   void checkPasswordStrength(String value) {
@@ -137,27 +154,27 @@ class _RegisterPageState extends State<RegisterPage> {
           height: device.height,
           width: device.width,
           alignment: Alignment.center,
-          /*
           child: Form(
-            key: _formKey,*/
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //  Flexible(fit: FlexFit.tight, flex: 3, child: buildHeader()),
-              //  Flexible(fit: FlexFit.tight, flex: 24, child: buildBody()),
-              Expanded(flex: 3, child: buildHeader()),
-              Expanded(flex: 15, child: buildBody()),
-              /* const Spacer(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                //  Flexible(fit: FlexFit.tight, flex: 3, child: buildHeader()),
+                //  Flexible(fit: FlexFit.tight, flex: 24, child: buildBody()),
+                Expanded(flex: 3, child: buildHeader()),
+                Expanded(flex: 15, child: buildBody()),
+                /* const Spacer(
                 flex: 1,
               ),*/
-              //const SizedBox(height: 10),
-              //Flexible(fit: FlexFit.tight, flex: 4, child: buildFooter())
-              Expanded(flex: 4, child: buildFooter()),
-            ],
+                //const SizedBox(height: 10),
+                //Flexible(fit: FlexFit.tight, flex: 4, child: buildFooter())
+                Expanded(flex: 4, child: buildFooter()),
+              ],
+            ),
           ),
         ),
+        // ),
       ),
-      // ),
     );
   }
 

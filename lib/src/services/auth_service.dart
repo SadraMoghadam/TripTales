@@ -15,7 +15,8 @@ class AuthService extends GetxService {
     user.bindStream(_auth.authStateChanges());
   }
 
-  Future<User?> signInWithEmailAndPassword(String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
       final UserCredential authResult = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -29,13 +30,18 @@ class AuthService extends GetxService {
     }
   }
 
-  Future<User?> registerWithEmailAndPassword(String email, String password) async {
+  Future<User?> registerWithEmailAndPassword(
+      String email, String password,String name, String surname, String birthDate) async {
     try {
-      final UserCredential authResult = await _auth.createUserWithEmailAndPassword(
+      final UserCredential authResult =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       final User? registeredUser = authResult.user;
+      if (registeredUser != null) {
+        await _createUserDocument(registeredUser.uid, email, name, surname, birthDate);
+      }
       return registeredUser;
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -47,13 +53,28 @@ class AuthService extends GetxService {
     await _auth.signOut();
   }
 
+  Future<void> _createUserDocument(String uid, String email, String name,
+      String surname, String birthDate) async {
+    await _firestore.collection('users').doc(uid).set({
+      'email': email,
+      'name': name,
+      'surname': surname,
+      'birthDate': birthDate,
+    });
+  }
+
   Future<UserModel?> getUserById(String uid) async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await _firestore.collection('users').doc(uid).get();
+          await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
       if (userData != null) {
-        return UserModel(uid: uid, email: userData['email']);
+        return UserModel(
+            uid: uid,
+            email: userData['email'],
+            name: userData['name'],
+            surname: userData['surname'],
+            birthDate: userData['birth_date']);
       }
       return null;
     } catch (e) {

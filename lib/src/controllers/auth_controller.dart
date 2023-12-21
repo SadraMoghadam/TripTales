@@ -23,7 +23,8 @@ class AuthController extends GetxController {
   }
 
   Future<int> signInWithEmailAndPassword(String email, String password) async {
-    final User? signedInUser = await _authService.signInWithEmailAndPassword(email, password);
+    final User? signedInUser =
+        await _authService.signInWithEmailAndPassword(email, password);
     if (signedInUser != null) {
       print("logged in");
       return 200;
@@ -33,12 +34,14 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> registerWithEmailAndPassword(String email, String password) async {
-    final User? registeredUser = await _authService.registerWithEmailAndPassword(email, password);
+  Future<int> registerWithEmailAndPassword(
+      String email, String password, String name, String surname, String birthDate) async {
+    final User? registeredUser =
+        await _authService.registerWithEmailAndPassword(email, password, name, surname, birthDate);
     if (registeredUser != null) {
-      // Handle successful registration
+      return 200;
     } else {
-      // Handle registration failure
+      return 401;
     }
   }
 
