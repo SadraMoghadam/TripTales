@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trip_tales/src/constants/color.dart';
+import 'package:trip_tales/src/constants/error_messages.dart';
+import '../constants/firestore_collections.dart';
 import '../models/user_model.dart';
 
 class AuthService extends GetxService {
@@ -25,7 +29,7 @@ class AuthService extends GetxService {
       final User? signedInUser = authResult.user;
       return signedInUser;
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      ErrorMsg.loginError;
       return null;
     }
   }
@@ -55,7 +59,7 @@ class AuthService extends GetxService {
 
   Future<void> _createUserDocument(String uid, String email, String name,
       String surname, String birthDate) async {
-    await _firestore.collection('users').doc(uid).set({
+    await _firestore.collection(FirestoreCollections.users).doc(uid).set({
       'email': email,
       'name': name,
       'surname': surname,
