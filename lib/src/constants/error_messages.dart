@@ -6,9 +6,12 @@ import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/constants/error_messages.dart';
 import '../models/user_model.dart';
 
-class ErrorMsg {
+class ErrorController {
   static const String login = "Wrong email or password";
-  static SnackbarController loginError = Get.snackbar('Oops!', login, backgroundColor: AppColors.main3, borderWidth: 3, borderColor: Colors.black26);
   static const String register = "Registration not completed";
-  static SnackbarController registerError = Get.snackbar('Oops!', register, backgroundColor: AppColors.main3, borderWidth: 3, borderColor: Colors.black26);
+  static const String createImage = "Problem with image creation";
+  static void showSnackBarError(String errorMsg){
+    Get.snackbar('Oops!', errorMsg, backgroundColor: AppColors.main3, borderWidth: 3, borderColor: Colors.black26);
+  }
 }
+

@@ -77,7 +77,7 @@ class _CreateTalePage extends State<CreateTalePage> {
           const SizedBox(
             height: 15,
           ),
-          const SizedBox(
+          SizedBox(
             height: 320,
             child: SetPhotoScreen(),
           ),

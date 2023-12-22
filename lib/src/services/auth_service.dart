@@ -29,7 +29,7 @@ class AuthService extends GetxService {
       final User? signedInUser = authResult.user;
       return signedInUser;
     } catch (e) {
-      ErrorMsg.loginError;
+      ErrorController.showSnackBarError(ErrorController.login);
       return null;
     }
   }
@@ -48,7 +48,7 @@ class AuthService extends GetxService {
       }
       return registeredUser;
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      ErrorController.showSnackBarError(ErrorController.register);
       return null;
     }
   }
@@ -86,4 +86,9 @@ class AuthService extends GetxService {
       return null;
     }
   }
+
+  String? get currentUserId {
+    return FirebaseAuth.instance.currentUser?.uid;
+  }
+
 }

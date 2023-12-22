@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trip_tales/src/constants/color.dart';
+import 'package:trip_tales/src/controllers/image_controller.dart';
 import 'package:trip_tales/src/widgets/button.dart';
 import 'package:video_player/video_player.dart';
 import 'select_photo_options_screen.dart';
@@ -12,7 +14,7 @@ class SetPhotoScreen extends StatefulWidget {
   final bool isImage;
   final bool contDef;
 
-  const SetPhotoScreen({
+  SetPhotoScreen({
     super.key,
     this.isImage = true,
     this.contDef = false,
@@ -25,6 +27,7 @@ class SetPhotoScreen extends StatefulWidget {
 }
 
 class _SetPhotoScreenState extends State<SetPhotoScreen> {
+  final ImageController imageController = Get.put(ImageController());
   File? _image;
   XFile? _video;
   late VideoPlayerController _videoController;
@@ -55,6 +58,7 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
       img = await _cropImage(imageFile: img);
       setState(() {
         _image = img;
+        imageController.setImage(_image);
         Navigator.of(context).pop();
       });
     } on PlatformException catch (e) {

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:trip_tales/src/constants/error_messages.dart';
+import 'package:trip_tales/src/constants/memory_card_type.dart';
+import 'package:trip_tales/src/models/card_model.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
+import 'package:trip_tales/src/services/card_service.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import '../constants/color.dart';
+import '../controllers/image_controller.dart';
 import '../utils/device_info.dart';
-import '../utils/password_strength_indicator.dart';
 import '../widgets/button.dart';
 import '../widgets/text_field.dart';
 
@@ -13,19 +19,28 @@ class CreateImagePage extends StatefulWidget {
 }
 
 class _CreateImagePageState extends State<CreateImagePage> {
+  final ImageController imageController = Get.put(ImageController());
+  final CardService _cardService = Get.find<CardService>();
+  final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
 
-  // late final TextEditingController _passwordController;
-
-  void _submit() {
+  void _submit() async {
     final isValid = _formKey.currentState?.validate();
-    // if (isValid == null || !isValid) {
-    //   return;
-    // }
-    _formKey.currentState?.save();
-    Navigator.of(context).pop();
+    if (isValid == null || !isValid) {
+      return;
+    }
+    ImageCardModel imageCardData = ImageCardModel(id: "1", order: 1, type: MemoryCardType.image, transform: Matrix4.identity(), name: '${_nameController.text}.png');
+    int result = await _cardService.addImageCard(imageCardData, imageController.getImage()!);
+    if(result == 200){
+      _formKey.currentState?.save();
+      Navigator.of(context).pop();
+    }
+    else{
+      ErrorController.showSnackBarError(ErrorController.createImage);
+      return;
+    }
   }
 
   @override
@@ -111,9 +126,9 @@ class _CreateImagePageState extends State<CreateImagePage> {
                     child: CustomButton(
                         height: 20,
                         width: 200,
-                        text: "Delete",
+                        text: "Submit",
                         textColor: Colors.white,
-                        onPressed: () => Navigator.of(context).pop())),
+                        onPressed: () => _submit())),
               )
             ],
           ),
