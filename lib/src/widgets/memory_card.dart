@@ -63,9 +63,8 @@ class _MemoryCardState extends State<MemoryCard> {
     // _widgetKeyList = List.generate(3,
     //         (index) => GlobalObjectKey<FormState>(index*1000 + widget.cardKey.hashCode.hashCode));
     if (widget.type == MemoryCardType.video) {
-      _videoController = VideoPlayerController.networkUrl(Uri.parse(
-        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-      ));
+      print("------------------${widget.videoPath}");
+      _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoPath));
       // _videoController = VideoPlayerController.asset(widget.videoPath);
       // _videoController = VideoPlayerController.network('assets/videos/1.mp4');
       _initializeVideoPlayerFuture = _videoController.initialize();
@@ -73,6 +72,9 @@ class _MemoryCardState extends State<MemoryCard> {
     if (widget.type == MemoryCardType.image) {
       loadImageInfo(widget.imagePath);
     }
+    // else if (widget.type == MemoryCardType.video) {
+    //   loadImageInfo(widget.videoPath);
+    // }
     super.initState();
     currentSize = widget.size;
     transform = widget.initTransform;

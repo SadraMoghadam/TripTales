@@ -82,7 +82,7 @@ class AuthService extends GetxService {
       }
       return null;
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      // Get.snackbar('Error', e.toString());
       return null;
     }
   }

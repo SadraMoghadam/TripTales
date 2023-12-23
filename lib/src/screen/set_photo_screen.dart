@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trip_tales/src/constants/color.dart';
-import 'package:trip_tales/src/controllers/image_controller.dart';
+import 'package:trip_tales/src/controllers/media_controller.dart';
 import 'package:trip_tales/src/widgets/button.dart';
 import 'package:video_player/video_player.dart';
 import 'select_photo_options_screen.dart';
@@ -27,7 +27,7 @@ class SetPhotoScreen extends StatefulWidget {
 }
 
 class _SetPhotoScreenState extends State<SetPhotoScreen> {
-  final ImageController imageController = Get.put(ImageController());
+  final MediaController mediaController = Get.put(MediaController());
   File? _image;
   XFile? _video;
   late VideoPlayerController _videoController;
@@ -58,7 +58,7 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
       img = await _cropImage(imageFile: img);
       setState(() {
         _image = img;
-        imageController.setImage(_image);
+        mediaController.setImage(_image);
         Navigator.of(context).pop();
       });
     } on PlatformException catch (e) {
@@ -73,6 +73,7 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
       if (video == null) return;
       setState(() {
         _video = video;
+        mediaController.setVideo(_video);
         _videoController = VideoPlayerController.file(File(video.path))
           ..initialize().then((_) {
             setState(() {});

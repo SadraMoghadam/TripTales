@@ -4,8 +4,19 @@ import 'package:trip_tales/src/widgets/button_slider.dart';
 import '../utils/device_info.dart';
 import '../widgets/tale_builder.dart';
 
-class TalePage extends StatelessWidget {
+class TalePage extends StatefulWidget {
   const TalePage({super.key});
+
+  @override
+  State<TalePage> createState() => _TalePageState();
+}
+
+class _TalePageState extends State<TalePage> {
+  bool reload = false;
+  callback() {
+    print("IIIIIIIIIIIMMMMMMMMMMMMM HHHHHHHHHHHEEEEEEEEEEEE");
+    setState(() {reload = true;});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +40,7 @@ class TalePage extends StatelessWidget {
       child: Stack(
         children: [
           SingleChildScrollView(
-            child: TaleBuilder(),
+            child: TaleBuilder(callback: callback,),
           ),
           buildAddMemory(),
         ],
@@ -46,6 +57,6 @@ class TalePage extends StatelessWidget {
   }
 
   Widget buildAddMemory() {
-    return ButtonSlider();
+    return ButtonSlider(callback: callback,);
   }
 }

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:trip_tales/src/constants/firestore_collections.dart';
 import 'package:trip_tales/src/constants/memory_card_type.dart';
 import 'package:trip_tales/src/models/card_model.dart';
@@ -17,7 +18,7 @@ class CardService extends GetxService {
   final CollectionReference _cardsCollection =
       FirebaseFirestore.instance.collection('cards');
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final List<ImageCardModel> imageCards = [];
+  final List<CardModel> cards = [];
 
   Rx<CardModel?> card = Rx<CardModel?>(null);
 
@@ -26,9 +27,15 @@ class CardService extends GetxService {
     super.onInit();
   }
 
-  Future<int> addImageCard(ImageCardModel cardData, File imageFile) async {
+  Future<int> addImageCard(CardModel cardData, File imageFile) async {
     try {
       // String? currentUserId = _authService.currentUserId;
+      List<CardModel?> currentCards = await getCards("1");
+      var contain =
+          currentCards.where((element) => element!.name == cardData.name);
+      if (!contain.isEmpty) {
+        return 400;
+      }
       Future<bool> isUploaded = _uploadImage(imageFile, cardData.name);
       DocumentReference cardReference = await _cardsCollection.add({
         'userId': '1',
@@ -46,8 +53,9 @@ class CardService extends GetxService {
     }
   }
 
-  Future<List<ImageCardModel?>> getImageCards(String uid) async {
+  Future<List<CardModel?>> getCards(String uid) async {
     try {
+      List<CardModel> cards = [];
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
           await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
@@ -61,27 +69,33 @@ class CardService extends GetxService {
         Reference ref = _storage.ref().child('your_image_path');
 
         if (cardData != null) {
-
-          print("----------------------${cardData['order']}");
-          print("----------------------${MemoryCardType.values.byName(cardData['type'])}");
-          print("----------------------${CustomMatrixUtils.jsonToMatrix4(cardData['transform'])}");
-          print("----------------------${cardData['path']}");
-          print("----------------------${cardData['name']}");
-          ImageCardModel cardModel = ImageCardModel(
-            id: '1',
-            order: cardData['order'],
-            type: MemoryCardType.values.byName(cardData['type']),
-            transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),
-            path: await _storage.ref().child(cardData['name']).getDownloadURL(),
-            name: cardData['name'],
-          );
-          imageCards.add(cardModel);
+          // print("----------------------${cardData['order']}");
+          // print(
+          //     "----------------------${MemoryCardType.values.byName(cardData['type'])}");
+          // print(
+          //     "----------------------${CustomMatrixUtils.jsonToMatrix4(cardData['transform'])}");
+          // print("----------------------${cardData['path']}");
+          // print("----------------------${cardData['name']}");
+          String downloadURL =
+              await _storage.ref().child(cardData['name']).getDownloadURL();
+          MemoryCardType type = MemoryCardType.values.byName(cardData['type']);
+          if (type == MemoryCardType.image || type == MemoryCardType.video) {
+            CardModel cardModel = CardModel(
+              id: '1',
+              order: cardData['order'],
+              type: type,
+              transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),
+              path: downloadURL,
+              name: cardData['name'],
+            );
+            cards.add(cardModel);
+          }
         }
       }
-      print('%%%%%%%%%%%%%%%%%%${imageCards[0].order}');
-      return imageCards;
+      print('%%%%%%%%%%%%%%%%%%${cards.length}');
+      return cards;
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      // Get.snackbar('Error', e.toString());
       return List.empty();
     }
   }
@@ -89,6 +103,43 @@ class CardService extends GetxService {
   Future<bool> _uploadImage(File imageFile, String imageName) async {
     try {
       await _storage.ref().child(imageName).putFile(imageFile);
+      print('Image uploaded successfully.');
+      return Future.value(true);
+    } on FirebaseException catch (e) {
+      print('Error uploading image: $e');
+      return Future.value(false);
+    }
+  }
+
+  Future<int> addVideoCard(CardModel cardData, XFile videoFile) async {
+    try {
+      // String? currentUserId = _authService.currentUserId;
+      // List<ImageCardModel?> currentCards = await getImageCards("1");
+      // var contain = currentCards.where((element) => element!.name == cardData.name);
+      // if(!contain.isEmpty){
+      //   return 400;
+      // }
+      Future<bool> isUploaded = _uploadVideo(videoFile, cardData.name);
+      DocumentReference cardReference = await _cardsCollection.add({
+        'userId': '1',
+        'cardData': cardData.toJson(),
+      });
+      await FirebaseFirestore.instance.collection('users').doc("1").update({
+        'cards': FieldValue.arrayUnion([cardReference.id]),
+      });
+
+      print('Card added successfully.');
+      return 200;
+    } catch (e) {
+      print('Error adding card: $e');
+      return 401;
+    }
+  }
+
+
+  Future<bool> _uploadVideo(XFile videoFile, String videoName) async {
+    try {
+      await _storage.ref().child(videoName).putFile(File(videoFile.path));
       print('Image uploaded successfully.');
       return Future.value(true);
     } on FirebaseException catch (e) {

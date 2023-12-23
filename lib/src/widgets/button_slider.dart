@@ -8,6 +8,9 @@ import 'package:trip_tales/src/pages/create_text_page.dart';
 import '../pages/create_video_page.dart';
 
 class ButtonSlider extends StatefulWidget {
+  final Function callback;
+
+  const ButtonSlider({super.key, required this.callback});
   @override
   _ButtonSlider createState() => _ButtonSlider();
 }
@@ -18,22 +21,28 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
   late final AnimationController _controller;
   late Animation<Offset> _slideAnimation;
 
-  Future<void> onImageButtonClick() async {
-    showDialog(
+  Future<void> onImageButtonClick(Function callback) async {
+    final result = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return CreateImagePage();
         }
     );
+    if (result != null && result == true) {
+      widget.callback();
+    }
   }
 
-  Future<void> onVideoButtonClick() async {
-    showDialog(
+  Future<void> onVideoButtonClick(Function callback) async {
+    final result = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return CreateVideoPage();
         }
     );
+    if (result != null && result == true) {
+      widget.callback();
+    }
   }
 
   Future<void> onTextButtonClick() async {
@@ -136,10 +145,10 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
           child: GestureDetector(
             onTap: () async{
               if (type == MemoryCardType.image) {
-                await onImageButtonClick();
+                await onImageButtonClick(widget.callback);
               }
               else if (type == MemoryCardType.video) {
-                await onVideoButtonClick();
+                await onVideoButtonClick(widget.callback);
               }
               else if (type == MemoryCardType.text) {
                 await onTextButtonClick();

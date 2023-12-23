@@ -3,12 +3,13 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:trip_tales/src/constants/error_messages.dart';
 import 'package:trip_tales/src/constants/memory_card_type.dart';
+import 'package:trip_tales/src/controllers/card_controller.dart';
 import 'package:trip_tales/src/models/card_model.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/services/card_service.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import '../constants/color.dart';
-import '../controllers/image_controller.dart';
+import '../controllers/media_controller.dart';
 import '../utils/device_info.dart';
 import '../widgets/button.dart';
 import '../widgets/text_field.dart';
@@ -19,7 +20,7 @@ class CreateImagePage extends StatefulWidget {
 }
 
 class _CreateImagePageState extends State<CreateImagePage> {
-  final ImageController imageController = Get.put(ImageController());
+  final MediaController mediaController = Get.put(MediaController());
   final CardService _cardService = Get.find<CardService>();
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
@@ -31,11 +32,11 @@ class _CreateImagePageState extends State<CreateImagePage> {
     if (isValid == null || !isValid) {
       return;
     }
-    ImageCardModel imageCardData = ImageCardModel(id: "1", order: 1, type: MemoryCardType.image, transform: Matrix4.identity(), name: '${_nameController.text}.png');
-    int result = await _cardService.addImageCard(imageCardData, imageController.getImage()!);
+    CardModel imageCardData = CardModel(id: "1", order: 1, type: MemoryCardType.image, transform: Matrix4.identity(), name: '${_nameController.text}.png');
+    int result = await _cardService.addImageCard(imageCardData, mediaController.getImage()!);
     if(result == 200){
       _formKey.currentState?.save();
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     }
     else{
       ErrorController.showSnackBarError(ErrorController.createImage);
