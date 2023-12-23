@@ -5,11 +5,15 @@ import 'package:trip_tales/src/constants/color.dart';
 class CustomDropdownButton extends StatefulWidget {
   final String label;
   final List<String> items;
+  final Function(String?) onValueChanged;
+  String? selectedValue;
 
   CustomDropdownButton({
     super.key,
+    required this.selectedValue,
     required this.label,
     required this.items,
+    required this.onValueChanged,
   });
 
   @override
@@ -17,7 +21,7 @@ class CustomDropdownButton extends StatefulWidget {
 }
 
 class _CustomDropdownButtonState extends State<CustomDropdownButton> {
-  String? selectedValue;
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
             Expanded(
               child: Text(
                 widget.label,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.text3,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -71,10 +75,11 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
                   ),
                 ))
             .toList(),
-        value: selectedValue,
+        value: widget.selectedValue,
         onChanged: (String? value) {
           setState(() {
-            selectedValue = value;
+            widget.selectedValue = value;
+            widget.onValueChanged(value);
           });
         },
         buttonStyleData: ButtonStyleData(

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
+import 'package:trip_tales/src/utils/text_utils.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import '../constants/color.dart';
+import '../constants/error_messages.dart';
+import '../constants/memory_card_type.dart';
+import '../models/card_model.dart';
+import '../services/card_service.dart';
 import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';
 import '../widgets/button.dart';
@@ -23,17 +30,66 @@ class _CreateTextPageState extends State<CreateTextPage> {
   late final TextEditingController _backgroundColorController;
   double _fontSize = 16;
   Color _selectedColor = AppColors.main2;
-  Color _selectedBackgroundColor = Colors.white;
+  Color _selectedBackgroundColor = Color.fromRGBO(0, 0, 0, 0);
+  List<String> textDecorationOptions = const [
+    'None',
+    'Underline',
+    'Line through',
+    "Overline"
+  ];
+  String _selectedTextDecoration = 'None';
+  List<String> fontStyleOptions = const ['Normal', 'Italic'];
+  String _selectedFontStyle = 'Normal';
+  List<String> fontWeightOptions = const [
+    'XSmall',
+    'Small',
+    'Medium',
+    'Large',
+    'XLarge'
+  ];
+  String _selectedFontWeight = 'Medium';
+
+  final CardService _cardService = Get.find<CardService>();
 
   // late final TextEditingController _passwordController;
 
-  void _submit() {
+  void _handletextDecorationValueChanged(String? newValue) {
+    _selectedTextDecoration = newValue!;
+  }
+  void _handleFontStyleValueChanged(String? newValue) {
+    _selectedFontStyle = newValue!;
+  }
+  void _handleFontWeightValueChanged(String? newValue) {
+    _selectedFontWeight = newValue!;
+  }
+
+  void _submit() async {
     final isValid = _formKey.currentState?.validate();
-    // if (isValid == null || !isValid) {
-    //   return;
-    // }
-    _formKey.currentState?.save();
-    Navigator.of(context).pop();
+    if (isValid == null || !isValid) {
+      return;
+    }
+    CardModel textCardData = CardModel(
+      id: "1",
+      order: 1,
+      type: MemoryCardType.text,
+      transform: Matrix4.identity(),
+      name: _nameController.text,
+      text: _textController.text,
+      textColor: _selectedColor,
+      textBackgroundColor: _selectedBackgroundColor,
+      textDecoration: TextUtils.textToDecoration(_selectedTextDecoration),
+      fontStyle: TextUtils.textToFontStyle(_selectedFontStyle),
+      fontWeight: TextUtils.textToFontWeight(_selectedFontWeight),
+      fontSize: _fontSize,
+    );
+    int result = await _cardService.addTextCard(textCardData);
+    if (result == 200) {
+      _formKey.currentState?.save();
+      Navigator.of(context).pop(true);
+    } else {
+      ErrorController.showSnackBarError(ErrorController.createImage);
+      return;
+    }
   }
 
   void _showColorPicker(bool isColor) {
@@ -41,16 +97,17 @@ class _CreateTextPageState extends State<CreateTextPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Pick a color'),
+          title: const Text('Pick a color'),
           content: SingleChildScrollView(
             child: ColorPicker(
               pickerColor: isColor ? _selectedColor : _selectedBackgroundColor,
               onColorChanged: (color) {
                 setState(() {
-                  if (isColor)
+                  if (isColor) {
                     _selectedColor = color;
-                  else
+                  } else {
                     _selectedBackgroundColor = color;
+                  }
                 });
               },
               showLabel: true,
@@ -62,7 +119,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Done'),
+              child: const Text('Done'),
             ),
           ],
         );
@@ -86,7 +143,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
       });
     _backgroundColorController = TextEditingController()
       ..addListener(() {
-        if (_selectedBackgroundColor == Colors.white) setState(() {});
+        setState(() {});
       });
     super.initState();
   }
@@ -109,7 +166,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
         style: TextStyle(
             color: AppColors.main1, fontSize: 25, fontWeight: FontWeight.w700),
       )),
-      insetPadding: EdgeInsets.all(10),
+      insetPadding: const EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       content: buildBody(device),
@@ -160,7 +217,6 @@ class _CreateTextPageState extends State<CreateTextPage> {
                       hintText: 'Enter your text',
                       prefixIcon: Icons.text_snippet_rounded,
                       obscureText: false,
-                      maxLines: 5,
                       keyboardType: TextInputType.multiline,
                       textInputAction: TextInputAction.newline,
                       validator: _validator.nameValidator,
@@ -213,8 +269,10 @@ class _CreateTextPageState extends State<CreateTextPage> {
                 fit: FlexFit.tight,
                 child: Center(
                   child: CustomDropdownButton(
-                    label: 'Font style',
-                    items: ['Normal', 'Italic'],
+                    selectedValue: _selectedTextDecoration,
+                    label: 'Text Decoration',
+                    items: textDecorationOptions,
+                    onValueChanged: _handletextDecorationValueChanged,
                   ),
                 ),
               ),
@@ -223,8 +281,22 @@ class _CreateTextPageState extends State<CreateTextPage> {
                 fit: FlexFit.tight,
                 child: Center(
                   child: CustomDropdownButton(
+                    selectedValue: _selectedFontStyle,
+                    label: 'Font style',
+                    items: fontStyleOptions,
+                    onValueChanged: _handleFontStyleValueChanged,
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 2,
+                fit: FlexFit.tight,
+                child: Center(
+                  child: CustomDropdownButton(
+                    selectedValue: _selectedFontWeight,
                     label: 'Font weight',
-                    items: ['XSmall', 'Small', 'Medium', 'Large', 'XLarge'],
+                    items: fontWeightOptions,
+                    onValueChanged: _handleFontWeightValueChanged,
                   ),
                 ),
               ),
@@ -247,12 +319,12 @@ class _CreateTextPageState extends State<CreateTextPage> {
                               thumbColor: AppColors.main1,
                               trackHeight: 10,
                               trackShape: RoundedRectSliderTrackShape(),
-                              thumbShape: RoundSliderThumbShape(
+                              thumbShape: const RoundSliderThumbShape(
                                   enabledThumbRadius: 10, pressedElevation: 10),
                               inactiveTrackColor: AppColors.main1.shade100,
                               activeTrackColor: AppColors.main1,
                               overlayColor: AppColors.main1.shade200,
-                              overlayShape: RoundSliderThumbShape(
+                              overlayShape: const RoundSliderThumbShape(
                                   enabledThumbRadius: 11, pressedElevation: 11),
                             ),
                             child: Slider(
@@ -260,9 +332,9 @@ class _CreateTextPageState extends State<CreateTextPage> {
                               // activeColor: AppColors.main1,
                               // inactiveColor: AppColors.main1.shade100,
                               value: _fontSize,
-                              min: 5,
-                              max: 40,
-                              divisions: 40 - 5,
+                              min: 10,
+                              max: 100,
+                              divisions: 100 - 10,
                               label: _fontSize.round().toString(),
                               onChanged: (double value) {
                                 setState(() {
@@ -296,7 +368,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
                         width: 200,
                         text: "Submit",
                         textColor: Colors.white,
-                        onPressed: () => Navigator.of(context).pop())),
+                        onPressed: () => _submit())),
               ),
             ],
           ),

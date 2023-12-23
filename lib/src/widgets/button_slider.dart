@@ -46,12 +46,15 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
   }
 
   Future<void> onTextButtonClick() async {
-    showDialog(
+    final result = showDialog(
         context: context,
         builder: (BuildContext context) {
           return CreateTextPage();
         }
     );
+    if (result != null && result == true) {
+      widget.callback();
+    }
   }
 
   @override

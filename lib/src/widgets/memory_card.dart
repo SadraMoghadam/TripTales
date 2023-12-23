@@ -15,25 +15,40 @@ class MemoryCard extends StatefulWidget {
   final GlobalKey cardKey;
   final MemoryCardType type;
   final int order;
-  Size size;
+  late Size size;
   final String imagePath;
   final String videoPath;
   Matrix4 initTransform;
+
+  final String text;
+  final Color textColor;
+  final Color textBackgroundColor;
+  final TextDecoration textDecoration;
+  final FontStyle fontStyle;
+  final FontWeight fontWeight;
+  final double fontSize;
 
   // var currentSize;
 
   var lockLocations = [0, 90];
   double maxRotation = math.pi / 2.0;
 
-  MemoryCard({
+  MemoryCard({super.key,
     required this.cardKey,
     required this.order,
     required this.type,
-    required this.size,
     // required this.onSizeChanged,
     required this.initTransform,
+    this.size = const Size(300, 300),
     this.imagePath = 'assets/images/canvas1.jpg',
     this.videoPath = 'assets/videos/1.mp4',
+    this.text = '',
+    this.textColor = AppColors.text1,
+    this.textBackgroundColor = AppColors.main2,
+    this.textDecoration = TextDecoration.none,
+    this.fontStyle = FontStyle.normal,
+    this.fontWeight = FontWeight.normal,
+    this.fontSize = 16,
   });
 
   @override
@@ -43,7 +58,7 @@ class MemoryCard extends StatefulWidget {
 class _MemoryCardState extends State<MemoryCard> {
   late VideoPlayerController _videoController;
   late Future<void> _initializeVideoPlayerFuture;
-  Size currentSize = Size(200, 200);
+  Size currentSize = Size(300, 300);
   double maxScale = 2;
   double minScale = 0.75;
   double maxSize = 1000;
@@ -354,17 +369,18 @@ class _MemoryCardState extends State<MemoryCard> {
     return Container(
         // key: _widgetKeyList[2],
       transform: transform,
-        child: const FittedBox(
+        child: FittedBox(
           fit: BoxFit.fill,
           child:
           Text(
-            "TEST 123 !@# ",
+            widget.text,
             style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w600,
-                color: AppColors.text1,
-                fontStyle: FontStyle.italic,
-
+                fontSize: widget.fontSize,
+                fontWeight: widget.fontWeight,
+                color: widget.textColor,
+                backgroundColor: widget.textBackgroundColor,
+                decoration: widget.textDecoration,
+                fontStyle: widget.fontStyle,
             ),
           ),)
     );

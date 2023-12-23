@@ -6,6 +6,9 @@ buildscript {
     }
 
     dependencies {
+        implementation 'com.google.firebase:firebase-appcheck:latest_version'
+        implementation 'com.google.firebase:firebase-appcheck-safety-net:latest_version'
+        implementation("com.google.firebase:firebase-appcheck-playintegrity")
         classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
