@@ -9,6 +9,7 @@ import '../constants/memory_card_type.dart';
 import '../controllers/media_controller.dart';
 import '../models/card_model.dart';
 import '../services/card_service.dart';
+import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';
 import '../widgets/button.dart';
@@ -24,6 +25,7 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   final MediaController mediaController = Get.put(MediaController());
+  final AppManager _appManager = Get.put(AppManager());
   final CardService _cardService = Get.find<CardService>();
 
   // late final TextEditingController _passwordController;
@@ -33,7 +35,7 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
     if (isValid == null || !isValid) {
       return;
     }
-    CardModel videoCardData = CardModel(id: "1", order: 1, type: MemoryCardType.video, transform: Matrix4.identity(), name: '${_nameController.text}.mp4');
+    CardModel videoCardData = CardModel(uid: "1", order: _appManager.getCardsNum(), type: MemoryCardType.video, transform: Matrix4.identity(), name: '${_nameController.text}.mp4');
     int result = await _cardService.addVideoCard(videoCardData, mediaController.getVideo()!);
     if(result == 200){
       _formKey.currentState?.save();

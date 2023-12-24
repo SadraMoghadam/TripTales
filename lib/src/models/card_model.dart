@@ -6,7 +6,7 @@ import '../constants/memory_card_type.dart';
 import '../utils/matrix_utils.dart';
 
 class CardModel {
-  final String id;
+  final String uid;
   late final int order;
   final MemoryCardType type;
   final Matrix4 transform;
@@ -23,7 +23,7 @@ class CardModel {
   final double fontSize;
 
   CardModel({
-    required this.id,
+    required this.uid,
     required this.order,
     required this.type,
     required this.transform,
@@ -39,6 +39,10 @@ class CardModel {
     this.fontWeight = FontWeight.normal,
     this.fontSize = 16,
   });
+
+  void setOrder(int order){
+    this.order = order;
+  }
 
   Map<String, dynamic> toJson() {
     return {

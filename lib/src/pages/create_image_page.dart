@@ -7,6 +7,7 @@ import 'package:trip_tales/src/controllers/card_controller.dart';
 import 'package:trip_tales/src/models/card_model.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/services/card_service.dart';
+import 'package:trip_tales/src/utils/app_manager.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import '../constants/color.dart';
 import '../controllers/media_controller.dart';
@@ -21,6 +22,7 @@ class CreateImagePage extends StatefulWidget {
 
 class _CreateImagePageState extends State<CreateImagePage> {
   final MediaController mediaController = Get.put(MediaController());
+  final AppManager _appManager = Get.put(AppManager());
   final CardService _cardService = Get.find<CardService>();
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
@@ -32,7 +34,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
     if (isValid == null || !isValid) {
       return;
     }
-    CardModel imageCardData = CardModel(id: "1", order: 1, type: MemoryCardType.image, transform: Matrix4.identity(), name: '${_nameController.text}.png');
+    CardModel imageCardData = CardModel(uid: "1", order: _appManager.getCardsNum(), type: MemoryCardType.image, transform: Matrix4.identity(), name: '${_nameController.text}.png');
     int result = await _cardService.addImageCard(imageCardData, mediaController.getImage()!);
     if(result == 200){
       _formKey.currentState?.save();

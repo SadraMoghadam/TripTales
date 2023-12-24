@@ -59,8 +59,9 @@ class CardService extends GetxService {
     try {
       // String? currentUserId = _authService.currentUserId;
       List<CardModel?> currentCards = await getCards("1");
-      var contain = currentCards.where((element) => element!.name == cardData.name);
-      if(!contain.isEmpty){
+      var contain =
+          currentCards.where((element) => element!.name == cardData.name);
+      if (!contain.isEmpty) {
         return 400;
       }
       // cardData.order = currentCards.length;
@@ -86,7 +87,7 @@ class CardService extends GetxService {
       // String? currentUserId = _authService.currentUserId;
       List<CardModel?> currentCards = await getCards("1");
       var contain =
-      currentCards.where((element) => element!.name == cardData.name);
+          currentCards.where((element) => element!.name == cardData.name);
       if (!contain.isEmpty) {
         return 400;
       }
@@ -102,6 +103,43 @@ class CardService extends GetxService {
       print('Card added successfully.');
       return 200;
     } catch (e) {
+      print('Error adding card: $e');
+      return 401;
+    }
+  }
+
+  Future<int> updateCard(CardModel cardData) async {
+    try {
+      // String? currentUserId = _authService.currentUserId;
+      List<CardModel?> currentCards = await getCards("1");
+      final DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firestore.collection('users').doc('1').get();
+      final userData = userDoc.data();
+      print(userData);
+      var contain =
+          currentCards.where((element) => element!.name == cardData.name);
+      if (!contain.isEmpty) {
+        String cardId = await getCardId(contain.first!.name);
+        if(contain.first!.type == MemoryCardType.image || contain.first!.type == MemoryCardType.video){
+          await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
+            'userId': '1',
+            'cardData': cardData.toJson(),
+          });
+        }
+        else if(contain.first!.type == MemoryCardType.text){
+          await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
+            'userId': '1',
+            'cardData': cardData.toJsonTextCard(),
+          });
+        }
+
+        print('Card added successfully.');
+        return 200;
+      }
+      return 401;
+    }
+    // print("__________________${cardData.toJsonTextCard()}");
+    catch (e) {
       print('Error adding card: $e');
       return 401;
     }
@@ -133,9 +171,9 @@ class CardService extends GetxService {
           MemoryCardType type = MemoryCardType.values.byName(cardData['type']);
           if (type == MemoryCardType.image || type == MemoryCardType.video) {
             String downloadURL =
-            await _storage.ref().child(cardData['name']).getDownloadURL();
+                await _storage.ref().child(cardData['name']).getDownloadURL();
             CardModel cardModel = CardModel(
-              id: '1',
+              uid: '1',
               order: cardData['order'],
               type: type,
               transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),
@@ -143,8 +181,7 @@ class CardService extends GetxService {
               name: cardData['name'],
             );
             cards.add(cardModel);
-          }
-          else if(type == MemoryCardType.text){
+          } else if (type == MemoryCardType.text) {
             // print("----------------------${cardData['fontSize']}");
             // print(
             //     "----------------------${MemoryCardType.values.byName(cardData['type'])}");
@@ -153,15 +190,17 @@ class CardService extends GetxService {
             // print("----------------------${cardData['path']}");
             // print("----------------------${cardData['name']}");
             CardModel cardModel = CardModel(
-              id: '1',
+              uid: '1',
               order: cardData['order'],
               type: type,
               transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),
               name: cardData['name'],
               text: cardData['text'],
               textColor: TextUtils.textToColor(cardData['textColor']),
-              textBackgroundColor: TextUtils.textToColor(cardData['textBackgroundColor']),
-              textDecoration: TextUtils.textToDecoration(cardData['textDecoration']),
+              textBackgroundColor:
+                  TextUtils.textToColor(cardData['textBackgroundColor']),
+              textDecoration:
+                  TextUtils.textToDecoration(cardData['textDecoration']),
               fontStyle: TextUtils.textToFontStyle(cardData['fontStyle']),
               fontWeight: TextUtils.textToFontWeight(cardData['fontWeight']),
               fontSize: cardData['fontSize'],
@@ -189,8 +228,6 @@ class CardService extends GetxService {
     }
   }
 
-
-
   Future<bool> _uploadVideo(XFile videoFile, String videoName) async {
     try {
       await _storage.ref().child(videoName).putFile(File(videoFile.path));
@@ -200,5 +237,19 @@ class CardService extends GetxService {
       print('Error uploading image: $e');
       return Future.value(false);
     }
+  }
+
+  Future<String> getCardId(String name) async {
+    List<CardModel?> currentCards = await getCards("1");
+    final DocumentSnapshot<Map<String, dynamic>> userDoc =
+        await _firestore.collection('users').doc('1').get();
+    final userData = userDoc.data();
+    print(userData);
+    for (int i = 0; i < currentCards.length; i++){
+      if(name == currentCards[i]!.name){
+        return userData!['cards'][i];
+      }
+    }
+    return "";
   }
 }

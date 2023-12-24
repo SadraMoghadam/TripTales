@@ -18,7 +18,7 @@ class DynamicStack extends StatelessWidget {
     children.sort((a, b) {
       int orderA = (a as MemoryCard).order;
       int orderB = (b as MemoryCard).order;
-      return orderB.compareTo(orderA);
+      return orderA.compareTo(orderB);
     });
 
     return Stack(

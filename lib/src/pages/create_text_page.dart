@@ -10,6 +10,7 @@ import '../constants/error_messages.dart';
 import '../constants/memory_card_type.dart';
 import '../models/card_model.dart';
 import '../services/card_service.dart';
+import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';
 import '../widgets/button.dart';
@@ -23,6 +24,7 @@ class CreateTextPage extends StatefulWidget {
 
 class _CreateTextPageState extends State<CreateTextPage> {
   final Validator _validator = Validator();
+  final AppManager _appManager = Get.put(AppManager());
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final TextEditingController _textController;
@@ -69,8 +71,8 @@ class _CreateTextPageState extends State<CreateTextPage> {
       return;
     }
     CardModel textCardData = CardModel(
-      id: "1",
-      order: 1,
+      uid: "1",
+      order: _appManager.getCardsNum(),
       type: MemoryCardType.text,
       transform: Matrix4.identity(),
       name: _nameController.text,

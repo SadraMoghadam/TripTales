@@ -1,24 +1,22 @@
-// import 'dart:io';
-//
-// import 'package:get/get.dart';
-// import 'package:image_picker/image_picker.dart';
-//
-// class MediaController extends GetxController {
-//   Rx<bool?> isRestart = Rx<bool?>(null);
-//
-//   void setImage(File? file) {
-//     image.value = file;
-//   }
-//
-//   File? getImage() {
-//     return image.value;
-//   }
-//
-//   void setVideo(XFile? file) {
-//     video.value = file;
-//   }
-//
-//   XFile? getVideo() {
-//     return video.value;
-//   }
-// }
+import 'dart:io';
+
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:trip_tales/src/models/card_model.dart';
+
+class AppManager extends GetxController {
+  Rx<List<CardModel?>?> userCards = Rx<List<CardModel?>?>(null);
+
+  void setCards(List<CardModel?>? cards) {
+    userCards.value = cards;
+  }
+
+  List<CardModel?>? getCards() {
+    userCards.value!.sort((a, b) => a!.order.compareTo(b!.order));
+    return userCards.value;
+  }
+
+  int getCardsNum(){
+    return userCards.value!.length;
+  }
+}

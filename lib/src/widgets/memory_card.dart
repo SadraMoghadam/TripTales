@@ -113,10 +113,10 @@ class _MemoryCardState extends State<MemoryCard> {
 
     // Apply size limits
     if (newContainerSize > maxSize) {
-      print("fjsbeueyb");
+      // print("fjsbeueyb");
       newContainerSize = maxSize;
     } else if (newContainerSize < minSize) {
-      print("uyiuiyfjsbeueyb");
+      // print("uyiuiyfjsbeueyb");
       newContainerSize = minSize;
     }
     widget.size = new Size(newContainerSize, newContainerSize);
