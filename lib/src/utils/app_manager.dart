@@ -12,6 +12,8 @@ class AppManager extends GetxController {
   }
 
   List<CardModel?>? getCards() {
+    if(userCards == Rx<List<CardModel?>?>(null))
+      return [];
     userCards.value!.sort((a, b) => a!.order.compareTo(b!.order));
     return userCards.value;
   }

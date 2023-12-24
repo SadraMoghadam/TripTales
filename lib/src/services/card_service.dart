@@ -85,12 +85,12 @@ class CardService extends GetxService {
   Future<int> addTextCard(CardModel cardData) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<CardModel?> currentCards = await getCards("1");
-      var contain =
-          currentCards.where((element) => element!.name == cardData.name);
-      if (!contain.isEmpty) {
-        return 400;
-      }
+      // List<CardModel?> currentCards = await getCards("1");
+      // var contain =
+      //     currentCards.where((element) => element!.name == cardData.name);
+      // if (!contain.isEmpty) {
+      //   return 400;
+      // }
       // print("__________________${cardData.toJsonTextCard()}");
       DocumentReference cardReference = await _cardsCollection.add({
         'userId': '1',
@@ -120,27 +120,30 @@ class CardService extends GetxService {
           currentCards.where((element) => element!.name == cardData.name);
       if (!contain.isEmpty) {
         String cardId = await getCardId(contain.first!.name);
+        print('(((((((((((((${cardId}');
         if(contain.first!.type == MemoryCardType.image || contain.first!.type == MemoryCardType.video){
           await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
             'userId': '1',
             'cardData': cardData.toJson(),
           });
+          print('+++++++++++++++${cardId}');
         }
         else if(contain.first!.type == MemoryCardType.text){
           await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
             'userId': '1',
             'cardData': cardData.toJsonTextCard(),
           });
+          print('=====================${cardId}');
         }
 
-        print('Card added successfully.');
+        print('Card updated successfully.');
         return 200;
       }
       return 401;
     }
     // print("__________________${cardData.toJsonTextCard()}");
     catch (e) {
-      print('Error adding card: $e');
+      print('Error updated card: $e');
       return 401;
     }
   }
@@ -151,14 +154,13 @@ class CardService extends GetxService {
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
           await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
-      // print("__________________$userData");
+      // print("__________________${userData?['cards'].length}");
       for (int i = 0; i < userData?['cards'].length; i++) {
         final DocumentSnapshot<Map<String, dynamic>> cardDoc = await _firestore
             .collection('cards')
             .doc(userData?['cards'][i])
             .get();
         final cardData = cardDoc.data()!['cardData'];
-        Reference ref = _storage.ref().child('your_image_path');
 
         if (cardData != null) {
           // print("----------------------${cardData['order']}");
@@ -179,6 +181,14 @@ class CardService extends GetxService {
               transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),
               path: downloadURL,
               name: cardData['name'],
+              size: Size(cardData['size'], cardData['size']),
+              // text: '',
+              // textColor: Colors.white,
+              // textBackgroundColor: Colors.white,
+              // textDecoration: TextDecoration.none,
+              // fontStyle: FontStyle.normal,
+              // fontWeight: FontWeight.normal,
+              fontSize: 0,
             );
             cards.add(cardModel);
           } else if (type == MemoryCardType.text) {
@@ -195,6 +205,8 @@ class CardService extends GetxService {
               type: type,
               transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),
               name: cardData['name'],
+              // path: '',
+              // size: Size(0, 0),
               text: cardData['text'],
               textColor: TextUtils.textToColor(cardData['textColor']),
               textBackgroundColor:
@@ -205,6 +217,7 @@ class CardService extends GetxService {
               fontWeight: TextUtils.textToFontWeight(cardData['fontWeight']),
               fontSize: cardData['fontSize'],
             );
+            print("----------------------${cardData['name']}");
             cards.add(cardModel);
           }
         }

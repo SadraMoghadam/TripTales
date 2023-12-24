@@ -85,7 +85,7 @@ class _TalePageState extends State<TalePage> {
             });
           },
           child: Container(
-            width: device.width * 0.30,
+            width: 120,
             decoration: BoxDecoration(
               boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 3, spreadRadius: 3)],
                 borderRadius: BorderRadius.circular(30),
@@ -142,18 +142,6 @@ class _TalePageState extends State<TalePage> {
     );
   }
 
-  Future<void> onReorderButtonClick() async {
-    final result = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return ReorderPage();
-        }
-    );
-    // if (result != null && result == true) {
-    //   widget.callback();
-    // }
-  }
-
   Widget buildReorder() {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
@@ -162,9 +150,7 @@ class _TalePageState extends State<TalePage> {
       left: 20,
       child: GestureDetector(
         onTap: () {
-          setState(() {
-            onReorderButtonClick();
-          });
+          onReorderButtonClick();
         },
         child: Container(
           padding: EdgeInsets.all(15),
@@ -182,6 +168,20 @@ class _TalePageState extends State<TalePage> {
         ),
       ),
     );
+  }
+
+  Future<void> onReorderButtonClick() async {
+    final result = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ReorderPage();
+        }
+    );
+    if (result != null && result == true) {
+      setState(() {
+        callback();
+      });
+    }
   }
 
   Widget buildAddMemory() {

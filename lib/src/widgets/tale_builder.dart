@@ -48,15 +48,18 @@ class _TaleBuilderState extends State<TaleBuilder>
     print("sadawdwadawwdafdw HHHHHHHHHHHEEEEEEEEEEEE");
     setState(() {
       cards = _cardService.getCards("1");
-      print(cards.then((value) => print(value.length)));
     });
+    // for(int i = 0; i <
+    //     print(cards.then((value) => print(value.nam)));)
   }
 
   @override
   void initState() {
     super.initState();
     print("YYYYYYYYYYYYYYYYYYYYYYYYYYYY HHHHHHHHHHHEEEEEEEEEEEE");
-    cards = _cardService.getCards("1");
+    setState(() {
+      cards = _cardService.getCards("1");
+    });
     // _controller = AnimationController(vsync: this);
     // _controller_place_here = AnimationController(vsync: this);
     // for (int i = 0; i < numOfCards; i++) {
@@ -68,7 +71,7 @@ class _TaleBuilderState extends State<TaleBuilder>
     print("------------$widgetId------------");
     GlobalKey widgetKey = _widgetKeyList[widgetId];
     final RenderBox renderBox =
-        widgetKey.currentContext?.findRenderObject() as RenderBox;
+    widgetKey.currentContext?.findRenderObject() as RenderBox;
     widgetKey.currentContext?.size;
 
     final Size size = renderBox.size;
@@ -89,8 +92,15 @@ class _TaleBuilderState extends State<TaleBuilder>
       builder:
           (BuildContext context, AsyncSnapshot<List<CardModel?>> snapshot) {
         if (snapshot.hasData) {
-          _appManager.setCards(snapshot.data);
-          numOfCards = snapshot.data!.length;
+          List<CardModel?> data = [];
+          print("###########");
+          data = snapshot.data!;
+          print(data);
+          _appManager.setCards(data);
+          numOfCards = data.length;
+          for (int i = 0; i < numOfCards; i++)
+            print(')))))))${data[i]!.name} ==== ${data[i]!.order}');
+
           _widgetKeyList = List.generate(
               numOfCards, (index) => GlobalObjectKey<FormState>(index));
           return Container(
@@ -99,34 +109,34 @@ class _TaleBuilderState extends State<TaleBuilder>
             child: DynamicStack(
               children: [
                 for (int i = 0; i < numOfCards; i++)
-                  if (snapshot.data![i]!.type == MemoryCardType.image)
+                  if (data[i]!.type == MemoryCardType.image)
                     MemoryCard(
                         cardKey: _widgetKeyList[i],
-                        order: snapshot.data![i]!.order,
+                        order: data[i]!.order,
                         type: MemoryCardType.image,
-                        initTransform: snapshot.data![i]!.transform,
-                        imagePath: snapshot.data![i]!.path)
-                  else if (snapshot.data![i]!.type == MemoryCardType.video)
+                        initTransform: data[i]!.transform,
+                        imagePath: data[i]!.path)
+                  else if (data[i]!.type == MemoryCardType.video)
                     MemoryCard(
                         cardKey: _widgetKeyList[i],
-                        order: snapshot.data![i]!.order,
+                        order: data[i]!.order,
                         type: MemoryCardType.video,
-                        initTransform: snapshot.data![i]!.transform,
-                        videoPath: snapshot.data![i]!.path)
-                  else if (snapshot.data![i]!.type == MemoryCardType.text)
-                    MemoryCard(
-                      cardKey: _widgetKeyList[i],
-                      order: snapshot.data![i]!.order,
-                      type: MemoryCardType.text,
-                      initTransform: snapshot.data![i]!.transform,
-                      text: snapshot.data![i]!.text,
-                      textColor: snapshot.data![i]!.textColor,
-                      textBackgroundColor: snapshot.data![i]!.textBackgroundColor,
-                      textDecoration: snapshot.data![i]!.textDecoration,
-                      fontStyle: snapshot.data![i]!.fontStyle,
-                      fontWeight: snapshot.data![i]!.fontWeight,
-                      fontSize: snapshot.data![i]!.fontSize,
-                    )
+                        initTransform: data[i]!.transform,
+                        videoPath: data[i]!.path)
+                  else if (data[i]!.type == MemoryCardType.text)
+                      MemoryCard(
+                        cardKey: _widgetKeyList[i],
+                        order: data[i]!.order,
+                        type: MemoryCardType.text,
+                        initTransform: data[i]!.transform,
+                        text: data[i]!.text,
+                        textColor: data[i]!.textColor,
+                        textBackgroundColor: data[i]!.textBackgroundColor,
+                        textDecoration: data[i]!.textDecoration,
+                        fontStyle: data[i]!.fontStyle,
+                        fontWeight: data[i]!.fontWeight,
+                        fontSize: data[i]!.fontSize,
+                      )
 
                 // MemoryCard(cardKey: _widgetKeyList[0], order: 1, type: MemoryCardType.image, initTransform: Matrix4.identity(), imagePath: "https://picsum.photos/200/300", size: containersSize[0]),
                 // MemoryCard(cardKey: _widgetKeyList[1], order: 3, type: MemoryCardType.image, initTransform: Matrix4.identity(), imagePath: "https://picsum.photos/900/500", size: containersSize[1]),

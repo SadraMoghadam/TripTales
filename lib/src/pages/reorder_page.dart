@@ -27,6 +27,7 @@ class _ReorderPageState extends State<ReorderPage> {
   final CardService _cardService = Get.find<CardService>();
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   List<CardModel?> cardsOrder = [];
+  List<CardModel?> newCardsOrder = [];
 
   @override
   void initState() {
@@ -64,7 +65,7 @@ class _ReorderPageState extends State<ReorderPage> {
             backgroundColor: AppColors.main3,
             text: "close",
             textColor: Colors.white,
-            onPressed: () => Navigator.of(context).pop())
+            onPressed: () => Navigator.of(context).pop(true))
       ],
     );
   }
@@ -124,30 +125,52 @@ class _ReorderPageState extends State<ReorderPage> {
   }
 
   void reorderCards(){
+    newCardsOrder = [];
     for(int i = 0; i < cardsOrder.length!; i++){
-      // if(cardsOrder[i]!.type == MemoryCardType.image || cardsOrder[i]!.type == MemoryCardType.image){
-      //   cardsOrder[i] = CardModel(uid: i, order: order, type: type, transform: transform);
-      // }
-      // else if(cardsOrder[i]!.type == MemoryCardType.text){
-      //   cardsOrder[i] = CardModel(uid: i, order: order, type: type, transform: transform);
-      // }
-      cardsOrder[i] = CardModel(
-        uid: cardsOrder[i]!.uid,
-        order: i,
-        type: cardsOrder[i]!.type,
-        transform: cardsOrder[i]!.transform,
-        name: cardsOrder[i]!.name,
-        text: cardsOrder[i]!.text,
-        textColor: cardsOrder[i]!.textColor,
-        textBackgroundColor: cardsOrder[i]!.textBackgroundColor,
-        textDecoration: cardsOrder[i]!.textDecoration,
-        fontStyle: cardsOrder[i]!.fontStyle,
-        fontWeight: cardsOrder[i]!.fontWeight,
-        fontSize: cardsOrder[i]!.fontSize,
-      );
-      _cardService.updateCard(cardsOrder[i]!);
+      // print('------------__________${cardsOrder[i]!.name} ===== ${cardsOrder[i]!.order}');
+      if(cardsOrder[i]!.type == MemoryCardType.image || cardsOrder[i]!.type == MemoryCardType.video){
+        newCardsOrder.add(CardModel(
+          uid: cardsOrder[i]!.uid,
+          order: i,
+          type: cardsOrder[i]!.type,
+          transform: cardsOrder[i]!.transform,
+          path: cardsOrder[i]!.path,
+          name: cardsOrder[i]!.name,
+          // text: cardsOrder[i]!.text,
+          // textColor: cardsOrder[i]!.textColor,
+          // textBackgroundColor: cardsOrder[i]!.textBackgroundColor,
+          // textDecoration: cardsOrder[i]!.textDecoration,
+          // fontStyle: cardsOrder[i]!.fontStyle,
+          // fontWeight: cardsOrder[i]!.fontWeight,
+          // fontSize: cardsOrder[i]!.fontSize,
+        ));
+      }
+      else if(cardsOrder[i]!.type == MemoryCardType.text){
+        newCardsOrder.add(CardModel(
+          uid: cardsOrder[i]!.uid,
+          order: i,
+          type: cardsOrder[i]!.type,
+          transform: cardsOrder[i]!.transform,
+          // path: cardsOrder[i]!.path,
+          name: cardsOrder[i]!.name,
+          text: cardsOrder[i]!.text,
+          textColor: cardsOrder[i]!.textColor,
+          textBackgroundColor: cardsOrder[i]!.textBackgroundColor,
+          textDecoration: cardsOrder[i]!.textDecoration,
+          fontStyle: cardsOrder[i]!.fontStyle,
+          fontWeight: cardsOrder[i]!.fontWeight,
+          fontSize: cardsOrder[i]!.fontSize,
+        ));
+      }
+
+      // print('__________------------${newCardsOrder[i]!.name} ===== ${newCardsOrder[i]!.order}');
     }
-    _appManager.setCards(cardsOrder);
+    for(int i = 0; i < newCardsOrder.length!; i++){
+      print('__________------------${newCardsOrder[i]!.name} ===== ${newCardsOrder[i]!.order}');
+      _cardService.updateCard(newCardsOrder[i]!);
+
+    }
+    _appManager.setCards(newCardsOrder);
   }
 
 }

@@ -12,7 +12,7 @@ class CardModel {
   final Matrix4 transform;
   final Size size;
   final String name;
-  final String path;
+  late final String path;
 
   final String text;
   final Color textColor;
@@ -52,6 +52,13 @@ class CardModel {
       'transform': CustomMatrixUtils.matrix4ToJson(transform),
       'path': name,
       'size': size.height,
+      // 'text': '',
+      // 'textColor': '',
+      // 'textBackgroundColor': '',
+      // 'textDecoration': '',
+      // 'fontStyle': '',
+      // 'fontWeight': '',
+      // 'fontSize': '',
     };
   }
 
@@ -61,6 +68,8 @@ class CardModel {
       'order': order,
       'type': type.name,
       'transform': CustomMatrixUtils.matrix4ToJson(transform),
+      // 'path': '',
+      // 'size': 300,
       'text': text,
       'textColor': TextUtils.colorToText(textColor),
       'textBackgroundColor': TextUtils.colorToText(textBackgroundColor),
