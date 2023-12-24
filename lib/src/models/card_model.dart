@@ -7,7 +7,7 @@ import '../utils/matrix_utils.dart';
 
 class CardModel {
   final String id;
-  final int order;
+  late final int order;
   final MemoryCardType type;
   final Matrix4 transform;
   final Size size;

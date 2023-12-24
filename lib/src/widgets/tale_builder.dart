@@ -7,6 +7,7 @@ import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/constants/memory_card_info.dart';
 import 'package:trip_tales/src/constants/memory_card_type.dart';
 import 'package:trip_tales/src/pages/tale.dart';
+import 'package:trip_tales/src/utils/app_manager.dart';
 import 'package:trip_tales/src/utils/dynamic_stack.dart';
 import 'package:trip_tales/src/utils/text_utils.dart';
 import 'package:trip_tales/src/widgets/memory_card.dart';
@@ -17,8 +18,9 @@ import '../utils/device_info.dart';
 
 class TaleBuilder extends StatefulWidget {
   final Function callback;
+  final bool isEditMode;
 
-  const TaleBuilder({super.key, required this.callback});
+  const TaleBuilder({super.key, required this.callback, required this.isEditMode});
 
   @override
   _TaleBuilderState createState() => _TaleBuilderState();
@@ -27,6 +29,7 @@ class TaleBuilder extends StatefulWidget {
 class _TaleBuilderState extends State<TaleBuilder>
     with TickerProviderStateMixin {
   final CardService _cardService = Get.find<CardService>();
+  final AppManager _appManager = Get.put(AppManager());
   late List<GlobalKey> _widgetKeyList;
   double containerTop = 0.0;
   double containerLeft = 0.0;
@@ -86,6 +89,7 @@ class _TaleBuilderState extends State<TaleBuilder>
       builder:
           (BuildContext context, AsyncSnapshot<List<CardModel?>> snapshot) {
         if (snapshot.hasData) {
+          _appManager.setCards(snapshot.data);
           numOfCards = snapshot.data!.length;
           _widgetKeyList = List.generate(
               numOfCards, (index) => GlobalObjectKey<FormState>(index));

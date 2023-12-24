@@ -37,6 +37,7 @@ class CardService extends GetxService {
       if (!contain.isEmpty) {
         return 400;
       }
+      // cardData.order = currentCards.length;
       Future<bool> isUploaded = _uploadImage(imageFile, cardData.name);
       DocumentReference cardReference = await _cardsCollection.add({
         'userId': '1',
@@ -57,11 +58,12 @@ class CardService extends GetxService {
   Future<int> addVideoCard(CardModel cardData, XFile videoFile) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      // List<ImageCardModel?> currentCards = await getImageCards("1");
-      // var contain = currentCards.where((element) => element!.name == cardData.name);
-      // if(!contain.isEmpty){
-      //   return 400;
-      // }
+      List<CardModel?> currentCards = await getCards("1");
+      var contain = currentCards.where((element) => element!.name == cardData.name);
+      if(!contain.isEmpty){
+        return 400;
+      }
+      // cardData.order = currentCards.length;
       Future<bool> isUploaded = _uploadVideo(videoFile, cardData.name);
       DocumentReference cardReference = await _cardsCollection.add({
         'userId': '1',
