@@ -148,6 +148,35 @@ class CardService extends GetxService {
     }
   }
 
+  Future<int> deleteCardByName(String name) async {
+    try {
+      // String? currentUserId = _authService.currentUserId;
+      List<CardModel?> currentCards = await getCards("1");
+      final DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firestore.collection('users').doc('1').get();
+      final userData = userDoc.data();
+      print(userData);
+      var contain =
+      currentCards.where((element) => element!.name == name);
+      if (!contain.isEmpty) {
+        String cardId = await getCardId(contain.first!.name);
+        await FirebaseFirestore.instance.collection('cards').doc(cardId).delete();
+        await FirebaseFirestore.instance.collection('users').doc("1").update({
+          'cards': FieldValue.arrayRemove([cardId]),
+        });
+
+        print('Card deleted successfully.');
+        return 200;
+      }
+      return 401;
+    }
+    // print("__________________${cardData.toJsonTextCard()}");
+    catch (e) {
+      print('Error delete card: $e');
+      return 401;
+    }
+  }
+
   Future<List<CardModel?>> getCards(String uid) async {
     try {
       List<CardModel> cards = [];

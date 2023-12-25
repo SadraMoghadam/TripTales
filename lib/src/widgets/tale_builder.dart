@@ -122,6 +122,8 @@ class _TaleBuilderState extends State<TaleBuilder>
                   if (data[i]!.type == MemoryCardType.image)
                     MemoryCard(
                         isEditable: widget.isEditMode,
+                        callback: widget.callback,
+                        name: data[i]!.name,
                         cardKey: _widgetKeyList[i],
                         order: data[i]!.order,
                         type: MemoryCardType.image,
@@ -130,6 +132,8 @@ class _TaleBuilderState extends State<TaleBuilder>
                   else if (data[i]!.type == MemoryCardType.video)
                     MemoryCard(
                         isEditable: widget.isEditMode,
+                        callback: widget.callback,
+                        name: data[i]!.name,
                         cardKey: _widgetKeyList[i],
                         order: data[i]!.order,
                         type: MemoryCardType.video,
@@ -138,6 +142,8 @@ class _TaleBuilderState extends State<TaleBuilder>
                   else if (data[i]!.type == MemoryCardType.text)
                       MemoryCard(
                         isEditable: widget.isEditMode,
+                        callback: widget.callback,
+                        name: data[i]!.name,
                         cardKey: _widgetKeyList[i],
                         order: data[i]!.order,
                         type: MemoryCardType.text,

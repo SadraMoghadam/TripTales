@@ -12,6 +12,7 @@ class ErrorController {
   static const String createImage = "Problem with image creation";
   static const String createVideo = "Problem with video creation";
   static const String createText = "Problem with text creation";
+  static const String deleteCard = "Problem with deleting memory";
   static void showSnackBarError(String errorMsg){
     Get.snackbar('Oops!', errorMsg, backgroundColor: AppColors.main3, borderWidth: 3, borderColor: Colors.black26);
   }

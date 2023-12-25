@@ -82,7 +82,7 @@ class _TalePageState extends State<TalePage> {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return Positioned(
-        top: 10,
+        top: 20,
         right: 10,
         child: GestureDetector(
           onTap: () {

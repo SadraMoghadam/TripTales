@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:trip_tales/src/constants/color.dart';
+import 'package:trip_tales/src/widgets/delete_item_dialog.dart';
 import 'package:video_player/video_player.dart';
 
 import '../constants/memory_card_type.dart';
@@ -13,8 +14,10 @@ import 'dart:math' as math;
 class MemoryCard extends StatefulWidget {
   // final Function(Size) onSizeChanged;
   final bool isEditable;
+  final Function callback;
 
   final GlobalKey cardKey;
+  final String name;
   final MemoryCardType type;
   final int order;
   late Size size;
@@ -37,6 +40,8 @@ class MemoryCard extends StatefulWidget {
 
   MemoryCard({super.key,
     required this.isEditable,
+    required this.callback,
+    required this.name,
     required this.cardKey,
     required this.order,
     required this.type,
@@ -123,6 +128,16 @@ class _MemoryCardState extends State<MemoryCard> {
       newContainerSize = minSize;
     }
     widget.size = new Size(newContainerSize, newContainerSize);
+  }
+
+  void deleteCard(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DeleteItemDialog(name: widget.name);
+        }).then((value) => setState(() {
+      widget.callback();
+    }));
   }
 
   Future<void> loadImageInfo(String imageUrl) async {
@@ -263,10 +278,18 @@ class _MemoryCardState extends State<MemoryCard> {
               // key: _widgetKeyList[0],
               width: imageActualSize.width,
               height: imageActualSize.height,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(widget.imagePath, fit: BoxFit.cover),
-              ),
+              decoration: cardDecorationOnEdit(),
+              child: Center(
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(widget.imagePath, fit: BoxFit.cover),
+                    ),
+                    deleteButton(deleteCard),
+                  ],
+                ),
+              )
             );
           } else {
             return Center(
@@ -332,10 +355,18 @@ class _MemoryCardState extends State<MemoryCard> {
                           // key: _widgetKeyList[1],
                           height: videoActualSize.height,
                           width: videoActualSize.width,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: VideoPlayer(_videoController),
-                          ),
+                          decoration: cardDecorationOnEdit(),
+                          child: Center(
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: VideoPlayer(_videoController),
+                                ),
+                                deleteButton(deleteCard),
+                              ],
+                            ),
+                          )
                         ),
                         Container(
                           height: videoActualSize.height,
@@ -374,21 +405,58 @@ class _MemoryCardState extends State<MemoryCard> {
   Widget textMemory() {
     return Container(
         // key: _widgetKeyList[2],
-      transform: transform,
-        child: FittedBox(
-          fit: BoxFit.fill,
-          child:
-          Text(
-            widget.text,
-            style: TextStyle(
-                fontSize: widget.fontSize,
-                fontWeight: widget.fontWeight,
-                color: widget.textColor,
-                backgroundColor: widget.textBackgroundColor,
-                decoration: widget.textDecoration,
-                fontStyle: widget.fontStyle,
-            ),
-          ),)
+        transform: transform,
+        decoration: cardDecorationOnEdit(isText: true, backColor: widget.textBackgroundColor),
+        child: Stack(
+          children: [
+            FittedBox(
+              fit: BoxFit.fill,
+              child:
+              Text(
+                widget.text,
+                style: TextStyle(
+                  fontSize: widget.fontSize,
+                  fontWeight: widget.fontWeight,
+                  color: widget.textColor,
+                  // backgroundColor: widget.textBackgroundColor,
+                  decoration: widget.textDecoration,
+                  fontStyle: widget.fontStyle,
+                ),
+              ),),
+            deleteButton(deleteCard)
+          ],
+        )
+    );
+  }
+
+  Widget deleteButton(Function onTap) {
+    return widget.isEditable ? Positioned(
+      top: 5,
+      right: 5,
+      child: GestureDetector(
+        onTap: () {
+          onTap();
+        },
+        child: Container(
+          padding: EdgeInsets.all(1),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              // boxShadow: const [BoxShadow(color: AppColors.main3, blurRadius: 3, spreadRadius: 1)],
+              color: AppColors.main3.withOpacity(0.7)),
+          child: const Icon(Icons.close_outlined, size: 17, color: Colors.white60),
+        ),
+      ),
+    ) : Container(width: 0, height: 0,);
+  }
+
+  BoxDecoration cardDecorationOnEdit({bool isText = false, backColor = Colors.transparent}){
+    return BoxDecoration(
+      color: isText ? backColor : Colors.transparent,
+      borderRadius: BorderRadius.circular(13.0),
+      border: Border.all(
+        color: widget.isEditable ? AppColors.main3.withOpacity(0.8) : Colors.transparent, // Set your border color here
+        width: 1.0,
+      ),
     );
   }
 
