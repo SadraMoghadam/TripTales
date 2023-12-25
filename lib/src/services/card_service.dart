@@ -85,18 +85,18 @@ class CardService extends GetxService {
   Future<int> addTextCard(CardModel cardData) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      // List<CardModel?> currentCards = await getCards("1");
-      // var contain =
-      //     currentCards.where((element) => element!.name == cardData.name);
-      // if (!contain.isEmpty) {
-      //   return 400;
-      // }
+      List<CardModel?> currentCards = await getCards("1");
+      var contain =
+          currentCards.where((element) => element!.name == cardData.name);
+      if (!contain.isEmpty) {
+        return 400;
+      }
       // print("__________________${cardData.toJsonTextCard()}");
       DocumentReference cardReference = await _cardsCollection.add({
         'userId': '1',
         'cardData': cardData.toJsonTextCard(),
       });
-      print("__________________$cardReference");
+      // print("__________________$cardReference");
       await FirebaseFirestore.instance.collection('users').doc("1").update({
         'cards': FieldValue.arrayUnion([cardReference.id]),
       });
@@ -120,20 +120,20 @@ class CardService extends GetxService {
           currentCards.where((element) => element!.name == cardData.name);
       if (!contain.isEmpty) {
         String cardId = await getCardId(contain.first!.name);
-        print('(((((((((((((${cardId}');
+        // print('(((((((((((((${cardId}');
         if(contain.first!.type == MemoryCardType.image || contain.first!.type == MemoryCardType.video){
           await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
             'userId': '1',
             'cardData': cardData.toJson(),
           });
-          print('+++++++++++++++${cardId}');
+          // print('+++++++++++++++${cardId}');
         }
         else if(contain.first!.type == MemoryCardType.text){
           await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
             'userId': '1',
             'cardData': cardData.toJsonTextCard(),
           });
-          print('=====================${cardId}');
+          // print('=====================${cardId}');
         }
 
         print('Card updated successfully.');
@@ -217,12 +217,12 @@ class CardService extends GetxService {
               fontWeight: TextUtils.textToFontWeight(cardData['fontWeight']),
               fontSize: cardData['fontSize'],
             );
-            print("----------------------${cardData['name']}");
+            // print("----------------------${cardData['name']}");
             cards.add(cardModel);
           }
         }
       }
-      print('%%%%%%%%%%%%%%%%%%${cards.length}');
+      // print('%%%%%%%%%%%%%%%%%%${cards.length}');
       return cards;
     } catch (e) {
       // Get.snackbar('Error', e.toString());

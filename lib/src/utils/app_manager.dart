@@ -19,6 +19,8 @@ class AppManager extends GetxController {
   }
 
   int getCardsNum(){
+    if(userCards == Rx<List<CardModel?>?>(null))
+      return 0;
     return userCards.value!.length;
   }
 }

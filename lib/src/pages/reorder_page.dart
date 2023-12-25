@@ -28,6 +28,7 @@ class _ReorderPageState extends State<ReorderPage> {
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   List<CardModel?> cardsOrder = [];
   List<CardModel?> newCardsOrder = [];
+  bool canClose = true;
 
   @override
   void initState() {
@@ -63,6 +64,7 @@ class _ReorderPageState extends State<ReorderPage> {
             width: 30,
             fontSize: 12,
             backgroundColor: AppColors.main3,
+            isDisabled: !canClose,
             text: "close",
             textColor: Colors.white,
             onPressed: () => Navigator.of(context).pop(true))
@@ -124,7 +126,8 @@ class _ReorderPageState extends State<ReorderPage> {
     );
   }
 
-  void reorderCards(){
+  void reorderCards() {
+    canClose = false;
     newCardsOrder = [];
     for(int i = 0; i < cardsOrder.length!; i++){
       // print('------------__________${cardsOrder[i]!.name} ===== ${cardsOrder[i]!.order}');
@@ -167,8 +170,13 @@ class _ReorderPageState extends State<ReorderPage> {
     }
     for(int i = 0; i < newCardsOrder.length!; i++){
       print('__________------------${newCardsOrder[i]!.name} ===== ${newCardsOrder[i]!.order}');
-      _cardService.updateCard(newCardsOrder[i]!);
-
+      _cardService.updateCard(newCardsOrder[i]!).then((value) {
+        if(i == newCardsOrder.length! - 1) {
+          setState(() {
+            canClose = true;
+          });
+        }
+      });
     }
     _appManager.setCards(newCardsOrder);
   }

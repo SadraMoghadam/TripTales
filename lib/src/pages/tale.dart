@@ -17,9 +17,10 @@ class _TalePageState extends State<TalePage> {
   bool reload = false;
 
   bool isEditMode = false;
+  Key _contentKey = UniqueKey();
 
   callback() {
-    setState(() {reload = true;});
+    setState(() {reload = true; _contentKey = UniqueKey();});
   }
 
   final MaterialStateProperty<Icon?> thumbIcon =
@@ -54,7 +55,7 @@ class _TalePageState extends State<TalePage> {
       child: Stack(
         children: [
           SingleChildScrollView(
-            child: TaleBuilder(callback: callback, isEditMode: isEditMode,),
+            child: TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
           ),
           buildAddMemory(),
           isEditMode ? buildReorder() : Container(),
@@ -170,18 +171,20 @@ class _TalePageState extends State<TalePage> {
     );
   }
 
-  Future<void> onReorderButtonClick() async {
-    final result = await showDialog(
+  void onReorderButtonClick() {
+    showDialog(
         context: context,
         builder: (BuildContext context) {
           return ReorderPage();
         }
-    );
-    if (result != null && result == true) {
-      setState(() {
-        callback();
-      });
-    }
+    ).then((value) => setState(() {
+      callback();
+    }));
+    // if (result != null && result == true) {
+    //   setState(() {
+    //     callback();
+    //   });
+    // }
   }
 
   Widget buildAddMemory() {

@@ -180,7 +180,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
             backgroundColor: AppColors.main3,
             text: "close",
             textColor: Colors.white,
-            onPressed: () => Navigator.of(context).pop())
+            onPressed: () => Navigator.of(context).pop(true))
       ],
     );
   }

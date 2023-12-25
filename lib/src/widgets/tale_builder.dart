@@ -19,8 +19,10 @@ import '../utils/device_info.dart';
 class TaleBuilder extends StatefulWidget {
   final Function callback;
   final bool isEditMode;
+  final bool reload;
+  final Key taleKey;
 
-  const TaleBuilder({super.key, required this.callback, required this.isEditMode});
+  const TaleBuilder({super.key, required this.callback, required this.isEditMode, required this.reload, required this.taleKey});
 
   @override
   _TaleBuilderState createState() => _TaleBuilderState();
@@ -41,17 +43,17 @@ class _TaleBuilderState extends State<TaleBuilder>
 
   static int numOfCards = 0;
 
-  @override
-  void didUpdateWidget(covariant TaleBuilder oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    print("sadawdwadawwdafdw HHHHHHHHHHHEEEEEEEEEEEE");
-    setState(() {
-      cards = _cardService.getCards("1");
-    });
-    // for(int i = 0; i <
-    //     print(cards.then((value) => print(value.nam)));)
-  }
+  // @override
+  // void didUpdateWidget(covariant TaleBuilder oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //
+  //   print("sadawdwadawwdafdw HHHHHHHHHHHEEEEEEEEEEEE");
+  //   setState(() {
+  //     cards = _cardService.getCards("1");
+  //   });
+  //   // for(int i = 0; i <
+  //   //     print(cards.then((value) => print(value.nam)));)
+  // }
 
   @override
   void initState() {
@@ -65,6 +67,12 @@ class _TaleBuilderState extends State<TaleBuilder>
     // for (int i = 0; i < numOfCards; i++) {
     //   WidgetsBinding.instance.addPostFrameCallback((_) => _getWidgetInfo(i));
     // }
+  }
+
+  void initialize() {
+    setState(() {
+      cards = _cardService.getCards("1");
+    });
   }
 
   void _getWidgetInfo(int widgetId) {
@@ -85,21 +93,27 @@ class _TaleBuilderState extends State<TaleBuilder>
 
   @override
   Widget build(BuildContext context) {
+    if(widget.reload) {
+      setState(() {
+        cards = _cardService.getCards("1");
+      });
+    }
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return FutureBuilder<List<CardModel?>>(
+      key: widget.taleKey,
       future: cards,
       builder:
           (BuildContext context, AsyncSnapshot<List<CardModel?>> snapshot) {
         if (snapshot.hasData) {
           List<CardModel?> data = [];
-          print("###########");
+          // print("###########");
           data = snapshot.data!;
           print(data);
           _appManager.setCards(data);
           numOfCards = data.length;
           for (int i = 0; i < numOfCards; i++)
-            print(')))))))${data[i]!.name} ==== ${data[i]!.order}');
+            // print(')))))))${data[i]!.name} ==== ${data[i]!.order}');
 
           _widgetKeyList = List.generate(
               numOfCards, (index) => GlobalObjectKey<FormState>(index));

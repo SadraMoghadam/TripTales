@@ -11,6 +11,7 @@ class ButtonSlider extends StatefulWidget {
   final Function callback;
 
   const ButtonSlider({super.key, required this.callback});
+
   @override
   _ButtonSlider createState() => _ButtonSlider();
 }
@@ -21,40 +22,34 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
   late final AnimationController _controller;
   late Animation<Offset> _slideAnimation;
 
-  Future<void> onImageButtonClick(Function callback) async {
-    final result = await showDialog(
+  void onImageButtonClick() {
+    showDialog(
         context: context,
         builder: (BuildContext context) {
           return CreateImagePage();
-        }
-    );
-    if (result != null && result == true) {
-      widget.callback();
-    }
+        }).then((value) => setState(() {
+          widget.callback();
+        }));
   }
 
-  Future<void> onVideoButtonClick(Function callback) async {
-    final result = await showDialog(
+  void onVideoButtonClick() {
+    showDialog(
         context: context,
         builder: (BuildContext context) {
           return CreateVideoPage();
-        }
-    );
-    if (result != null && result == true) {
-      widget.callback();
-    }
+        }).then((value) => setState(() {
+          widget.callback();
+        }));
   }
 
-  Future<void> onTextButtonClick() async {
-    final result = showDialog(
+  void onTextButtonClick() {
+    showDialog(
         context: context,
         builder: (BuildContext context) {
           return CreateTextPage();
-        }
-    );
-    if (result != null && result == true) {
-      widget.callback();
-    }
+        }).then((value) => setState(() {
+          widget.callback();
+        }));
   }
 
   @override
@@ -77,21 +72,24 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
     return Container(
       child: Stack(
         children: [
-          buildButton(MemoryCardType.text, Icons.text_snippet_rounded, const Offset(0.0, -3.6)),
-          buildButton(MemoryCardType.video, Icons.video_library_rounded, const Offset(0.0, -2.45)),
-          buildButton(MemoryCardType.image, Icons.image, const Offset(0.0, -1.3)),
+          buildButton(MemoryCardType.text, Icons.text_snippet_rounded,
+              const Offset(0.0, -3.6)),
+          buildButton(MemoryCardType.video, Icons.video_library_rounded,
+              const Offset(0.0, -2.45)),
+          buildButton(
+              MemoryCardType.image, Icons.image, const Offset(0.0, -1.3)),
           Positioned(
             bottom: 0,
             right: 0,
             child: AnimatedContainer(
               height: 100,
               width: 100,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
               ),
-              duration: Duration(seconds: 0),
+              duration: const Duration(seconds: 0),
               child: GestureDetector(
-                key: ValueKey<int>(0),
+                key: const ValueKey<int>(0),
                 onTap: () {
                   setState(() {
                     isMenuOpen = !isMenuOpen;
@@ -146,15 +144,13 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
             color: AppColors.main2,
           ),
           child: GestureDetector(
-            onTap: () async{
+            onTap: () {
               if (type == MemoryCardType.image) {
-                await onImageButtonClick(widget.callback);
-              }
-              else if (type == MemoryCardType.video) {
-                await onVideoButtonClick(widget.callback);
-              }
-              else if (type == MemoryCardType.text) {
-                await onTextButtonClick();
+                onImageButtonClick();
+              } else if (type == MemoryCardType.video) {
+                onVideoButtonClick();
+              } else if (type == MemoryCardType.text) {
+                onTextButtonClick();
               }
             },
             child: Icon(
