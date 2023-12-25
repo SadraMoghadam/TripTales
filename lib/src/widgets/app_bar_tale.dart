@@ -4,11 +4,13 @@ import '../constants/color.dart';
 class CustomAppBar extends StatelessWidget {
   final Widget bodyTale;
   final bool showIcon;
+  final bool isScrollable;
 
   const CustomAppBar({
     Key? key,
     required this.bodyTale,
     required this.showIcon,
+    this.isScrollable = true,
   }) : super(key: key);
 
   @override
@@ -16,12 +18,25 @@ class CustomAppBar extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: NestedScrollView(
+        physics: isScrollable ? const AlwaysScrollableScrollPhysics() : const NeverScrollableScrollPhysics(),
+        // physics: const NeverScrollableScrollPhysics(),
         headerSliverBuilder: (context, isScrolled) => [
           SliverAppBar(
+            // toolbarHeight: isScrollable ? 50.0 : 0,
             pinned: false,
             backgroundColor: AppColors.main1,
             shadowColor: Colors.grey,
             centerTitle: true,
+            // flexibleSpace: const FlexibleSpaceBar(
+            //   title: Text(
+            //     'Trip Tales',
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(
+            //       color: Colors.white,
+            //       fontSize: 20,
+            //     ),
+            //   ),
+            // ),
             title: const Text(
               'Trip Tales',
               textAlign: TextAlign.center,
@@ -30,6 +45,7 @@ class CustomAppBar extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
+
             leading: showIcon
                 ? Builder(
                     builder: (context) => IconButton(

@@ -35,8 +35,8 @@ class _TaleBuilderState extends State<TaleBuilder>
   late List<GlobalKey> _widgetKeyList;
   double containerTop = 0.0;
   double containerLeft = 0.0;
-  late final AnimationController _controller;
-  late final AnimationController _controller_place_here;
+  // late final AnimationController _controller;
+  // late final AnimationController _controller_place_here;
   late Future<List<CardModel?>> cards;
 
   Size containersSize = Size(300, 300);
@@ -69,11 +69,6 @@ class _TaleBuilderState extends State<TaleBuilder>
     // }
   }
 
-  void initialize() {
-    setState(() {
-      cards = _cardService.getCards("1");
-    });
-  }
 
   void _getWidgetInfo(int widgetId) {
     print("------------$widgetId------------");
@@ -112,11 +107,12 @@ class _TaleBuilderState extends State<TaleBuilder>
           print(data);
           _appManager.setCards(data);
           numOfCards = data.length;
-          for (int i = 0; i < numOfCards; i++)
+          for (int i = 0; i < numOfCards; i++) {
             // print(')))))))${data[i]!.name} ==== ${data[i]!.order}');
 
           _widgetKeyList = List.generate(
               numOfCards, (index) => GlobalObjectKey<FormState>(index));
+          }
           return Container(
             height: device.height * 10,
             width: device.width,
@@ -125,6 +121,7 @@ class _TaleBuilderState extends State<TaleBuilder>
                 for (int i = 0; i < numOfCards; i++)
                   if (data[i]!.type == MemoryCardType.image)
                     MemoryCard(
+                        isEditable: widget.isEditMode,
                         cardKey: _widgetKeyList[i],
                         order: data[i]!.order,
                         type: MemoryCardType.image,
@@ -132,6 +129,7 @@ class _TaleBuilderState extends State<TaleBuilder>
                         imagePath: data[i]!.path)
                   else if (data[i]!.type == MemoryCardType.video)
                     MemoryCard(
+                        isEditable: widget.isEditMode,
                         cardKey: _widgetKeyList[i],
                         order: data[i]!.order,
                         type: MemoryCardType.video,
@@ -139,6 +137,7 @@ class _TaleBuilderState extends State<TaleBuilder>
                         videoPath: data[i]!.path)
                   else if (data[i]!.type == MemoryCardType.text)
                       MemoryCard(
+                        isEditable: widget.isEditMode,
                         cardKey: _widgetKeyList[i],
                         order: data[i]!.order,
                         type: MemoryCardType.text,
@@ -161,7 +160,7 @@ class _TaleBuilderState extends State<TaleBuilder>
             ),
           );
         } else if (snapshot.hasError) {
-          print(snapshot.error);
+          // print(snapshot.error);
           return Text("Error: ${snapshot.error}");
         }
         return Container();

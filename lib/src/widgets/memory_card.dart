@@ -12,6 +12,8 @@ import 'dart:math' as math;
 
 class MemoryCard extends StatefulWidget {
   // final Function(Size) onSizeChanged;
+  final bool isEditable;
+
   final GlobalKey cardKey;
   final MemoryCardType type;
   final int order;
@@ -34,6 +36,7 @@ class MemoryCard extends StatefulWidget {
   double maxRotation = math.pi / 2.0;
 
   MemoryCard({super.key,
+    required this.isEditable,
     required this.cardKey,
     required this.order,
     required this.type,
@@ -152,6 +155,9 @@ class _MemoryCardState extends State<MemoryCard> {
     device.computeDeviceInfo(context);
     return MatrixGestureDetector(
       key: widget.cardKey,
+      shouldRotate: widget.isEditable,
+      shouldScale: widget.isEditable,
+      shouldTranslate: widget.isEditable,
       onMatrixUpdate: (m, tm, sm, rm) {
         notifier.value = m;
         transform = m;

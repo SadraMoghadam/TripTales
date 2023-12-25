@@ -42,6 +42,7 @@ class _TalePageState extends State<TalePage> {
         body: CustomAppBar(
           bodyTale: buildBody(device),
           showIcon: true,
+          isScrollable: !isEditMode,
         ));
   }
 
@@ -55,8 +56,12 @@ class _TalePageState extends State<TalePage> {
       child: Stack(
         children: [
           SingleChildScrollView(
+            // physics: isEditMode ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
+            // physics: isEditMode ? const FixedExtentScrollPhysics() : const AlwaysScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             child: TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
           ),
+          // TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
           buildAddMemory(),
           isEditMode ? buildReorder() : Container(),
           buildEditModeButton(),
@@ -65,13 +70,13 @@ class _TalePageState extends State<TalePage> {
     );
   }
 
-  Widget buildMemories() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [buildAddMemory()],
-      ),
-    );
-  }
+  // Widget buildMemories() {
+  //   return SingleChildScrollView(
+  //     child: Column(
+  //       children: [buildAddMemory()],
+  //     ),
+  //   );
+  // }
 
   Widget buildEditModeButton() {
     DeviceInfo device = DeviceInfo();
