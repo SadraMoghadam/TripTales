@@ -118,7 +118,7 @@ class _TalePageState extends State<TalePage> {
         child: Container(
           width: 120,
           decoration: BoxDecoration(boxShadow: const [
-            BoxShadow(color: Colors.grey, blurRadius: 3, spreadRadius: 3)
+            BoxShadow(color: Colors.black45, blurRadius: 3, spreadRadius: 3)
           ], borderRadius: BorderRadius.circular(30), color: AppColors.main2),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -174,7 +174,7 @@ class _TalePageState extends State<TalePage> {
         child: Container(
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(boxShadow: const [
-            BoxShadow(color: Colors.grey, blurRadius: 3, spreadRadius: 3)
+            BoxShadow(color: Colors.black45, blurRadius: 3, spreadRadius: 3)
           ], borderRadius: BorderRadius.circular(30), color: AppColors.main2),
           child: const Center(
               child: Text(

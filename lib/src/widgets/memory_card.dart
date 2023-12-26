@@ -57,7 +57,7 @@ class MemoryCard extends StatefulWidget {
     this.videoPath = 'assets/videos/1.mp4',
     this.text = '',
     this.textColor = AppColors.text1,
-    this.textBackgroundColor = AppColors.main2,
+    this.textBackgroundColor = Colors.transparent,
     this.textDecoration = TextDecoration.none,
     this.fontStyle = FontStyle.normal,
     this.fontWeight = FontWeight.normal,
@@ -485,8 +485,8 @@ class _MemoryCardState extends State<MemoryCard> {
             ),
           )
         : Container(
-            width: 0,
-            height: 0,
+            width: 1,
+            height: 1,
           );
   }
 

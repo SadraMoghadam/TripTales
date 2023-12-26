@@ -163,7 +163,7 @@ class CardService extends GetxService {
         CardModel newCard;
         CardModel currentCard = contain.first!;
         String cardId = await getCardId(currentCard.name);
-        if(currentCard.type == MemoryCardType.image || currentCard.type == MemoryCardType.video){
+        if(currentCard.type == MemoryCardType.text){
           newCard = CardModel(
             uid: currentCard.uid,
             order: currentCard.order,
@@ -181,7 +181,7 @@ class CardService extends GetxService {
           );
           await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
             'userId': '1',
-            'cardData': newCard.toJson(),
+            'cardData': newCard.toJsonTextCard(),
           });
         }
         // else if(currentCard.type == MemoryCardType.text){
@@ -203,7 +203,7 @@ class CardService extends GetxService {
           );
           await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
             'userId': '1',
-            'cardData': newCard.toJsonTextCard(),
+            'cardData': newCard.toJson(),
           });
         }
         // _appManager.setCardByName(newCard);
