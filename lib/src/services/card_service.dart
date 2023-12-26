@@ -275,6 +275,7 @@ class CardService extends GetxService {
           if (type == MemoryCardType.image || type == MemoryCardType.video) {
             String downloadURL =
                 await _storage.ref().child(cardData['name']).getDownloadURL();
+            print("video:      ${downloadURL}");
             CardModel cardModel = CardModel(
               uid: '1',
               order: cardData['order'],

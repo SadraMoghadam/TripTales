@@ -189,7 +189,16 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          child: VideoPlayer(_videoController),
+                                          child: FittedBox(
+                                              fit: BoxFit.cover,
+                                              alignment: Alignment.center,
+                                              child: SizedBox(
+                                                width: _videoController.value.size!.width,
+                                                height: _videoController.value.size!.height,
+                                                child: VideoPlayer(_videoController),
+                                              ),
+                                            ),
+                                          // child: VideoPlayer(_videoController),
                                         ),
                                       ),
                               ),

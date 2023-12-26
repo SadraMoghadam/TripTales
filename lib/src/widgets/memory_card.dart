@@ -326,6 +326,10 @@ class _MemoryCardState extends State<MemoryCard> {
   }
 
   Widget videoMemory() {
+    if(start) {
+      print("________________${_videoController}");
+      start = false;
+    }
     return Container(
       // transform: transform,
       child: GestureDetector(
@@ -457,11 +461,7 @@ class _MemoryCardState extends State<MemoryCard> {
         },
         child: Container(
           padding: EdgeInsets.all(1),
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              // boxShadow: const [BoxShadow(color: AppColors.main3, blurRadius: 3, spreadRadius: 1)],
-              color: AppColors.main3.withOpacity(0.7)),
-          child: const Icon(Icons.close_outlined, size: 17, color: Colors.white60),
+          child: const Icon(Icons.delete_rounded, size: 20, color: AppColors.main3),
         ),
       ),
     ) : Container(width: 0, height: 0,);
@@ -470,7 +470,7 @@ class _MemoryCardState extends State<MemoryCard> {
   BoxDecoration cardDecorationOnEdit({bool isText = false, backColor = Colors.transparent}){
     return BoxDecoration(
       color: isText ? backColor : Colors.transparent,
-      borderRadius: BorderRadius.circular(13.0),
+      borderRadius: BorderRadius.circular(10.0),
       border: Border.all(
         color: widget.isEditable ? AppColors.main3.withOpacity(0.8) : Colors.transparent, // Set your border color here
         width: 1.0,

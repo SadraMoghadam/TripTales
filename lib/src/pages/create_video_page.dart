@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -35,13 +37,20 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
     if (isValid == null || !isValid) {
       return;
     }
-    CardModel videoCardData = CardModel(uid: "1", order: _appManager.getCardsNum(), type: MemoryCardType.video, transform: Matrix4.identity(), name: '${_nameController.text}.mp4');
-    int result = await _cardService.addVideoCard(videoCardData, mediaController.getVideo()!);
-    if(result == 200){
-      _formKey.currentState?.save();
-      Navigator.of(context).pop(true);
-    }
-    else{
+    CardModel videoCardData = CardModel(
+        uid: "1",
+        order: _appManager.getCardsNum(),
+        type: MemoryCardType.video,
+        transform: Matrix4.identity(),
+        name: '${_nameController.text}.mp4');
+    int result = await _cardService.addVideoCard(
+        videoCardData, mediaController.getVideo()!);
+    if (result == 200) {
+      Timer(Duration(seconds: 2), () {
+        _formKey.currentState?.save();
+        Navigator.of(context).pop(true);
+      });
+    } else {
       ErrorController.showSnackBarError(ErrorController.createImage);
       return;
     }
