@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trip_tales/src/pages/profile.dart';
-import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
 import 'package:trip_tales/src/widgets/text_field.dart'; // Import your ProfilePage widget
 // Import necessary dependencies and widgets used in the ProfilePage
@@ -38,111 +37,376 @@ void main() {
   });
 */
 
-  testWidgets('Profile Page email', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: ProfilePage()));
-
-    final editButtonFinder = find.byKey(const Key('editSaveCustomButtonKey'));
-    expect(editButtonFinder, findsOneWidget);
-    await tester.tap(editButtonFinder);
-
-    final emailTextFieldFinder =
-        find.byKey(const Key('emailCustomTextFieldKey'));
-    expect(emailTextFieldFinder, findsOneWidget);
-
-    await tester.enterText(emailTextFieldFinder, '');
-    // Test typing in Email and Password fields
-    await tester.enterText(emailTextFieldFinder, 'example@example.com');
-    expect(find.text('example@example.com'), findsOneWidget);
-
-    await tester.pump();
-  });
-
   testWidgets('Profile Page name', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ProfilePage()));
+
+    // Wait for the UI to settle/render completely
+    await tester.pumpAndSettle();
+
     final editButtonFinder = find.byKey(const Key('editSaveCustomButtonKey'));
     expect(editButtonFinder, findsOneWidget);
+
+    // Scroll to the button if it's not visible
+    await tester.ensureVisible(editButtonFinder);
+    await tester.pumpAndSettle();
+
+    // Tap the edit button
     await tester.tap(editButtonFinder);
+    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+
     final nameTextFieldFinder = find.byKey(const Key('nameCustomTextFieldKey'));
     expect(nameTextFieldFinder, findsOneWidget);
-    await tester.pump();
+
+    // Enter text into the name form field
+    await tester.enterText(nameTextFieldFinder, 'aName');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the text in the field
+    expect(find.text('aName'), findsOneWidget);
+
+    // Clear the text field
+    await tester.enterText(nameTextFieldFinder, '');
+    await tester.pump(); // Trigger a rebuild
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+
+    // Verify "Enter your name" error is displayed
+    expect(find.text('Enter your name'), findsOneWidget);
+
+    // Enter text into the name form field again
+    await tester.enterText(nameTextFieldFinder, 'anothername');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the new text in the field
+    expect(find.text('anothername'), findsOneWidget);
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+    // We might not need this additional pump, but it's included for consistency
   });
 
   testWidgets('Profile Page surname', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ProfilePage()));
+
+    // Wait for the UI to settle/render completely
+    await tester.pumpAndSettle();
+
     final editButtonFinder = find.byKey(const Key('editSaveCustomButtonKey'));
     expect(editButtonFinder, findsOneWidget);
+
+    // Scroll to the button if it's not visible
+    await tester.ensureVisible(editButtonFinder);
+    await tester.pumpAndSettle();
+
+    // Tap the edit button
     await tester.tap(editButtonFinder);
+    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+
     final surnameTextFieldFinder =
         find.byKey(const Key('surnameCustomTextFieldKey'));
     expect(surnameTextFieldFinder, findsOneWidget);
-    await tester.pump();
+
+    // Enter text into the surname form field
+    await tester.enterText(surnameTextFieldFinder, 'aSurname');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the text in the field
+    expect(find.text('aSurname'), findsOneWidget);
+
+    // Clear the text field
+    await tester.enterText(surnameTextFieldFinder, '');
+    await tester.pump(); // Trigger a rebuild
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+
+    // Verify "Enter your surname" error is displayed
+    expect(find.text('Enter your surname'), findsOneWidget);
+
+    // Enter text into the surname form field again
+    await tester.enterText(surnameTextFieldFinder, 'anotherSurname');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the new text in the field
+    expect(find.text('anotherSurname'), findsOneWidget);
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+    // We might not need this additional pump, but it's included for consistency
   });
 
   testWidgets('Profile Page birth date', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ProfilePage()));
+
+    // Wait for the UI to settle/render completely
+    await tester.pumpAndSettle();
+
     final editButtonFinder = find.byKey(const Key('editSaveCustomButtonKey'));
     expect(editButtonFinder, findsOneWidget);
+
+    // Scroll to the button if it's not visible
+    await tester.ensureVisible(editButtonFinder);
+    await tester.pumpAndSettle();
+
+    // Tap the edit button
     await tester.tap(editButtonFinder);
+    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
     final dateBirthTextFieldFinder =
         find.byKey(const Key('birthDateCustomTextFieldKey'));
     expect(dateBirthTextFieldFinder, findsOneWidget);
     await tester.pump();
   });
 
-  testWidgets('Profile Page password', (WidgetTester tester) async {
+  testWidgets('Profile Page email', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ProfilePage()));
+
+    // Wait for the UI to settle/render completely
+    await tester.pumpAndSettle();
+
     final editButtonFinder = find.byKey(const Key('editSaveCustomButtonKey'));
     expect(editButtonFinder, findsOneWidget);
+
+    // Scroll to the button if it's not visible
+    await tester.ensureVisible(editButtonFinder);
+    await tester.pumpAndSettle();
+
+    // Tap the edit button
     await tester.tap(editButtonFinder);
+    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+
+    final emailTextFieldFinder =
+        find.byKey(const Key('emailCustomTextFieldKey'));
+    expect(emailTextFieldFinder, findsOneWidget);
+
+    // Enter text into the email form field
+    await tester.enterText(emailTextFieldFinder, 'example@example.com');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the text in the field
+    expect(find.text('example@example.com'), findsOneWidget);
+
+    // Clear the text field
+    await tester.enterText(emailTextFieldFinder, '');
+    await tester.pump(); // Trigger a rebuild
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+
+    // Verify "Enter your email" error is displayed
+    expect(find.text('Enter your email'), findsOneWidget);
+
+    // Enter text into the email form field again
+    await tester.enterText(emailTextFieldFinder, 'anotherexample@example.com');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the new text in the field
+    expect(find.text('anotherexample@example.com'), findsOneWidget);
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+    // We might not need this additional pump, but it's included for consistency
+  });
+
+  testWidgets('Profile Page password', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: ProfilePage()));
+
+    // Wait for the UI to settle/render completely
+    await tester.pumpAndSettle();
+
+    final editButtonFinder = find.byKey(const Key('editSaveCustomButtonKey'));
+    expect(editButtonFinder, findsOneWidget);
+
+    // Scroll to the button if it's not visible
+    await tester.ensureVisible(editButtonFinder);
+    await tester.pumpAndSettle();
+
+    // Tap the edit button
+    await tester.tap(editButtonFinder);
+    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
 
     final passwordTextFieldFinder =
         find.byKey(const Key('passwordCustomTextFieldKey'));
     expect(passwordTextFieldFinder, findsOneWidget);
 
-    // Enter some text into the password form field
+    // Enter text into the password form field
     await tester.enterText(passwordTextFieldFinder, 'somepassword');
-    // clean the text from the password field
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the text in the field
+    expect(find.text('somepassword'), findsOneWidget);
+
+    // Clear the text field
     await tester.enterText(passwordTextFieldFinder, '');
-    // trigger validation
-    await tester.pump();
-    // verify "Enter your password" error is displayed
-    expect(find.text('Enter your password'), findsOneWidget);
-    // Enter text into password form field again
-    await tester.enterText(passwordTextFieldFinder, 'newpassword');
+    await tester.pump(); // Trigger a rebuild
+
     // Trigger validation
-    await tester.pump();
+    await tester.pumpAndSettle();
+
+    // Verify "Enter your password" error is displayed
+    expect(find.text('Enter your password'), findsOneWidget);
+
+    // Enter text into the password form field again
+    await tester.enterText(passwordTextFieldFinder, 'anotherpassword');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the new text in the field
+    expect(find.text('anotherpassword'), findsOneWidget);
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+    // We might not need this additional pump, but it's included for consistency
   });
 
   testWidgets('Profile Page phone number', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ProfilePage()));
+
+    // Wait for the UI to settle/render completely
+    await tester.pumpAndSettle();
+
     final editButtonFinder = find.byKey(const Key('editSaveCustomButtonKey'));
     expect(editButtonFinder, findsOneWidget);
+
+    // Scroll to the button if it's not visible
+    await tester.ensureVisible(editButtonFinder);
+    await tester.pumpAndSettle();
+
+    // Tap the edit button
     await tester.tap(editButtonFinder);
+    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+
     final phoneTextFieldFinder =
         find.byKey(const Key('phoneNumberCustomTextFieldKey'));
     expect(phoneTextFieldFinder, findsOneWidget);
-    await tester.pump();
+
+    // Enter text into the phone number form field
+    await tester.enterText(phoneTextFieldFinder, '+393208264550');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the text in the field
+    expect(find.text('+393208264550'), findsOneWidget);
+
+    // Clear the text field
+    await tester.enterText(phoneTextFieldFinder, '');
+    await tester.pump(); // Trigger a rebuild
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+
+    // Verify "Enter your phone number" error is displayed
+    expect(find.text('Enter your phone number'), findsOneWidget);
+
+    // Enter text into the phone number form field again
+    await tester.enterText(phoneTextFieldFinder, '+345210324990');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the new text in the field
+    expect(find.text('+345210324990'), findsOneWidget);
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+    // We might not need this additional pump, but it's included for consistency
   });
 
   testWidgets('Profile Page gender', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ProfilePage()));
+
+    // Wait for the UI to settle/render completely
+    await tester.pumpAndSettle();
+
     final editButtonFinder = find.byKey(const Key('editSaveCustomButtonKey'));
     expect(editButtonFinder, findsOneWidget);
+
+    // Scroll to the button if it's not visible
+    await tester.ensureVisible(editButtonFinder);
+    await tester.pumpAndSettle();
+
+    // Tap the edit button
     await tester.tap(editButtonFinder);
+    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+
     final genderTextFieldFinder =
         find.byKey(const Key('genderCustomTextFieldKey'));
     expect(genderTextFieldFinder, findsOneWidget);
-    await tester.pump();
+
+    // Enter text into the gender form field
+    await tester.enterText(genderTextFieldFinder, 'Male');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the text in the field
+    expect(find.text('Male'), findsOneWidget);
+
+    // Clear the text field
+    await tester.enterText(genderTextFieldFinder, '');
+    await tester.pump(); // Trigger a rebuild
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+
+    // Verify "Enter your gender" error is displayed
+    expect(find.text('Enter your gender'), findsOneWidget);
+
+    // Enter text into the gender form field again
+    await tester.enterText(genderTextFieldFinder, 'Female');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the new text in the field
+    expect(find.text('Female'), findsOneWidget);
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+    // We might not need this additional pump, but it's included for consistency
   });
 
   testWidgets('Profile Page bio', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ProfilePage()));
+
+    // Wait for the UI to settle/render completely
+    await tester.pumpAndSettle();
+
     final editButtonFinder = find.byKey(const Key('editSaveCustomButtonKey'));
     expect(editButtonFinder, findsOneWidget);
+
+    // Scroll to the button if it's not visible
+    await tester.ensureVisible(editButtonFinder);
+    await tester.pumpAndSettle();
+
+    // Tap the edit button
     await tester.tap(editButtonFinder);
+    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+
     final bioTextFieldFinder = find.byKey(const Key('bioCustomTextFieldKey'));
     expect(bioTextFieldFinder, findsOneWidget);
-    await tester.pump();
+
+    // Enter text into the bio form field
+    await tester.enterText(
+        bioTextFieldFinder, 'A text bio profile description');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the text in the field
+    expect(find.text('A text bio profile description'), findsOneWidget);
+
+    // Clear the text field
+    await tester.enterText(bioTextFieldFinder, '');
+    await tester.pump(); // Trigger a rebuild
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+
+    // Verify "Enter your bio" error is displayed
+    expect(find.text('Enter your bio'), findsOneWidget);
+
+    // Enter text into the gender form field again
+    await tester.enterText(
+        bioTextFieldFinder, 'Another text bio profile description');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the new text in the field
+    expect(find.text('Another text bio profile description'), findsOneWidget);
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+    // We might not need this additional pump, but it's included for consistency
   });
 /*
   testWidgets('ProfilePage edit button', (WidgetTester tester) async {

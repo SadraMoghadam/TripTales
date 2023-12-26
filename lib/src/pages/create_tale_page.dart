@@ -91,7 +91,7 @@ class _CreateTalePage extends State<CreateTalePage> {
               key: const Key('taleNameCustomTextFieldKey'),
               controller: _taleNameController,
               labelText: 'Tale Name',
-              hintText: 'Enter your Tale Name',
+              hintText: 'Enter your Tale name',
               prefixIcon: Icons.abc,
               obscureText: false,
               keyboardType: TextInputType.emailAddress,

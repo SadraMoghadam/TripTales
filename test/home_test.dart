@@ -32,31 +32,6 @@ void main() {
     expect(find.byType(OverflowBar), findsOneWidget);
     expect(find.byType(CustomButton), findsOneWidget);
     expect(find.byType(TextButton), findsOneWidget);
-/*
-      // Tap the "Login" button and verify navigation
-      await tester.tap(find.byKey(const Key('loginCustomButtonKey')));
-      await tester.pumpAndSettle();
-      expect(find.text('Login Page'),
-          findsOneWidget); // replace 'Login Page' with the actual text on your login page
-
-      // Go back to the HomePage
-      tester.pageBack();
-      await tester.pumpAndSettle();
-
-      // Tap the "Create Account" button and verify navigation
-      await tester.tap(find.text('Create Account'));
-      await tester.pumpAndSettle();
-      expect(find.text('Register Page'),
-          findsOneWidget); // replace 'Register Page' with the actual text on your register page
-*/
-    // Test onPressed callbacks for buttons
-    // await tester.tap(find.text('Login'));
-    //  await tester.pumpAndSettle();
-    //  expect(find.byKey(const Key('/loginPage')), findsOneWidget);
-
-    // await tester.tap(find.text('Create Account'));
-    //  await tester.pumpAndSettle();
-    //  expect(find.byKey(const Key('/registerPage')), findsOneWidget);
   });
 
   testWidgets('HomePage container size', (WidgetTester tester) async {

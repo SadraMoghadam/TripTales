@@ -23,8 +23,7 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
         context: context,
         builder: (BuildContext context) {
           return CreateImagePage();
-        }
-    );
+        });
   }
 
   Future<void> onVideoButtonClick() async {
@@ -32,8 +31,7 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
         context: context,
         builder: (BuildContext context) {
           return CreateVideoPage();
-        }
-    );
+        });
   }
 
   Future<void> onTextButtonClick() async {
@@ -41,8 +39,7 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
         context: context,
         builder: (BuildContext context) {
           return CreateTextPage();
-        }
-    );
+        });
   }
 
   @override
@@ -65,31 +62,34 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
     return Container(
       child: Stack(
         children: [
-          buildButton(MemoryCardType.text, Icons.text_snippet_rounded, const Offset(0.0, -3.6)),
-          buildButton(MemoryCardType.video, Icons.video_library_rounded, const Offset(0.0, -2.45)),
-          buildButton(MemoryCardType.image, Icons.image, const Offset(0.0, -1.3)),
+          buildButton(MemoryCardType.text, Icons.text_snippet_rounded,
+              const Offset(0.0, -3.6)),
+          buildButton(MemoryCardType.video, Icons.video_library_rounded,
+              const Offset(0.0, -2.45)),
+          buildButton(
+              MemoryCardType.image, Icons.image, const Offset(0.0, -1.3)),
           Positioned(
             bottom: 0,
             right: 0,
             child: AnimatedContainer(
               height: 100,
               width: 100,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
               ),
-              duration: Duration(seconds: 0),
+              duration: const Duration(seconds: 0),
               child: GestureDetector(
-                key: ValueKey<int>(0),
+                key: const ValueKey<int>(0),
                 onTap: () {
                   setState(() {
                     isMenuOpen = !isMenuOpen;
                   });
                   if (isMenuOpen) {
                     _controller.animateTo(0.5,
-                        duration: Duration(milliseconds: 500));
+                        duration: const Duration(milliseconds: 500));
                   } else {
                     _controller.animateTo(0,
-                        duration: Duration(milliseconds: 500));
+                        duration: const Duration(milliseconds: 500));
                   }
                 },
                 child: Lottie.asset(
@@ -134,14 +134,12 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
             color: AppColors.main2,
           ),
           child: GestureDetector(
-            onTap: () async{
+            onTap: () async {
               if (type == MemoryCardType.image) {
                 await onImageButtonClick();
-              }
-              else if (type == MemoryCardType.video) {
+              } else if (type == MemoryCardType.video) {
                 await onVideoButtonClick();
-              }
-              else if (type == MemoryCardType.text) {
+              } else if (type == MemoryCardType.text) {
                 await onTextButtonClick();
               }
             },

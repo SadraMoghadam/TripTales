@@ -4,7 +4,6 @@ import 'package:trip_tales/src/pages/create_tale_page.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
 import 'package:trip_tales/src/widgets/canvas_card.dart';
-import 'package:trip_tales/src/widgets/tale_card.dart';
 
 void main() {
   testWidgets('MyTalesPage layout', (WidgetTester tester) async {
@@ -30,23 +29,38 @@ void main() {
   testWidgets('MyTalesPage Tale Name Text Field', (WidgetTester tester) async {
     // Build the widget
     await tester.pumpWidget(MaterialApp(home: CreateTalePage()));
+
     final taleNameTextFieldFinder =
         find.byKey(const Key('taleNameCustomTextFieldKey'));
     expect(taleNameTextFieldFinder, findsOneWidget);
 
-    // Enter some text into the tale name field
+    // Enter text into the email form field
     await tester.enterText(taleNameTextFieldFinder, 'a tale name');
-    // clean the text from the tale name field
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the text in the field
+    expect(find.text('a tale name'), findsOneWidget);
+
+    // Clear the text field
     await tester.enterText(taleNameTextFieldFinder, '');
-    // trigger validation
-    await tester.pump();
-    // verify "Tale name" hint is displayed
-    expect(find.text('Tale Name'), findsOneWidget);
-    // Enter text into password form field again
-    await tester.enterText(taleNameTextFieldFinder, 'new tale name');
+    await tester.pump(); // Trigger a rebuild
+
     // Trigger validation
-    await tester.pump();
-    expect(find.text('Tale Name'), findsOneWidget);
+    await tester.pumpAndSettle();
+
+    // Verify "Enter your Tale name" error is displayed
+    expect(find.text('Enter your Tale name'), findsOneWidget);
+
+    // Enter text into the email form field again
+    await tester.enterText(taleNameTextFieldFinder, 'another tale name');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the new text in the field
+    expect(find.text('another tale name'), findsOneWidget);
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+    // We might not need this additional pump, but it's included for consistency
   });
 
   testWidgets('MyTalesPage Start Creating Button', (WidgetTester tester) async {

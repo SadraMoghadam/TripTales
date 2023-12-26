@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import '../constants/color.dart';
 import '../utils/device_info.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 import 'package:trip_tales/src/pages/register.dart';
 import 'package:trip_tales/src/widgets/text_field.dart';
 
@@ -24,118 +23,33 @@ void main() {
     // expect(find.byType(SetPhotoScreen), findsNWidgets(2));
   });
 
-  /*
-  testWidgets(
-    'RegisterPage Widget Test',
-    (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: RegisterPage()));
-
-      expect(find.byType(Scaffold), findsOneWidget);
-
-      expect(find.text('Create your account for free'), findsOneWidget);
-
-      // Fill in the text fields and test validation
-      final nameTextFieldFinder =
-          find.byKey(const Key('nameCustomTextFieldKey'));
-      await tester.enterText(nameTextFieldFinder, 'Mario');
-      expect(find.text('Mario'), findsOneWidget);
-
-      final surnameTextFieldFinder =
-          find.byKey(const Key('surnameCustomTextFieldKey'));
-      await tester.enterText(surnameTextFieldFinder, 'Rossi');
-      expect(find.text('Rossi'), findsOneWidget);
-
-      // Test the date picker functionality
-      final dateTextFieldFinder =
-          find.byKey(const Key('emailCustomTextFieldKey'));
-      await tester.tap(dateTextFieldFinder);
-      await tester.pumpAndSettle();
-
-      testWidgets('Date Picker Interaction Test', (WidgetTester tester) async {
-        expect(find.text('Select date'), findsOneWidget);
-
-        // Tap the TextField to trigger the onTap callback
-        await tester.tap(find.byType(CustomTextField));
-        await tester.pump();
-
-        // Replace this with your actual date selection logic
-        DateTime _selectedDate = DateTime.now();
-
-        // Verify the hintText changes after date selection
-        expect(find.text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
-            findsOneWidget);
-
-        // Simulate tap on the CustomTextField to open the date picker
-        await tester.tap(find.byType(CustomTextField));
-
-        // Wait for the UI to update after the tap
-        await tester.pump();
-
-        // Simulate selecting a date in the date picker
-        // Replace this with the code to simulate date selection
-
-        // Assert that the selected date updates _selectedDate variable and reflects in UI
-        // Replace this with the assertion code
-      });
-
-      // You can simulate the date picker interaction if needed
-
-      // Password fields testing
-      final passwordTextFieldFinder = find.byKey(ValueKey('passwordField'));
-      await tester.enterText(passwordTextFieldFinder, 'Test@123');
-      expect(find.text('Test@123'), findsOneWidget);
-
-      final confirmPasswordTextFieldFinder =
-          find.byKey(ValueKey('confirmPasswordField'));
-      await tester.enterText(confirmPasswordTextFieldFinder, 'Test@123');
-      expect(find.text('Test@123'), findsOneWidget);
-
-      // Test the password visibility toggles
-      final passwordVisibilityButtonFinder =
-          find.byKey(ValueKey('visibilityPasswordButton'));
-      await tester.tap(passwordVisibilityButtonFinder);
-      await tester.pump();
-      // Validate the visibility change
-
-      final confirmPasswordVisibilityButtonFinder =
-          find.byKey(ValueKey('visibilityConfirmPasswordButton'));
-      await tester.tap(confirmPasswordVisibilityButtonFinder);
-      await tester.pump();
-      // Validate the visibility change
-
-      // Test password strength indicator
-      // Trigger the password strength calculation and test indicator display
-
-      // Test form submission and navigation
-      final createAccountButtonFinder = find.text('Create Account');
-      //await tester.tap(createAccountButtonFinder);
-      //await tester.pumpAndSettle(); // Wait for navigation
-
-      // Validate if navigation to the login page occurs
-      //expect(find.text('Login Page'), findsOneWidget);
-
-      // Test navigation to the login page from the "Already have an account?" button
-      final alreadyHaveAccountButtonFinder =
-          find.text('Already have an account?');
-      //await tester.tap(alreadyHaveAccountButtonFinder);
-      //await tester.pumpAndSettle(); // Wait for navigation
-
-      // Validate if navigation to the login page occurs
-      //expect(find.text('Login Page'), findsOneWidget);
-    },
-  );*/
-
-  testWidgets('Register Page Create an account for free',
+  testWidgets('Register Page create an account text',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: RegisterPage()));
-    final textFieldFinder = find.text('Create your account for free');
-    expect(textFieldFinder, findsOneWidget);
+    final loginTextFinder = find.text('Create your account for free');
+    expect(loginTextFinder, findsOneWidget);
   });
 
   testWidgets('Register Page name', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: RegisterPage()));
     final nameTextFieldFinder = find.byKey(const Key('nameCustomTextFieldKey'));
     expect(nameTextFieldFinder, findsOneWidget);
+
+    // Enter some text into the name form field
+    await tester.enterText(nameTextFieldFinder, 'aName');
+    expect(find.text('aName'), findsOneWidget);
+    // clean the text from the name field
+    await tester.enterText(nameTextFieldFinder, '');
+    // Trigger validation
+    await tester.pump();
+    // verify "Enter your name" error is displayed
+    expect(find.text('Enter your name'), findsOneWidget);
+    // Enter another text into name form field again
+    await tester.enterText(nameTextFieldFinder, 'anothername');
+    expect(find.text('anothername'), findsOneWidget);
+    // Trigger validation
+    await tester.pump();
+    expect(find.text('Enter your name'), findsOneWidget);
   });
 
   testWidgets('Register Page surname', (WidgetTester tester) async {
@@ -143,6 +57,22 @@ void main() {
     final surnameTextFieldFinder =
         find.byKey(const Key('surnameCustomTextFieldKey'));
     expect(surnameTextFieldFinder, findsOneWidget);
+
+    // Enter some text into the surname form field
+    await tester.enterText(surnameTextFieldFinder, 'aSurname');
+    expect(find.text('aSurname'), findsOneWidget);
+    // clean the text from the surname field
+    await tester.enterText(surnameTextFieldFinder, '');
+    // Trigger validation
+    await tester.pump();
+    // verify "Enter your surname" error is displayed
+    expect(find.text('Enter your surname'), findsOneWidget);
+    // Enter another text into name form field again
+    await tester.enterText(surnameTextFieldFinder, 'anotherSurname');
+    expect(find.text('anotherSurname'), findsOneWidget);
+    // Trigger validation
+    await tester.pump();
+    expect(find.text('Enter your surname'), findsOneWidget);
   });
 
   testWidgets('Register Page email', (WidgetTester tester) async {
@@ -153,21 +83,39 @@ void main() {
     expect(emailTextFieldFinder, findsOneWidget);
 
     await tester.enterText(emailTextFieldFinder, '');
-    // Test typing in Email and Password fields
+    // Test typing in Email field
     await tester.enterText(emailTextFieldFinder, 'example@example.com');
     expect(find.text('example@example.com'), findsOneWidget);
-
     await tester.pump();
+    // clean the text from the email field
+    await tester.enterText(emailTextFieldFinder, '');
+    // Trigger validation
+    await tester.pump();
+    // verify "Enter your email" error is displayed
+    expect(find.text('Enter your email'), findsOneWidget);
+    // Enter another text into email form field again
+    await tester.enterText(emailTextFieldFinder, 'anotheremail@example.com');
+    expect(find.text('anotheremail@example.com'), findsOneWidget);
+    // Trigger validation
+    await tester.pump();
+    //find hint email text form
+    expect(find.text('Enter your email'), findsOneWidget);
   });
 
   testWidgets('Register Page birth date', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: RegisterPage()));
-    final dateBirthTextFieldFinder =
-        find.byKey(const Key('birthDateCustomTextFieldKey'));
-    expect(dateBirthTextFieldFinder, findsOneWidget);
-    await tester.pump();
-  });
 
+    final dateBirthTextFieldFinder =
+        find.byKey(const Key('dateBirthCustomTextFieldKey'));
+    expect(dateBirthTextFieldFinder, findsOneWidget);
+
+    // Simulate tapping on the birth date text field
+    await tester.tap(dateBirthTextFieldFinder);
+    await tester.pumpAndSettle(); // Wait for any subsequent widgets to load
+
+    // Check for any widget that appears after tapping the date field
+    expect(find.byType(_selectDate(context)), findsOneWidget);
+  });
   testWidgets('Register Page password', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: RegisterPage()));
 
@@ -177,6 +125,8 @@ void main() {
 
     // Enter some text into the password form field
     await tester.enterText(passwordTextFieldFinder, 'somepassword');
+    // expect to see the text field in the password form field
+    expect(find.text('somepassword'), findsOneWidget);
     // clean the text from the password field
     await tester.enterText(passwordTextFieldFinder, '');
     // trigger validation
@@ -185,6 +135,8 @@ void main() {
     expect(find.text('Enter your password'), findsOneWidget);
     // Enter text into password form field again
     await tester.enterText(passwordTextFieldFinder, 'newpassword');
+    // expect to see the text field in the password form field
+    expect(find.text('newpassword'), findsOneWidget);
     // Trigger validation
     await tester.pump();
   });
@@ -196,8 +148,10 @@ void main() {
         find.byKey(const Key('confirmPasswordCustomTextFieldKey'));
     expect(passwordTextFieldFinder, findsOneWidget);
 
-    // Enter some text into the password form field
+    // Enter some text into the confirm password form field
     await tester.enterText(passwordTextFieldFinder, 'somepassword');
+    // expect to see the text field in the password form field
+    expect(find.text('somepassword'), findsOneWidget);
     // clean the text from the password field
     await tester.enterText(passwordTextFieldFinder, '');
     // trigger validation
@@ -206,6 +160,8 @@ void main() {
     expect(find.text('Enter your password again'), findsOneWidget);
     // Enter text into password form field again
     await tester.enterText(passwordTextFieldFinder, 'newpassword');
+    // expect to see the text field in the password form field
+    expect(find.text('newpassword'), findsOneWidget);
     // Trigger validation
     await tester.pump();
   });
@@ -226,6 +182,13 @@ void main() {
   testWidgets('Register Page login', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: RegisterPage()));
     final loginTextFinder = find.byKey(const Key('loginTextKey'));
+    expect(loginTextFinder, findsOneWidget);
+  });
+
+  testWidgets('Register Page already have an account',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: RegisterPage()));
+    final loginTextFinder = find.text('Already have an account?');
     expect(loginTextFinder, findsOneWidget);
   });
 }

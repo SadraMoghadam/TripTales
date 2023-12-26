@@ -42,6 +42,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
 
   Widget _buildStrengthIndicator(int strength, int indicator) {
     return Container(
+      key: Key('strength_indicator_$indicator'),
       margin: const EdgeInsets.all(2),
       width: 40,
       height: 5,
