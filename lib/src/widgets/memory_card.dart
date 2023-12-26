@@ -42,7 +42,8 @@ class MemoryCard extends StatefulWidget {
   var lockLocations = [0, 90];
   double maxRotation = math.pi / 2.0;
 
-  MemoryCard({super.key,
+  MemoryCard({
+    super.key,
     required this.isEditable,
     required this.callback,
     required this.name,
@@ -83,6 +84,7 @@ class _MemoryCardState extends State<MemoryCard> {
   var rotation;
   late Size imageActualSize;
   late Size videoActualSize;
+
   // late List<GlobalKey> _widgetKeyList;
 
   // late ImageInfo _imageInfo;
@@ -94,7 +96,8 @@ class _MemoryCardState extends State<MemoryCard> {
     //         (index) => GlobalObjectKey<FormState>(index*1000 + widget.cardKey.hashCode.hashCode));
     if (widget.type == MemoryCardType.video) {
       // print("------------------${widget.videoPath}");
-      _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoPath));
+      _videoController =
+          VideoPlayerController.networkUrl(Uri.parse(widget.videoPath));
       // _videoController = VideoPlayerController.asset(widget.videoPath);
       // _videoController = VideoPlayerController.network('assets/videos/1.mp4');
       _initializeVideoPlayerFuture = _videoController.initialize();
@@ -118,6 +121,13 @@ class _MemoryCardState extends State<MemoryCard> {
     super.dispose();
   }
 
+  Future<bool> checkTextNotEmpty() async {
+    // Simulate an asynchronous check for non-empty text.
+    await Future.delayed(Duration(seconds: 1));
+
+    return widget.text.isNotEmpty;
+  }
+
   // void updateContainerSize(Matrix4 scaleMatrix) {
   //   // Extract the scale values from the matrix
   //   // final double scaleX = scaleMatrix.getRow(0).length2;
@@ -137,14 +147,14 @@ class _MemoryCardState extends State<MemoryCard> {
   //   widget.size = new Size(newContainerSize, newContainerSize);
   // }
 
-  void deleteCard(){
+  void deleteCard() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return DeleteItemDialog(name: widget.name);
         }).then((value) => setState(() {
-      widget.callback();
-    }));
+          widget.callback();
+        }));
   }
 
   Future<void> loadImageInfo(String imageUrl) async {
@@ -160,7 +170,7 @@ class _MemoryCardState extends State<MemoryCard> {
 
   void _getWidgetInfo(GlobalKey key) {
     final RenderBox renderBox =
-    key.currentContext?.findRenderObject() as RenderBox;
+        key.currentContext?.findRenderObject() as RenderBox;
     key.currentContext?.size;
 
     final Size size = renderBox.size;
@@ -174,14 +184,14 @@ class _MemoryCardState extends State<MemoryCard> {
 
   void updateTransform(Matrix4 transform, int counter) {
     _cardService.updateCardTransform(widget.name, transform).then((value) {
-      if(counter == updateCounter)
-        print("SSSSSSSSSSSSSSSSSSSSSSs");
+      if (counter == updateCounter) print("SSSSSSSSSSSSSSSSSSSSSSs");
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<Matrix4> notifier = ValueNotifier<Matrix4>(Matrix4.identity());
+    final ValueNotifier<Matrix4> notifier =
+        ValueNotifier<Matrix4>(Matrix4.identity());
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return MatrixGestureDetector(
@@ -199,11 +209,10 @@ class _MemoryCardState extends State<MemoryCard> {
         //   notifier.value.setTranslationRaw(0, position[1], position[2]);
         // }
 
-        if(notifier.value.entry(0, 0) > maxScale){
+        if (notifier.value.entry(0, 0) > maxScale) {
           notifier.value.setEntry(0, 0, maxScale);
           notifier.value.setEntry(1, 1, maxScale);
-        }
-        else if(notifier.value.entry(0, 0) < minScale){
+        } else if (notifier.value.entry(0, 0) < minScale) {
           notifier.value.setEntry(0, 0, minScale);
           notifier.value.setEntry(1, 1, minScale);
         }
@@ -217,7 +226,7 @@ class _MemoryCardState extends State<MemoryCard> {
         setState(() {
           widget.initTransform = notifier.value * transform;
         });
-        if(counter % maxThreshold == 0){
+        if (counter % maxThreshold == 0) {
           // print("====================\n====================\n====================\n====================\n");
           updateTransform(notifier.value * transform, updateCounter);
           updateCounter++;
@@ -288,27 +297,26 @@ class _MemoryCardState extends State<MemoryCard> {
                       imageInfo.image.width /
                       imageInfo.image.height,
                   widget.size.height);
-            }
-            else {
+            } else {
               imageActualSize = Size(widget.size.width, widget.size.height);
             }
             return Container(
-              // key: _widgetKeyList[0],
-              width: imageActualSize.width,
-              height: imageActualSize.height,
-              decoration: cardDecorationOnEdit(),
-              child: Center(
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(widget.imagePath, fit: BoxFit.cover),
-                    ),
-                    deleteButton(deleteCard),
-                  ],
-                ),
-              )
-            );
+                // key: _widgetKeyList[0],
+                width: imageActualSize.width,
+                height: imageActualSize.height,
+                decoration: cardDecorationOnEdit(),
+                child: Center(
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child:
+                            Image.network(widget.imagePath, fit: BoxFit.cover),
+                      ),
+                      deleteButton(deleteCard),
+                    ],
+                  ),
+                ));
           } else {
             return Center(
               child: Container(
@@ -326,7 +334,7 @@ class _MemoryCardState extends State<MemoryCard> {
   }
 
   Widget videoMemory() {
-    if(start) {
+    if (start) {
       print("________________${_videoController}");
       start = false;
     }
@@ -366,30 +374,28 @@ class _MemoryCardState extends State<MemoryCard> {
                               _videoController.value.size.width /
                               _videoController.value.size.height,
                           widget.size.height);
-                    }
-                    else {
+                    } else {
                       videoActualSize =
                           Size(widget.size.width, widget.size.height);
                     }
                     return Stack(
                       children: [
                         Container(
-                          // key: _widgetKeyList[1],
-                          height: videoActualSize.height,
-                          width: videoActualSize.width,
-                          decoration: cardDecorationOnEdit(),
-                          child: Center(
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: VideoPlayer(_videoController),
-                                ),
-                                deleteButton(deleteCard),
-                              ],
-                            ),
-                          )
-                        ),
+                            // key: _widgetKeyList[1],
+                            height: videoActualSize.height,
+                            width: videoActualSize.width,
+                            decoration: cardDecorationOnEdit(),
+                            child: Center(
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: VideoPlayer(_videoController),
+                                  ),
+                                  deleteButton(deleteCard),
+                                ],
+                              ),
+                            )),
                         Container(
                           height: videoActualSize.height,
                           width: videoActualSize.width,
@@ -425,54 +431,74 @@ class _MemoryCardState extends State<MemoryCard> {
   }
 
   Widget textMemory() {
+    print("-------------${widget.text}");
     return Container(
         // key: _widgetKeyList[2],
         // transform: transform,
-        decoration: cardDecorationOnEdit(isText: true, backColor: widget.textBackgroundColor),
-        child: Stack(
-          children: [
-            FittedBox(
-              fit: BoxFit.fill,
-              child:
-              Text(
-                widget.text,
-                style: TextStyle(
-                  fontSize: widget.fontSize,
-                  fontWeight: widget.fontWeight,
-                  color: widget.textColor,
-                  // backgroundColor: widget.textBackgroundColor,
-                  decoration: widget.textDecoration,
-                  fontStyle: widget.fontStyle,
-                ),
-              ),),
-            deleteButton(deleteCard)
-          ],
-        )
-    );
+        padding: EdgeInsets.all(1),
+        decoration: cardDecorationOnEdit(
+            isText: true, backColor: widget.textBackgroundColor),
+        child: FutureBuilder(
+            future: checkTextNotEmpty(),
+            builder: (context, snapshot) {
+              if(snapshot.hasData) {
+                return Stack(
+                children: [
+                  FittedBox(
+                    fit: BoxFit.fill,
+                    child: Text(
+                      widget.text,
+                      style: TextStyle(
+                        fontSize: widget.fontSize,
+                        fontWeight: widget.fontWeight,
+                        color: widget.textColor,
+                        // backgroundColor: widget.textBackgroundColor,
+                        decoration: widget.textDecoration,
+                        fontStyle: widget.fontStyle,
+                      ),
+                    ),
+                  ),
+                  deleteButton(deleteCard)
+                ],
+              );
+              }
+              else {
+                return Container();
+              }
+            }));
   }
 
   Widget deleteButton(Function onTap) {
-    return widget.isEditable ? Positioned(
-      top: 5,
-      right: 5,
-      child: GestureDetector(
-        onTap: () {
-          onTap();
-        },
-        child: Container(
-          padding: EdgeInsets.all(1),
-          child: const Icon(Icons.delete_rounded, size: 20, color: AppColors.main3),
-        ),
-      ),
-    ) : Container(width: 0, height: 0,);
+    return widget.isEditable
+        ? Positioned(
+            top: 5,
+            right: 5,
+            child: GestureDetector(
+              onTap: () {
+                onTap();
+              },
+              child: Container(
+                padding: EdgeInsets.all(1),
+                child: const Icon(Icons.delete_rounded,
+                    size: 20, color: AppColors.main3),
+              ),
+            ),
+          )
+        : Container(
+            width: 0,
+            height: 0,
+          );
   }
 
-  BoxDecoration cardDecorationOnEdit({bool isText = false, backColor = Colors.transparent}){
+  BoxDecoration cardDecorationOnEdit(
+      {bool isText = false, backColor = Colors.transparent}) {
     return BoxDecoration(
       color: isText ? backColor : Colors.transparent,
       borderRadius: BorderRadius.circular(10.0),
       border: Border.all(
-        color: widget.isEditable ? AppColors.main3.withOpacity(0.8) : Colors.transparent, // Set your border color here
+        color: widget.isEditable
+            ? AppColors.main3.withOpacity(0.8)
+            : Colors.transparent, // Set your border color here
         width: 1.0,
       ),
     );

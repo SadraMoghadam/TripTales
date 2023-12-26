@@ -272,10 +272,11 @@ class CardService extends GetxService {
           // print("----------------------${cardData['path']}");
           // print("----------------------${cardData['name']}");
           MemoryCardType type = MemoryCardType.values.byName(cardData['type']);
+          print("-----------_____________");
           if (type == MemoryCardType.image || type == MemoryCardType.video) {
             String downloadURL =
                 await _storage.ref().child(cardData['name']).getDownloadURL();
-            print("video:      ${downloadURL}");
+            // print("video:      ${downloadURL}");
             CardModel cardModel = CardModel(
               uid: '1',
               order: cardData['order'],
@@ -294,6 +295,8 @@ class CardService extends GetxService {
             );
             cards.add(cardModel);
           } else if (type == MemoryCardType.text) {
+
+            print("-----------_____________${cardData['name']}");
             // print("----------------------${cardData['fontSize']}");
             // print(
             //     "----------------------${MemoryCardType.values.byName(cardData['type'])}");
@@ -319,7 +322,7 @@ class CardService extends GetxService {
               fontWeight: TextUtils.textToFontWeight(cardData['fontWeight']),
               fontSize: cardData['fontSize'],
             );
-            // print("----------------------${cardData['name']}");
+            print("----------------------${cardData['name']}");
             cards.add(cardModel);
           }
         }

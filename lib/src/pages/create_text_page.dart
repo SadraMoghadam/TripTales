@@ -30,7 +30,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
   late final TextEditingController _textController;
   late final TextEditingController _colorController;
   late final TextEditingController _backgroundColorController;
-  double _fontSize = 16;
+  double _fontSize = 50;
   Color _selectedColor = AppColors.main2;
   Color _selectedBackgroundColor = Color.fromRGBO(0, 0, 0, 0);
   List<String> textDecorationOptions = const [
@@ -219,8 +219,8 @@ class _CreateTextPageState extends State<CreateTextPage> {
                       hintText: 'Enter your text',
                       prefixIcon: Icons.text_snippet_rounded,
                       obscureText: false,
-                      keyboardType: TextInputType.multiline,
-                      textInputAction: TextInputAction.newline,
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.next,
                       validator: _validator.nameValidator,
                     ),
                   )),
