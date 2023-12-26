@@ -188,7 +188,7 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                                     : Container(
                                         child: ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                              BorderRadius.circular(15),
                                           child: FittedBox(
                                               fit: BoxFit.cover,
                                               alignment: Alignment.center,

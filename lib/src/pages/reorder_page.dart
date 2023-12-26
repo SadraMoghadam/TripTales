@@ -15,6 +15,7 @@ import '../constants/color.dart';
 import '../controllers/media_controller.dart';
 import '../utils/device_info.dart';
 import '../widgets/button.dart';
+import '../widgets/delete_item_dialog.dart';
 import '../widgets/text_field.dart';
 
 class ReorderPage extends StatefulWidget {
@@ -29,6 +30,7 @@ class _ReorderPageState extends State<ReorderPage> {
   List<CardModel?> cardsOrder = [];
   List<CardModel?> newCardsOrder = [];
   bool canClose = true;
+
 
   @override
   void initState() {
@@ -109,6 +111,9 @@ class _ReorderPageState extends State<ReorderPage> {
                 title: Text(cardsOrder[i]!.name),
                 leading:
                     const Icon(Icons.drag_handle_rounded, color: Colors.black),
+                trailing: deleteButton(cardsOrder[i]!.name),
+
+
               ),
             ),
         ],
@@ -122,6 +127,28 @@ class _ReorderPageState extends State<ReorderPage> {
           cardsOrder.insert(newIndex, task);
           reorderCards();
         },
+      ),
+    );
+  }
+
+  Widget deleteButton(String name) {
+    return Positioned(
+      top: 5,
+      right: 5,
+      child: GestureDetector(
+        onTap: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return DeleteItemDialog(name: name);
+              }).then((value) => setState(() {
+            cardsOrder.removeAt(cardsOrder.indexWhere((element) => element!.name == name));
+          }));
+        },
+        child: Container(
+          padding: EdgeInsets.all(1),
+          child: const Icon(Icons.delete_rounded, size: 22, color: AppColors.main3),
+        ),
       ),
     );
   }
