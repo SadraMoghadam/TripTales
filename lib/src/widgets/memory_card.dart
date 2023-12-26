@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:trip_tales/src/constants/color.dart';
+import 'package:trip_tales/src/models/card_model.dart';
 import 'package:trip_tales/src/widgets/delete_item_dialog.dart';
 import 'package:video_player/video_player.dart';
 
 import '../constants/memory_card_type.dart';
+import '../services/card_service.dart';
 import '../utils/device_info.dart';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
@@ -65,12 +69,15 @@ class MemoryCard extends StatefulWidget {
 
 class _MemoryCardState extends State<MemoryCard> {
   late VideoPlayerController _videoController;
+  final CardService _cardService = Get.find<CardService>();
   late Future<void> _initializeVideoPlayerFuture;
   Size currentSize = Size(300, 300);
-  double maxScale = 2;
-  double minScale = 0.75;
-  double maxSize = 1000;
-  double minSize = 50;
+  double maxScale = 2.7;
+  double minScale = 0.3;
+  bool start = true;
+  int counter = 0;
+  int updateCounter = 0;
+  int maxThreshold = 5;
   late Matrix4 transform;
   var position;
   var rotation;
@@ -86,7 +93,7 @@ class _MemoryCardState extends State<MemoryCard> {
     // _widgetKeyList = List.generate(3,
     //         (index) => GlobalObjectKey<FormState>(index*1000 + widget.cardKey.hashCode.hashCode));
     if (widget.type == MemoryCardType.video) {
-      print("------------------${widget.videoPath}");
+      // print("------------------${widget.videoPath}");
       _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoPath));
       // _videoController = VideoPlayerController.asset(widget.videoPath);
       // _videoController = VideoPlayerController.network('assets/videos/1.mp4');
@@ -111,24 +118,24 @@ class _MemoryCardState extends State<MemoryCard> {
     super.dispose();
   }
 
-  void updateContainerSize(Matrix4 scaleMatrix) {
-    // Extract the scale values from the matrix
-    final double scaleX = scaleMatrix.getRow(0).length2;
-    final double scaleY = scaleMatrix.getRow(1).length2;
-
-    // Calculate the new container size based on scaling
-    double newContainerSize = widget.size.height;
-
-    // Apply size limits
-    if (newContainerSize > maxSize) {
-      // print("fjsbeueyb");
-      newContainerSize = maxSize;
-    } else if (newContainerSize < minSize) {
-      // print("uyiuiyfjsbeueyb");
-      newContainerSize = minSize;
-    }
-    widget.size = new Size(newContainerSize, newContainerSize);
-  }
+  // void updateContainerSize(Matrix4 scaleMatrix) {
+  //   // Extract the scale values from the matrix
+  //   // final double scaleX = scaleMatrix.getRow(0).length2;
+  //   // final double scaleY = scaleMatrix.getRow(1).length2;
+  //
+  //   // Calculate the new container size based on scaling
+  //   double newContainerSize = widget.size.height;
+  //
+  //   // Apply size limits
+  //   if (newContainerSize > maxSize) {
+  //     // print("fjsbeueyb");
+  //     newContainerSize = maxSize;
+  //   } else if (newContainerSize < minSize) {
+  //     // print("uyiuiyfjsbeueyb");
+  //     newContainerSize = minSize;
+  //   }
+  //   widget.size = new Size(newContainerSize, newContainerSize);
+  // }
 
   void deleteCard(){
     showDialog(
@@ -150,6 +157,7 @@ class _MemoryCardState extends State<MemoryCard> {
 
     imageStream.addListener(listener);
   }
+
   void _getWidgetInfo(GlobalKey key) {
     final RenderBox renderBox =
     key.currentContext?.findRenderObject() as RenderBox;
@@ -163,9 +171,17 @@ class _MemoryCardState extends State<MemoryCard> {
     // print(
     //     'Position: ${(offset.dx + size.width) / 2}, ${(offset.dy + size.height) / 2}');
   }
+
+  void updateTransform(Matrix4 transform, int counter) {
+    _cardService.updateCardTransform(widget.name, transform).then((value) {
+      if(counter == updateCounter)
+        print("SSSSSSSSSSSSSSSSSSSSSSs");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<Matrix4> notifier = ValueNotifier(Matrix4.identity());
+    final ValueNotifier<Matrix4> notifier = ValueNotifier<Matrix4>(Matrix4.identity());
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return MatrixGestureDetector(
@@ -175,36 +191,38 @@ class _MemoryCardState extends State<MemoryCard> {
       shouldTranslate: widget.isEditable,
       onMatrixUpdate: (m, tm, sm, rm) {
         notifier.value = m;
-        transform = m;
-        double scale = m.getMaxScaleOnAxis();
+        // double scale = m.getMaxScaleOnAxis();
         // updateContainerSize(sm);
         // onSizeChanged(currentSize);
-        position = m.getTranslation();
-        rotation = rm.getRotation();
-
-        // if (scale > maxScale) {
-        //   m.scale(maxScale / scale);
-        // }else if (scale < minScale) {
-        //   m.scale(minScale / scale);
-        // }
-        // _getWidgetInfo(_widgetKeyList[0]);
-
+        // position = notifier.value.getTranslation();
         // if (position[0] < 0) {
-        //   m.setTranslationRaw(0, position[1], position[2]);
-        // } else if (position[0] > device.width - 50) {
-        //   m.setTranslationRaw(device.width - 50, position[1], position[2]);
-        // } else if (position[1] < 0) {
-        //   m.setTranslationRaw(position[0], 0, position[2]);
+        //   notifier.value.setTranslationRaw(0, position[1], position[2]);
         // }
-        if (position[1] < 0) {
-            m.setTranslationRaw(position[0], 0, position[2]);
-          }
 
+        if(notifier.value.entry(0, 0) > maxScale){
+          notifier.value.setEntry(0, 0, maxScale);
+          notifier.value.setEntry(1, 1, maxScale);
+        }
+        else if(notifier.value.entry(0, 0) < minScale){
+          notifier.value.setEntry(0, 0, minScale);
+          notifier.value.setEntry(1, 1, minScale);
+        }
+        // if (notifier.value.entry(3, 0) < 0) {
+        //     notifier.value.setEntry(3, 0, 0);
+        //   }
+        // if (notifier.value.entry(3, 0) > 200) {
+        //   notifier.value.setEntry(3, 0, 0);
+        // }
+        counter++;
         setState(() {
-          position = m.getTranslation();
-          rotation = rm.getRotation();
-          widget.initTransform = m;
+          widget.initTransform = notifier.value * transform;
         });
+        if(counter % maxThreshold == 0){
+          // print("====================\n====================\n====================\n====================\n");
+          updateTransform(notifier.value * transform, updateCounter);
+          updateCounter++;
+          counter = 1;
+        }
 
         // if (position[0] < 0) {
         //   m.setTranslationRaw(0, position[1], position[2]);
@@ -228,7 +246,7 @@ class _MemoryCardState extends State<MemoryCard> {
             height: device.height * 10,
             width: device.width,
             child: Transform(
-              transform: notifier.value,
+              transform: notifier.value * widget.initTransform,
               child: Stack(
                 children: <Widget>[
                   if (widget.type == MemoryCardType.image)
@@ -248,7 +266,7 @@ class _MemoryCardState extends State<MemoryCard> {
 
   Widget imageMemory() {
     return Container(
-      transform: transform,
+      // transform: transform,
       decoration: const BoxDecoration(
         // color: Colors.red,
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -309,7 +327,7 @@ class _MemoryCardState extends State<MemoryCard> {
 
   Widget videoMemory() {
     return Container(
-      transform: transform,
+      // transform: transform,
       child: GestureDetector(
         onTap: () {
           setState(() {
@@ -405,7 +423,7 @@ class _MemoryCardState extends State<MemoryCard> {
   Widget textMemory() {
     return Container(
         // key: _widgetKeyList[2],
-        transform: transform,
+        // transform: transform,
         decoration: cardDecorationOnEdit(isText: true, backColor: widget.textBackgroundColor),
         child: Stack(
           children: [

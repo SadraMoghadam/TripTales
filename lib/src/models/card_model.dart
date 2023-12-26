@@ -9,7 +9,7 @@ class CardModel {
   final String uid;
   late final int order;
   final MemoryCardType type;
-  final Matrix4 transform;
+  Matrix4 transform;
   final Size size;
   final String name;
   late final String path;
@@ -42,6 +42,10 @@ class CardModel {
 
   void setOrder(int order){
     this.order = order;
+  }
+
+  void setTransform(Matrix4 transform){
+    this.transform = transform;
   }
 
   Map<String, dynamic> toJson() {

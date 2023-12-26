@@ -104,7 +104,7 @@ class _TaleBuilderState extends State<TaleBuilder>
           List<CardModel?> data = [];
           // print("###########");
           data = snapshot.data!;
-          print(data);
+          // print(data[0]!.transform);
           _appManager.setCards(data);
           numOfCards = data.length;
           for (int i = 0; i < numOfCards; i++) {

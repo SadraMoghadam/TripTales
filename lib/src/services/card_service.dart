@@ -10,12 +10,14 @@ import 'package:trip_tales/src/constants/firestore_collections.dart';
 import 'package:trip_tales/src/constants/memory_card_type.dart';
 import 'package:trip_tales/src/models/card_model.dart';
 import 'package:trip_tales/src/utils/text_utils.dart';
+import '../utils/app_manager.dart';
 import '../utils/matrix_utils.dart';
 import 'auth_service.dart';
 
 class CardService extends GetxService {
   // final AuthService _authService = Get.find<AuthService>();
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final AppManager _appManager = Get.put(AppManager());
   final CollectionReference _cardsCollection =
       FirebaseFirestore.instance.collection('cards');
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -144,6 +146,76 @@ class CardService extends GetxService {
     // print("__________________${cardData.toJsonTextCard()}");
     catch (e) {
       print('Error updated card: $e');
+      return 401;
+    }
+  }
+
+  Future<int> updateCardTransform(String name, Matrix4 transform) async {
+    try {
+      // String? currentUserId = _authService.currentUserId;
+      List<CardModel?> currentCards = await getCards("1");
+      final DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firestore.collection('users').doc('1').get();
+      final userData = userDoc.data();
+      print(userData);
+      var contain = currentCards.where((element) => element!.name == name);
+      if (!contain.isEmpty) {
+        CardModel newCard;
+        CardModel currentCard = contain.first!;
+        String cardId = await getCardId(currentCard.name);
+        if(currentCard.type == MemoryCardType.image || currentCard.type == MemoryCardType.video){
+          newCard = CardModel(
+            uid: currentCard.uid,
+            order: currentCard.order,
+            type: currentCard.type,
+            transform: transform,
+            // path: currentCard.path,
+            name: currentCard.name,
+            text: currentCard.text,
+            textColor: currentCard.textColor,
+            textBackgroundColor: currentCard.textBackgroundColor,
+            textDecoration: currentCard.textDecoration,
+            fontStyle: currentCard.fontStyle,
+            fontWeight: currentCard.fontWeight,
+            fontSize: currentCard.fontSize,
+          );
+          await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
+            'userId': '1',
+            'cardData': newCard.toJson(),
+          });
+        }
+        // else if(currentCard.type == MemoryCardType.text){
+        else{
+          newCard = CardModel(
+            uid: currentCard.uid,
+            order: currentCard.order,
+            type: currentCard.type,
+            transform: transform,
+            path: currentCard.path,
+            name: currentCard.name,
+            // text: currentCard.text,
+            // textColor: currentCard.textColor,
+            // textBackgroundColor: currentCard.textBackgroundColor,
+            // textDecoration: currentCard.textDecoration,
+            // fontStyle: currentCard.fontStyle,
+            // fontWeight: currentCard.fontWeight,
+            // fontSize: currentCard.fontSize,
+          );
+          await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
+            'userId': '1',
+            'cardData': newCard.toJsonTextCard(),
+          });
+        }
+        // _appManager.setCardByName(newCard);
+
+        print('Card transform updated successfully.');
+        return 200;
+      }
+      return 401;
+    }
+    // print("__________________${cardData.toJsonTextCard()}");
+    catch (e) {
+      print('Error transform updated card: $e');
       return 401;
     }
   }

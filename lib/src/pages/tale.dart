@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/pages/reorder_page.dart';
@@ -18,14 +20,18 @@ class _TalePageState extends State<TalePage> {
 
   bool isEditMode = false;
   Key _contentKey = UniqueKey();
+  late Completer<void> flagCompleter;
 
   callback() {
-    setState(() {reload = true; _contentKey = UniqueKey();});
+    setState(() {
+      reload = true;
+      _contentKey = UniqueKey();
+    });
   }
 
   final MaterialStateProperty<Icon?> thumbIcon =
-  MaterialStateProperty.resolveWith<Icon?>(
-        (Set<MaterialState> states) {
+      MaterialStateProperty.resolveWith<Icon?>(
+    (Set<MaterialState> states) {
       if (states.contains(MaterialState.selected)) {
         return const Icon(Icons.check);
       }
@@ -59,7 +65,11 @@ class _TalePageState extends State<TalePage> {
             // physics: isEditMode ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
             // physics: isEditMode ? const FixedExtentScrollPhysics() : const AlwaysScrollableScrollPhysics(),
             physics: NeverScrollableScrollPhysics(),
-            child: TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
+            child: TaleBuilder(
+                callback: callback,
+                isEditMode: isEditMode,
+                reload: reload,
+                taleKey: _contentKey),
           ),
           // TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
           buildAddMemory(),
@@ -82,69 +92,72 @@ class _TalePageState extends State<TalePage> {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return Positioned(
-        top: 20,
-        right: 10,
-        child: GestureDetector(
-          onTap: () {
+      top: 20,
+      right: 10,
+      child: GestureDetector(
+        onTap: () {
+          if (isEditMode) {
+            Timer(
+              Duration(seconds: 2),
+              () {
+                setState(
+                  () {
+                    reload = true;
+                    _contentKey = UniqueKey();
+                    isEditMode = !isEditMode;
+                  },
+                );
+              },
+            );
+          } else {
             setState(() {
               isEditMode = !isEditMode;
             });
-          },
-          child: Container(
-            width: 120,
-            decoration: BoxDecoration(
-              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 3, spreadRadius: 3)],
-                borderRadius: BorderRadius.circular(30),
-                color: AppColors.main2),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 30,
-                    decoration: BoxDecoration(
-                        borderRadius:
-                        BorderRadius.circular(30),
-                        color: isEditMode
-                            ? AppColors.main2
-                            : AppColors.main1),
-                    child: Center(
-                        child: Text(
-                          'View',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: isEditMode
-                                  ? Colors.black
-                                  : Colors.white),
-                        )),
-                  ),
-                  Container(
-                    width: 50,
-                    height: 30,
-                    decoration: BoxDecoration(
-                        borderRadius:
-                        BorderRadius.circular(30),
-                        color: isEditMode
-                            ? AppColors.main3
-                            : AppColors.main2),
-                    child: Center(
-                        child: Text(
-                          'Edit',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: isEditMode
-                                  ? Colors.white
-                                  : Colors.black),
-                        )),
-                  ),
-                ],
-              ),
+          }
+        },
+        child: Container(
+          width: 120,
+          decoration: BoxDecoration(boxShadow: const [
+            BoxShadow(color: Colors.grey, blurRadius: 3, spreadRadius: 3)
+          ], borderRadius: BorderRadius.circular(30), color: AppColors.main2),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 50,
+                  height: 30,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: isEditMode ? AppColors.main2 : AppColors.main1),
+                  child: Center(
+                      child: Text(
+                    'View',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isEditMode ? Colors.black : Colors.white),
+                  )),
+                ),
+                Container(
+                  width: 50,
+                  height: 30,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: isEditMode ? AppColors.main3 : AppColors.main2),
+                  child: Center(
+                      child: Text(
+                    'Edit',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isEditMode ? Colors.white : Colors.black),
+                  )),
+                ),
+              ],
             ),
           ),
         ),
+      ),
     );
   }
 
@@ -160,17 +173,14 @@ class _TalePageState extends State<TalePage> {
         },
         child: Container(
           padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 3, spreadRadius: 3)],
-              borderRadius: BorderRadius.circular(30),
-              color: AppColors.main2),
+          decoration: BoxDecoration(boxShadow: const [
+            BoxShadow(color: Colors.grey, blurRadius: 3, spreadRadius: 3)
+          ], borderRadius: BorderRadius.circular(30), color: AppColors.main2),
           child: const Center(
               child: Text(
-                'Reorder',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              )),
+            'Reorder',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          )),
         ),
       ),
     );
@@ -181,10 +191,9 @@ class _TalePageState extends State<TalePage> {
         context: context,
         builder: (BuildContext context) {
           return ReorderPage();
-        }
-    ).then((value) => setState(() {
-      callback();
-    }));
+        }).then((value) => setState(() {
+          callback();
+        }));
     // if (result != null && result == true) {
     //   setState(() {
     //     callback();
@@ -193,6 +202,8 @@ class _TalePageState extends State<TalePage> {
   }
 
   Widget buildAddMemory() {
-    return ButtonSlider(callback: callback,);
+    return ButtonSlider(
+      callback: callback,
+    );
   }
 }

@@ -11,6 +11,11 @@ class AppManager extends GetxController {
     userCards.value = cards;
   }
 
+  // void setCardByName(CardModel? card) {
+  //   userCards.value![userCards.value!.indexWhere((element) => element!.name == card!.name)] = card!;
+  // }
+
+
   List<CardModel?>? getCards() {
     if(userCards == Rx<List<CardModel?>?>(null))
       return [];
