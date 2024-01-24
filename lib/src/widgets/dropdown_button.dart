@@ -91,7 +91,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
             border: Border.all(
               color: AppColors.main1,
             ),
-            color: Colors.white,
+            color: Colors.transparent,
           ),
         ),
         iconStyleData: const IconStyleData(
@@ -107,7 +107,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           width: 300,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
-            color: Colors.white,
+            color: Colors.transparent,
             border: Border.all(
               color: AppColors.main1,
             ),
