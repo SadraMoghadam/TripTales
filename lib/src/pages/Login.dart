@@ -46,9 +46,9 @@ class _LoginPageState extends State<LoginPage> {
     else if(loginMethod == 2){
       result = await authController.signInWithGoogle();
     }
-    else if(loginMethod == 3){
-      result = await authController.signInWithFacebook();
-    }
+    // else if(loginMethod == 3){
+    //   result = await authController.signInWithFacebook();
+    // }
     if(result == 200) {
       Navigator.pushReplacementNamed(context, '/customMenu');
       _formKey.currentState?.save();
@@ -247,14 +247,14 @@ class _LoginPageState extends State<LoginPage> {
           ),
           onPressed: () => _submit(2),
         ),
-        IconButton(
-          icon: Image.asset(
-            'assets/images/fb_icon.png', // Replace with the path to your image
-            height: 40,
-            width: 40,
-          ),
-          onPressed: () => _submit(3),
-        ),
+        // IconButton(
+        //   icon: Image.asset(
+        //     'assets/images/fb_icon.png', // Replace with the path to your image
+        //     height: 40,
+        //     width: 40,
+        //   ),
+        //   onPressed: () => _submit(3),
+        // ),
         // SignInButton(
         //   Buttons.Facebook,
         //   onPressed: () => _submit(2),
