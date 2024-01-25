@@ -6,7 +6,7 @@ import '../constants/memory_card_type.dart';
 import '../utils/matrix_utils.dart';
 
 class CardModel {
-  final String uid;
+  final String id;
   late final int order;
   final MemoryCardType type;
   Matrix4 transform;
@@ -23,7 +23,7 @@ class CardModel {
   final double fontSize;
 
   CardModel({
-    required this.uid,
+    required this.id,
     required this.order,
     required this.type,
     required this.transform,

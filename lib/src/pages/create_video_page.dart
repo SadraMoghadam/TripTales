@@ -38,7 +38,7 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
       return;
     }
     CardModel videoCardData = CardModel(
-        uid: "1",
+        id: "1",
         order: _appManager.getCardsNum(),
         type: MemoryCardType.video,
         transform: Matrix4.identity(),

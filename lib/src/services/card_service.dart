@@ -10,6 +10,7 @@ import 'package:trip_tales/src/constants/firestore_collections.dart';
 import 'package:trip_tales/src/constants/memory_card_type.dart';
 import 'package:trip_tales/src/models/card_model.dart';
 import 'package:trip_tales/src/utils/text_utils.dart';
+import '../models/user_model.dart';
 import '../utils/app_manager.dart';
 import '../utils/matrix_utils.dart';
 import 'auth_service.dart';
@@ -165,7 +166,7 @@ class CardService extends GetxService {
         String cardId = await getCardId(currentCard.name);
         if(currentCard.type == MemoryCardType.text){
           newCard = CardModel(
-            uid: currentCard.uid,
+            id: currentCard.id,
             order: currentCard.order,
             type: currentCard.type,
             transform: transform,
@@ -187,7 +188,7 @@ class CardService extends GetxService {
         // else if(currentCard.type == MemoryCardType.text){
         else{
           newCard = CardModel(
-            uid: currentCard.uid,
+            id: currentCard.id,
             order: currentCard.order,
             type: currentCard.type,
             transform: transform,
@@ -278,7 +279,7 @@ class CardService extends GetxService {
                 await _storage.ref().child(cardData['name']).getDownloadURL();
             // print("video:      ${downloadURL}");
             CardModel cardModel = CardModel(
-              uid: '1',
+              id: '1',
               order: cardData['order'],
               type: type,
               transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),
@@ -305,7 +306,7 @@ class CardService extends GetxService {
             // print("----------------------${cardData['path']}");
             // print("----------------------${cardData['name']}");
             CardModel cardModel = CardModel(
-              uid: '1',
+              id: '1',
               order: cardData['order'],
               type: type,
               transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),

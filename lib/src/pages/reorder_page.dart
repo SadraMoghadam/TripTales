@@ -160,7 +160,7 @@ class _ReorderPageState extends State<ReorderPage> {
       // print('------------__________${cardsOrder[i]!.name} ===== ${cardsOrder[i]!.order}');
       if(cardsOrder[i]!.type == MemoryCardType.image || cardsOrder[i]!.type == MemoryCardType.video){
         newCardsOrder.add(CardModel(
-          uid: cardsOrder[i]!.uid,
+          id: cardsOrder[i]!.id,
           order: i,
           type: cardsOrder[i]!.type,
           transform: cardsOrder[i]!.transform,
@@ -177,7 +177,7 @@ class _ReorderPageState extends State<ReorderPage> {
       }
       else if(cardsOrder[i]!.type == MemoryCardType.text){
         newCardsOrder.add(CardModel(
-          uid: cardsOrder[i]!.uid,
+          id: cardsOrder[i]!.id,
           order: i,
           type: cardsOrder[i]!.type,
           transform: cardsOrder[i]!.transform,

@@ -1,5 +1,5 @@
 class UserModel {
-  final String uid;
+  final String id;
   final String email;
   final String name;
   final String surname;
@@ -8,9 +8,10 @@ class UserModel {
   final String bio;
   final String gender;
   final String profileImage;
+  final List<String>? cardsFK;
 
   UserModel({
-    required this.uid,
+    required this.id,
     required this.email,
     required this.name,
     required this.surname,
@@ -19,5 +20,38 @@ class UserModel {
     this.bio = '',
     this.gender = '',
     this.profileImage = '',
+    this.cardsFK,
   });
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'],
+      email: json['email'],
+      name: json['name'],
+      surname: json['surname'],
+      birthDate: json['birthDate'],
+      phoneNumber: json['phoneNumber'] ?? '',
+      bio: json['bio'] ?? '',
+      gender: json['gender'] ?? '',
+      profileImage: json['profileImage'] ?? '',
+      cardsFK: json['cardsFK'] != null
+          ? List<String>.from(json['cardsFK'])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'name': name,
+      'surname': surname,
+      'birthDate': birthDate,
+      'phoneNumber': phoneNumber,
+      'bio': bio,
+      'gender': gender,
+      'profileImage': profileImage,
+      'cardsFK': cardsFK,
+    };
+  }
 }

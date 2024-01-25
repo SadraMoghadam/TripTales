@@ -104,8 +104,37 @@ class AuthService extends GetxService {
         password: password,
       );
       final User? registeredUser = authResult.user;
+
       if (registeredUser != null) {
-        await _createUserDocument(registeredUser.uid, email, name, surname, birthDate: birthDate);
+        // await _createUserDocument(registeredUser.uid, email, name, surname, birthDate: birthDate);
+        CollectionReference users = _firestore.collection('users');
+        UserModel newUser = UserModel(
+          id: '',
+          email: email,
+          name: name,
+          surname: surname,
+          birthDate: birthDate,
+          phoneNumber: '',
+          bio: '',
+          gender: '',
+          profileImage: '',
+          cardsFK: List<String>.empty(),
+        );
+        DocumentReference documentReference = await users.add(newUser.toJson());
+        String firebaseGeneratedId = documentReference.id;
+        newUser = UserModel(
+          id: firebaseGeneratedId,
+          email: newUser.email,
+          name: newUser.name,
+          surname: newUser.surname,
+          birthDate: newUser.birthDate,
+          phoneNumber: newUser.phoneNumber,
+          bio: newUser.bio,
+          gender: newUser.gender,
+          profileImage: newUser.profileImage,
+          cardsFK: newUser.cardsFK,
+        );
+        await users.doc(firebaseGeneratedId).update(newUser.toJson());
       }
       return registeredUser;
     } catch (e) {
@@ -135,11 +164,12 @@ class AuthService extends GetxService {
       final userData = userDoc.data();
       if (userData != null) {
         return UserModel(
-            uid: uid,
+            id: uid,
             email: userData['email'],
             name: userData['name'],
             surname: userData['surname'],
-            birthDate: userData['birth_date']);
+            birthDate: userData['birth_date'],
+        );
       }
       return null;
     } catch (e) {
