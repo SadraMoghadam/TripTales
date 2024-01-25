@@ -8,6 +8,8 @@ import '../models/user_model.dart';
 
 class ErrorController {
   static const String login = "Wrong email or password";
+  static const String loginGmail = "Problem with google login";
+  static const String loginFacebook = "Problem with facebook login";
   static const String register = "Registration not completed";
   static const String createImage = "Problem with image creation";
   static const String createVideo = "Problem with video creation";

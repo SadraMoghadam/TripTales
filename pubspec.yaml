@@ -49,6 +49,8 @@ dependencies:
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.13.6
   firebase_storage: ^11.6.0
+  google_sign_in: ^6.2.1
+  flutter_facebook_auth: ^6.0.4
 
 
 
@@ -104,6 +106,8 @@ flutter:
    - assets/images/canvas4.jpg
    - assets/images/canvas5.jpg
    - assets/images/canvas6.jpg
+   - assets/images/google_icon.png
+   - assets/images/fb_icon.png
    
 
   # An image asset can refer to one or more resolution-specific "variants", see

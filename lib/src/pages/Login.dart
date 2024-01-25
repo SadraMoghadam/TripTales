@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -29,15 +30,25 @@ class _LoginPageState extends State<LoginPage> {
   bool hasDigits = false;
   bool hasSpecialCharacters = false;
 
-  void _submit() async {
-    final isValid = _formKey.currentState?.validate();
-    if (isValid == null || !isValid) {
-      return;
+  // Login methods: 1(with email and password), 2(with Gmail), 3(with Facebook)
+  void _submit(int loginMethod) async {
+    int result = 400;
+    if(loginMethod == 1){
+      final isValid = _formKey.currentState?.validate();
+      if (isValid == null || !isValid) {
+        return;
+      }
+      result = await authController.signInWithEmailAndPassword(
+        _emailController.text,
+        _passwordController.text,
+      );
     }
-    int result = await authController.signInWithEmailAndPassword(
-      _emailController.text,
-      _passwordController.text,
-    );
+    else if(loginMethod == 2){
+      result = await authController.signInWithGoogle();
+    }
+    else if(loginMethod == 3){
+      result = await authController.signInWithFacebook();
+    }
     if(result == 200) {
       Navigator.pushReplacementNamed(context, '/customMenu');
       _formKey.currentState?.save();
@@ -224,6 +235,63 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget buildAuthOptions(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: Image.asset(
+            'assets/images/google_icon.png', // Replace with the path to your image
+            height: 40,
+            width: 40,
+          ),
+          onPressed: () => _submit(2),
+        ),
+        IconButton(
+          icon: Image.asset(
+            'assets/images/fb_icon.png', // Replace with the path to your image
+            height: 40,
+            width: 40,
+          ),
+          onPressed: () => _submit(3),
+        ),
+        // SignInButton(
+        //   Buttons.Facebook,
+        //   onPressed: () => _submit(2),
+        // ),
+        // ElevatedButton(
+        //   onPressed: () async {
+        //     int? result = await authController.signInWithGoogle();
+        //     if(result == 200) {
+        //       Navigator.pushReplacementNamed(context, '/customMenu');
+        //       _formKey.currentState?.save();
+        //     }
+        //     else{
+        //       print("Wrong credentials");
+        //       return;
+        //     }
+        //   },
+        //   child: Text("Login with Google"),
+        // ),
+
+        // ElevatedButton(
+        //   onPressed: () async {
+        //     int? result = await authController.signInWithFacebook();
+        //     if(result == 200) {
+        //       Navigator.pushReplacementNamed(context, '/customMenu');
+        //       _formKey.currentState?.save();
+        //     }
+        //     else{
+        //       print("Wrong credentials");
+        //       return;
+        //     }
+        //   },
+        //   child: Text("Login with Facebook"),
+        // )
+      ],
+    );
+  }
+
   Widget buildFooter() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -239,9 +307,10 @@ class _LoginPageState extends State<LoginPage> {
                   width: 200,
                   text: "Login",
                   textColor: Colors.white,
-                  onPressed: _submit)
+                  onPressed: () => _submit(1))
             ],
           ),
+          buildAuthOptions(),
           TextButton(
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, '/registerPage'),

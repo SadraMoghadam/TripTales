@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import '../services/auth_service.dart';
 import '../models/user_model.dart';
 
+
 class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   Rx<UserModel?> currentUser = Rx<UserModel?>(null);
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void onInit() {
@@ -19,6 +21,31 @@ class AuthController extends GetxController {
     } else {
       final UserModel? userModel = await _authService.getUserById(user.uid);
       currentUser.value = userModel;
+    }
+  }
+
+
+  Future<int> signInWithFacebook() async {
+    final User? signedInUser =
+    await _authService.signInWithFacebook();
+    if (signedInUser != null) {
+      print("logged in");
+      return 200;
+    } else {
+      print("error in login");
+      return 401;
+    }
+  }
+
+  Future<int> signInWithGoogle() async {
+    final User? signedInUser =
+    await _authService.signInWithGoogle();
+    if (signedInUser != null) {
+      print("logged in");
+      return 200;
+    } else {
+      print("error in login");
+      return 401;
     }
   }
 
