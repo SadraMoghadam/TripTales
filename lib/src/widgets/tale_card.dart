@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:trip_tales/src/models/tale_model.dart';
+import 'package:trip_tales/src/services/tale_service.dart';
 import '../constants/color.dart';
 
 class CustomTale extends StatefulWidget {
@@ -23,6 +26,7 @@ class CustomTale extends StatefulWidget {
 
 class _CustomTaleState extends State<CustomTale> {
   final Completer<ImageInfo> _imageInfoCompleter = Completer<ImageInfo>();
+  final TaleService _taleService = Get.find<TaleService>();
   Size size = Size(320, 220);
 
   // late Size imageActualSize;
@@ -48,6 +52,7 @@ class _CustomTaleState extends State<CustomTale> {
     setState(() {
       widget.isLiked = !widget.isLiked;
     });
+    _taleService.updateTaleLikeByName(widget.taleName, widget.isLiked);
   }
 
   @override

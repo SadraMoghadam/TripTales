@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
-import 'package:trip_tales/src/constants/memory_card_type.dart';
-import 'package:trip_tales/src/models/card_model.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
 
 class TaleService extends GetxService {
@@ -14,7 +12,6 @@ class TaleService extends GetxService {
   final CollectionReference _talesCollection =
       FirebaseFirestore.instance.collection('tales');
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Rx<TaleModel?> card = Rx<TaleModel?>(null);
 
   @override
   void onInit() {
@@ -48,43 +45,59 @@ class TaleService extends GetxService {
     }
   }
 
-  // Future<int> updateCard(CardModel cardData) async {
-  //   try {
-  //     // String? currentUserId = _authService.currentUserId;
-  //     List<CardModel?> currentCards = await getCards("1");
-  //     final DocumentSnapshot<Map<String, dynamic>> userDoc =
-  //     await _firestore.collection('users').doc('1').get();
-  //     final userData = userDoc.data();
-  //     print(userData);
-  //     var contain =
-  //         currentCards.where((element) => element!.name == cardData.name);
-  //     if (!contain.isEmpty) {
-  //       String cardId = await getCardId(contain.first!.name);
-  //       // print('(((((((((((((${cardId}');
-  //       if(contain.first!.type == MemoryCardType.image || contain.first!.type == MemoryCardType.video){
-  //         await FirebaseFirestore.instance.collection('cards').doc(cardId).update(
-  //             cardData.toJson()
-  //         );
-  //         // print('+++++++++++++++${cardId}');
-  //       }
-  //       else if(contain.first!.type == MemoryCardType.text){
-  //         await FirebaseFirestore.instance.collection('cards').doc(cardId).update(
-  //             cardData.toJsonTextCard()
-  //         );
-  //         // print('=====================${cardId}');
-  //       }
-  //
-  //       print('Card updated successfully.');
-  //       return 200;
-  //     }
-  //     return 401;
-  //   }
-  //   // print("__________________${cardData.toJsonTextCard()}");
-  //   catch (e) {
-  //     print('Error updated card: $e');
-  //     return 401;
-  //   }
-  // }
+  Future<int> updateTale(TaleModel taleData) async {
+    try {
+      // String? currentUserId = _authService.currentUserId;
+      List<TaleModel?> currentTales = await getTales("1");
+      final DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firestore.collection('users').doc('1').get();
+      final userData = userDoc.data();
+      print(userData);
+      var contain =
+          currentTales.where((element) => element!.name == taleData.name);
+      if (!contain.isEmpty) {
+        String taleId = await getTaleId(contain.first!.name);
+        await FirebaseFirestore.instance.collection('tales').doc(taleId).update(
+            taleData.toJson()
+        );
+        print('Tale updated successfully.');
+        return 200;
+      }
+      return 401;
+    }
+    // print("__________________${cardData.toJsonTextTale()}");
+    catch (e) {
+      print('Error updated tale: $e');
+      return 401;
+    }
+  }
+
+  Future<int> updateTaleLikeByName(String name, bool liked) async {
+    try {
+      // String? currentUserId = _authService.currentUserId;
+      List<TaleModel?> currentTales = await getTales("1");
+      final DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firestore.collection('users').doc('1').get();
+      final userData = userDoc.data();
+      print(userData);
+      var contain =
+      currentTales.where((element) => element!.name == name);
+      if (!contain.isEmpty) {
+        String taleId = await getTaleId(contain.first!.name);
+        await FirebaseFirestore.instance.collection('tales').doc(taleId).update({
+              'liked': liked,
+            });
+        print('Tale updated successfully.');
+        return 200;
+      }
+      return 401;
+    }
+    // print("__________________${cardData.toJsonTextTale()}");
+    catch (e) {
+      print('Error updated tale: $e');
+      return 401;
+    }
+  }
 
   Future<int> deleteTaleByName(String name) async {
     try {
@@ -103,14 +116,14 @@ class TaleService extends GetxService {
           'talesFK': FieldValue.arrayRemove([taleId]),
         });
 
-        print('Card deleted successfully.');
+        print('Tale deleted successfully.');
         return 200;
       }
       return 401;
     }
-    // print("__________________${cardData.toJsonTextCard()}");
+    // print("__________________${taleData.toJsonTextTale()}");
     catch (e) {
-      print('Error delete card: $e');
+      print('Error delete tale: $e');
       return 401;
     }
   }
@@ -138,11 +151,48 @@ class TaleService extends GetxService {
               name: taleData['name'],
               imagePath: downloadURL,
               canvas: taleData['canvas'],
+              liked: taleData['liked'],
               cardsFK: List<String>.empty(),
             );
             tales.add(taleModel);
           }
         }
+      return tales;
+    } catch (e) {
+      // Get.snackbar('Error', e.toString());
+      return List.empty();
+    }
+  }
+
+  Future<List<TaleModel?>> getFavoriteTales(String uid) async {
+    try {
+      List<TaleModel> tales = [];
+      final DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firestore.collection('users').doc(uid).get();
+      final userData = userDoc.data();
+      print("=+=========${userData}");
+      for (int i = 0; i < userData?['talesFK'].length; i++) {
+        final DocumentSnapshot<Map<String, dynamic>> taleDoc = await _firestore
+            .collection('tales')
+            .doc(userData?['talesFK'][i])
+            .get();
+        final taleData = taleDoc.data()!;
+
+        if (taleData != null && taleData['liked'] == true) {
+          print("=+=========${taleData['imagePath']}");
+          String downloadURL =
+          await _storage.ref().child(taleData['imagePath']).getDownloadURL();
+          // print("video:      ${downloadURL}");
+          TaleModel taleModel = TaleModel(
+            name: taleData['name'],
+            imagePath: downloadURL,
+            canvas: taleData['canvas'],
+            liked: taleData['liked'],
+            cardsFK: List<String>.empty(),
+          );
+          tales.add(taleModel);
+        }
+      }
       return tales;
     } catch (e) {
       // Get.snackbar('Error', e.toString());

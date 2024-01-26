@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         '/myTalesPage': (context) => MyTalesPage(),
         '/createTalePage': (context) => CreateTalePage(),
         '/talePage': (context) => TalePage(),
-        '/favoriteTalesPage': (context) => FavoriteTales([]),
+        '/favoriteTalesPage': (context) => FavoriteTalesPage(),
         '/profilePage': (context) => ProfilePage(),
       },
       initialRoute: '/customMenu',

@@ -11,7 +11,7 @@ class CustomMenu extends StatefulWidget {
 
 class _CustomMenuState extends State<CustomMenu> {
   int index = 0;
-  final screens = [MyTalesPage(), FavoriteTales(const []), ProfilePage()];
+  final screens = [MyTalesPage(), FavoriteTalesPage(), ProfilePage()];
 
   @override
   Widget build(BuildContext context) => Scaffold(

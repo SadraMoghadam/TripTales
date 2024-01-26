@@ -46,54 +46,7 @@ class _MyTalesPage extends State<MyTalesPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed('/createTalePage');
-          },
-          child: Center(
-            child: Container(
-              width: 100,
-              height: 100,
-              margin: const EdgeInsets.all(12),
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.main2,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey,
-                        blurRadius: 3,
-                        offset: Offset(-5, 5))
-                  ],
-                  border: Border(
-                    top: BorderSide(color: AppColors.main1, width: 5),
-                    right: BorderSide(color: AppColors.main1, width: 5),
-                    bottom: BorderSide(color: AppColors.main1, width: 5),
-                    left: BorderSide(color: AppColors.main1, width: 5),
-                  )
-                  // image: DecorationImage(
-                  //   fit: BoxFit.cover,
-                  //   image: AssetImage('assets/images/createTale_background.png'),
-                  // ),
-                  ),
-              child: const Text(
-                textAlign: TextAlign.center,
-                '+',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 60.0,
-                  shadows: <Shadow>[
-                    Shadow(
-                      offset: Offset(-2.0, 2.0),
-                      blurRadius: 3.0,
-                      color: AppColors.main1,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        newTaleButton(),
         Flexible(
           fit: FlexFit.tight,
           flex: 14,
@@ -120,8 +73,8 @@ class _MyTalesPage extends State<MyTalesPage> {
           // print("###########");
           data = snapshot.data!;
           numOfTales = data.length;
-          print(numOfTales);
           for (int i = 0; i < numOfTales; i++) {
+            print("--___--${data[i]!.liked}");
             _widgetKeyList = List.generate(
                 numOfTales, (index) => GlobalObjectKey<FormState>(index));
           }
@@ -134,6 +87,7 @@ class _MyTalesPage extends State<MyTalesPage> {
                     talePath: data[i]!.imagePath,
                     taleName: data[i]!.name,
                     index: i,
+                    isLiked: data[i]!.liked,
                   ),
               ],
             ),
@@ -145,6 +99,57 @@ class _MyTalesPage extends State<MyTalesPage> {
           return Container();
         }
       },
+    );
+  }
+
+  Widget newTaleButton(){
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed('/createTalePage');
+      },
+      child: Center(
+        child: Container(
+          width: 100,
+          height: 100,
+          margin: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.main2,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 3,
+                    offset: Offset(-5, 5))
+              ],
+              border: Border(
+                top: BorderSide(color: AppColors.main1, width: 5),
+                right: BorderSide(color: AppColors.main1, width: 5),
+                bottom: BorderSide(color: AppColors.main1, width: 5),
+                left: BorderSide(color: AppColors.main1, width: 5),
+              )
+            // image: DecorationImage(
+            //   fit: BoxFit.cover,
+            //   image: AssetImage('assets/images/createTale_background.png'),
+            // ),
+          ),
+          child: const Text(
+            textAlign: TextAlign.center,
+            '+',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 60.0,
+              shadows: <Shadow>[
+                Shadow(
+                  offset: Offset(-2.0, 2.0),
+                  blurRadius: 3.0,
+                  color: AppColors.main1,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
