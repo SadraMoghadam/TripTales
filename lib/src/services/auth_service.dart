@@ -34,7 +34,7 @@ class AuthService extends GetxService {
       final User? fbUser = authResult.user;
 
       if (fbUser != null) {
-        await _createUserDocument(fbUser.uid, fbUser.email!, _getFirstName(fbUser?.displayName), _getLastName(fbUser?.displayName));
+        await _createUserDocument(fbUser.email!, _getFirstName(fbUser?.displayName), _getLastName(fbUser?.displayName));
       }
       print(fbUser);
 
@@ -60,7 +60,7 @@ class AuthService extends GetxService {
       final User? googleUser = authResult.user;
 
       if (googleUser != null) {
-        await _createUserDocument(googleUser.uid, googleUser.email!, _getFirstName(googleUser?.displayName), _getLastName(googleUser?.displayName));
+        await _createUserDocument(googleUser.email!, _getFirstName(googleUser?.displayName), _getLastName(googleUser?.displayName));
       }
 
       return googleUser;
@@ -106,35 +106,7 @@ class AuthService extends GetxService {
       final User? registeredUser = authResult.user;
 
       if (registeredUser != null) {
-        // await _createUserDocument(registeredUser.uid, email, name, surname, birthDate: birthDate);
-        CollectionReference users = _firestore.collection('users');
-        UserModel newUser = UserModel(
-          id: '',
-          email: email,
-          name: name,
-          surname: surname,
-          birthDate: birthDate,
-          phoneNumber: '',
-          bio: '',
-          gender: '',
-          profileImage: '',
-          cardsFK: List<String>.empty(),
-        );
-        DocumentReference documentReference = await users.add(newUser.toJson());
-        String firebaseGeneratedId = documentReference.id;
-        newUser = UserModel(
-          id: firebaseGeneratedId,
-          email: newUser.email,
-          name: newUser.name,
-          surname: newUser.surname,
-          birthDate: newUser.birthDate,
-          phoneNumber: newUser.phoneNumber,
-          bio: newUser.bio,
-          gender: newUser.gender,
-          profileImage: newUser.profileImage,
-          cardsFK: newUser.cardsFK,
-        );
-        await users.doc(firebaseGeneratedId).update(newUser.toJson());
+        await _createUserDocument(email, name, surname, birthDate: birthDate);
       }
       return registeredUser;
     } catch (e) {
@@ -147,13 +119,25 @@ class AuthService extends GetxService {
     await _auth.signOut();
   }
 
-  Future<void> _createUserDocument(String uid, String email, String name,
+  Future<void> _createUserDocument(String email, String name,
       String surname, {String? birthDate}) async {
-    await _firestore.collection(FirestoreCollections.users).doc(uid).set({
-      'email': email,
-      'name': name,
-      'surname': surname,
-      'birthDate': birthDate,
+    CollectionReference users = _firestore.collection('users');
+    UserModel newUser = UserModel(
+      id: '',
+      email: email,
+      name: name,
+      surname: surname,
+      birthDate: birthDate!,
+      phoneNumber: '',
+      bio: '',
+      gender: '',
+      profileImage: '',
+      cardsFK: List<String>.empty(),
+    );
+    DocumentReference documentReference = await users.add(newUser.toJson());
+    String firebaseGeneratedId = documentReference.id;
+    await users.doc(firebaseGeneratedId).update({
+      'id': firebaseGeneratedId,
     });
   }
 

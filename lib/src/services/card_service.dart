@@ -42,12 +42,12 @@ class CardService extends GetxService {
       }
       // cardData.order = currentCards.length;
       Future<bool> isUploaded = _uploadImage(imageFile, cardData.name);
-      DocumentReference cardReference = await _cardsCollection.add({
-        'userId': '1',
-        'cardData': cardData.toJson(),
-      });
+      DocumentReference cardReference = await _cardsCollection.add(
+          cardData.toJson()
+      );
+
       await FirebaseFirestore.instance.collection('users').doc("1").update({
-        'cards': FieldValue.arrayUnion([cardReference.id]),
+        'cardsFK': FieldValue.arrayUnion([cardReference.id]),
       });
 
       print('Card added successfully.');
@@ -69,12 +69,12 @@ class CardService extends GetxService {
       }
       // cardData.order = currentCards.length;
       Future<bool> isUploaded = _uploadVideo(videoFile, cardData.name);
-      DocumentReference cardReference = await _cardsCollection.add({
-        'userId': '1',
-        'cardData': cardData.toJson(),
-      });
+      DocumentReference cardReference = await _cardsCollection.add(
+          cardData.toJson()
+      );
+
       await FirebaseFirestore.instance.collection('users').doc("1").update({
-        'cards': FieldValue.arrayUnion([cardReference.id]),
+        'cardsFK': FieldValue.arrayUnion([cardReference.id]),
       });
 
       print('Card added successfully.');
@@ -95,13 +95,12 @@ class CardService extends GetxService {
         return 400;
       }
       // print("__________________${cardData.toJsonTextCard()}");
-      DocumentReference cardReference = await _cardsCollection.add({
-        'userId': '1',
-        'cardData': cardData.toJsonTextCard(),
-      });
+      DocumentReference cardReference = await _cardsCollection.add(
+        cardData.toJsonTextCard()
+      );
       // print("__________________$cardReference");
       await FirebaseFirestore.instance.collection('users').doc("1").update({
-        'cards': FieldValue.arrayUnion([cardReference.id]),
+        'cardsFK': FieldValue.arrayUnion([cardReference.id]),
       });
       print('Card added successfully.');
       return 200;
@@ -125,17 +124,15 @@ class CardService extends GetxService {
         String cardId = await getCardId(contain.first!.name);
         // print('(((((((((((((${cardId}');
         if(contain.first!.type == MemoryCardType.image || contain.first!.type == MemoryCardType.video){
-          await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
-            'userId': '1',
-            'cardData': cardData.toJson(),
-          });
+          await FirebaseFirestore.instance.collection('cards').doc(cardId).update(
+              cardData.toJson()
+          );
           // print('+++++++++++++++${cardId}');
         }
         else if(contain.first!.type == MemoryCardType.text){
-          await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
-            'userId': '1',
-            'cardData': cardData.toJsonTextCard(),
-          });
+          await FirebaseFirestore.instance.collection('cards').doc(cardId).update(
+              cardData.toJsonTextCard()
+          );
           // print('=====================${cardId}');
         }
 
@@ -166,7 +163,7 @@ class CardService extends GetxService {
         String cardId = await getCardId(currentCard.name);
         if(currentCard.type == MemoryCardType.text){
           newCard = CardModel(
-            id: currentCard.id,
+            // id: currentCard.id,
             order: currentCard.order,
             type: currentCard.type,
             transform: transform,
@@ -180,15 +177,14 @@ class CardService extends GetxService {
             fontWeight: currentCard.fontWeight,
             fontSize: currentCard.fontSize,
           );
-          await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
-            'userId': '1',
-            'cardData': newCard.toJsonTextCard(),
-          });
+          await FirebaseFirestore.instance.collection('cards').doc(cardId).update(
+              newCard.toJsonTextCard()
+          );
         }
         // else if(currentCard.type == MemoryCardType.text){
         else{
           newCard = CardModel(
-            id: currentCard.id,
+            // id: currentCard.id,
             order: currentCard.order,
             type: currentCard.type,
             transform: transform,
@@ -202,10 +198,9 @@ class CardService extends GetxService {
             // fontWeight: currentCard.fontWeight,
             // fontSize: currentCard.fontSize,
           );
-          await FirebaseFirestore.instance.collection('cards').doc(cardId).update({
-            'userId': '1',
-            'cardData': newCard.toJson(),
-          });
+          await FirebaseFirestore.instance.collection('cards').doc(cardId).update(
+              newCard.toJson()
+          );
         }
         // _appManager.setCardByName(newCard);
 
@@ -235,7 +230,7 @@ class CardService extends GetxService {
         String cardId = await getCardId(contain.first!.name);
         await FirebaseFirestore.instance.collection('cards').doc(cardId).delete();
         await FirebaseFirestore.instance.collection('users').doc("1").update({
-          'cards': FieldValue.arrayRemove([cardId]),
+          'cardsFK': FieldValue.arrayRemove([cardId]),
         });
 
         print('Card deleted successfully.');
@@ -252,34 +247,27 @@ class CardService extends GetxService {
 
   Future<List<CardModel?>> getCards(String uid) async {
     try {
+
+      // print("+=+=+=+=${0}");
       List<CardModel> cards = [];
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
           await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
-      // print("__________________${userData?['cards'].length}");
-      for (int i = 0; i < userData?['cards'].length; i++) {
+      for (int i = 0; i < userData?['cardsFK'].length; i++) {
         final DocumentSnapshot<Map<String, dynamic>> cardDoc = await _firestore
             .collection('cards')
-            .doc(userData?['cards'][i])
+            .doc(userData?['cardsFK'][i])
             .get();
-        final cardData = cardDoc.data()!['cardData'];
+        final cardData = cardDoc.data()!;
 
         if (cardData != null) {
-          // print("----------------------${cardData['order']}");
-          // print(
-          //     "----------------------${MemoryCardType.values.byName(cardData['type'])}");
-          // print(
-          //     "----------------------${CustomMatrixUtils.jsonToMatrix4(cardData['transform'])}");
-          // print("----------------------${cardData['path']}");
-          // print("----------------------${cardData['name']}");
           MemoryCardType type = MemoryCardType.values.byName(cardData['type']);
-          print("-----------_____________");
           if (type == MemoryCardType.image || type == MemoryCardType.video) {
             String downloadURL =
                 await _storage.ref().child(cardData['name']).getDownloadURL();
             // print("video:      ${downloadURL}");
             CardModel cardModel = CardModel(
-              id: '1',
+              // id: '1',
               order: cardData['order'],
               type: type,
               transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),
@@ -296,17 +284,8 @@ class CardService extends GetxService {
             );
             cards.add(cardModel);
           } else if (type == MemoryCardType.text) {
-
-            print("-----------_____________${cardData['name']}");
-            // print("----------------------${cardData['fontSize']}");
-            // print(
-            //     "----------------------${MemoryCardType.values.byName(cardData['type'])}");
-            // print(
-            //     "----------------------${CustomMatrixUtils.jsonToMatrix4(cardData['transform'])}");
-            // print("----------------------${cardData['path']}");
-            // print("----------------------${cardData['name']}");
             CardModel cardModel = CardModel(
-              id: '1',
+              // id: '',
               order: cardData['order'],
               type: type,
               transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),
@@ -323,7 +302,6 @@ class CardService extends GetxService {
               fontWeight: TextUtils.textToFontWeight(cardData['fontWeight']),
               fontSize: cardData['fontSize'],
             );
-            print("----------------------${cardData['name']}");
             cards.add(cardModel);
           }
         }
@@ -366,7 +344,7 @@ class CardService extends GetxService {
     print(userData);
     for (int i = 0; i < currentCards.length; i++){
       if(name == currentCards[i]!.name){
-        return userData!['cards'][i];
+        return userData!['cardsFK'][i];
       }
     }
     return "";
