@@ -103,7 +103,7 @@ class FavoriteTales extends StatelessWidget {
 
   Widget buildCards() {
     List<CustomTale> favoriteTales =
-        allTales.where((tale) => tale.isFavorited).toList();
+        allTales.where((tale) => tale.isLiked).toList();
 
     return SingleChildScrollView(
       child: Column(

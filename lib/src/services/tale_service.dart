@@ -121,6 +121,7 @@ class TaleService extends GetxService {
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
           await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
+      print("=+=========${userData}");
       for (int i = 0; i < userData?['talesFK'].length; i++) {
         final DocumentSnapshot<Map<String, dynamic>> taleDoc = await _firestore
             .collection('tales')
@@ -129,8 +130,9 @@ class TaleService extends GetxService {
         final taleData = taleDoc.data()!;
 
         if (taleData != null) {
+          print("=+=========${taleData['imagePath']}");
             String downloadURL =
-                await _storage.ref().child(taleData['name']).getDownloadURL();
+                await _storage.ref().child(taleData['imagePath']).getDownloadURL();
             // print("video:      ${downloadURL}");
             TaleModel taleModel = TaleModel(
               name: taleData['name'],

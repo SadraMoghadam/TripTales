@@ -168,8 +168,9 @@ class _TaleBuilderState extends State<TaleBuilder>
         } else if (snapshot.hasError) {
           // print(snapshot.error);
           return Text("Error: ${snapshot.error}");
+        } else{
+          return Container();
         }
-        return Container();
       },
     );
   }

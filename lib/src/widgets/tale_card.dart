@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../constants/color.dart';
 
@@ -5,14 +7,14 @@ class CustomTale extends StatefulWidget {
   final String talePath;
   final String taleName;
   final int index;
-  bool isFavorited; // Include isFavorited in CustomTale
+  bool isLiked; // Include isFavorited in CustomTale
 
   CustomTale({
     Key? key,
     required this.talePath,
     required this.taleName,
     required this.index,
-    this.isFavorited = false, // Set default to false
+    this.isLiked = false, // Set default to false
   }) : super(key: key);
 
   @override
@@ -20,6 +22,34 @@ class CustomTale extends StatefulWidget {
 }
 
 class _CustomTaleState extends State<CustomTale> {
+  final Completer<ImageInfo> _imageInfoCompleter = Completer<ImageInfo>();
+  Size size = Size(320, 220);
+
+  // late Size imageActualSize;
+
+  @override
+  void initState() {
+    super.initState();
+    loadImageInfo(widget.talePath);
+  }
+
+  Future<void> loadImageInfo(String imageUrl) async {
+    final ImageStream imageStream =
+        Image.network(imageUrl).image.resolve(ImageConfiguration.empty);
+    final ImageStreamListener listener =
+        ImageStreamListener((ImageInfo info, bool _) {
+      _imageInfoCompleter.complete(info);
+    });
+
+    imageStream.addListener(listener);
+  }
+
+  void likeTale() {
+    setState(() {
+      widget.isLiked = !widget.isLiked;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,56 +67,123 @@ class _CustomTaleState extends State<CustomTale> {
           });
           */
         },
-        child: SizedBox(
-          width: 320,
-          height: 220,
-          child: Stack(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(
-                    bottom: 12, top: 5, left: 5, right: 5),
+        child: taleCard(),
+      ),
+    );
+  }
+
+  Widget taleCard() {
+    return Container(
+      // transform: transform,
+      decoration: const BoxDecoration(
+        // color: Colors.red,
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),
+      child: FutureBuilder<ImageInfo>(
+        future: _imageInfoCompleter.future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            final imageInfo = snapshot.data!;
+            // if (imageInfo.image.width > imageInfo.image.height) {
+            //   imageActualSize = Size(
+            //       size.width,
+            //       size.width *
+            //           imageInfo.image.height /
+            //           imageInfo.image.width);
+            // } else if (imageInfo.image.width < imageInfo.image.height) {
+            //   imageActualSize = Size(
+            //       size.height *
+            //           imageInfo.image.width /
+            //           imageInfo.image.height,
+            //       size.height);
+            // } else {
+            //   imageActualSize = Size(size.width, size.height);
+            // }
+            return Container(
+                // key: _widgetKeyList[0],
+                width: size.width,
+                height: size.height,
+                margin: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage(widget.talePath),
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Colors.grey,
+                          blurRadius: 3,
+                          offset: Offset(-8, 8))
+                    ],
+                    border: Border.all(color: AppColors.main2),
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                child: Center(
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          widget.talePath, fit: BoxFit.cover,
+                          width: double.infinity,
+                          // Make the image take the full width
+                          height: double.infinity,
+                        ),
+                      ),
+                      likeButton(likeTale),
+                      taleName(),
+                    ],
                   ),
-                ),
-                child: Container(
-                  alignment: Alignment.bottomCenter,
-                  margin: const EdgeInsets.only(bottom: 5),
-                  child: Text(
-                    widget.taleName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22.0,
-                    ),
-                  ),
+                ));
+          } else {
+            return Center(
+              child: Container(
+                margin: EdgeInsets.all(100),
+                height: size.height / 3,
+                width: size.height / 3,
+                child: const CircularProgressIndicator(
+                  color: AppColors.main2,
                 ),
               ),
-              if (widget.index != 0)
-                Positioned(
-                  top: 2,
-                  right: 10,
-                  child: IconButton(
-                    icon: Icon(
-                      widget.isFavorited
-                          ? Icons.favorite_rounded
-                          : Icons.favorite_border_rounded,
-                      color: widget.isFavorited ? AppColors.main1 : Colors.grey,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        widget.isFavorited = !widget.isFavorited;
-                      });
-                    },
-                  ),
-                ),
-            ],
-          ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget likeButton(Function onTap) {
+    return Positioned(
+      top: 2,
+      right: 2,
+      child: IconButton(
+        icon: Icon(
+          widget.isLiked
+              ? Icons.favorite_rounded
+              : Icons.favorite_border_rounded,
+          color: widget.isLiked ? AppColors.main3 : AppColors.main2,
         ),
+        onPressed: () {
+          onTap();
+        },
+      ),
+    );
+  }
+
+  Widget taleName() {
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: const EdgeInsets.only(left: 8, top: 9),
+      child: Text(
+        widget.taleName,
+        style: const TextStyle(
+          color: AppColors.main2,
+          fontWeight: FontWeight.w600,
+          fontSize: 22,
+          shadows: <Shadow>[
+            Shadow(
+              offset: Offset(-2.0, 2.0),
+              blurRadius: 3.0,
+              color: AppColors.main1,
+            ),
+          ],
+        ),
+
       ),
     );
   }
