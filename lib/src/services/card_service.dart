@@ -22,9 +22,8 @@ class CardService extends GetxService {
   final CollectionReference _cardsCollection =
       FirebaseFirestore.instance.collection('cards');
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final List<CardModel> cards = [];
-
-  Rx<CardModel?> card = Rx<CardModel?>(null);
+  // final List<CardModel> cards = [];
+  // Rx<CardModel?> card = Rx<CardModel?>(null);
 
   @override
   void onInit() {
@@ -46,7 +45,7 @@ class CardService extends GetxService {
           cardData.toJson()
       );
 
-      await FirebaseFirestore.instance.collection('users').doc("1").update({
+      await _firestore.collection('users').doc("1").update({
         'cardsFK': FieldValue.arrayUnion([cardReference.id]),
       });
 
@@ -73,7 +72,7 @@ class CardService extends GetxService {
           cardData.toJson()
       );
 
-      await FirebaseFirestore.instance.collection('users').doc("1").update({
+      await _firestore.collection('users').doc("1").update({
         'cardsFK': FieldValue.arrayUnion([cardReference.id]),
       });
 
@@ -99,7 +98,7 @@ class CardService extends GetxService {
         cardData.toJsonTextCard()
       );
       // print("__________________$cardReference");
-      await FirebaseFirestore.instance.collection('users').doc("1").update({
+      await _firestore.collection('users').doc("1").update({
         'cardsFK': FieldValue.arrayUnion([cardReference.id]),
       });
       print('Card added successfully.');
@@ -124,13 +123,13 @@ class CardService extends GetxService {
         String cardId = await getCardId(contain.first!.name);
         // print('(((((((((((((${cardId}');
         if(contain.first!.type == MemoryCardType.image || contain.first!.type == MemoryCardType.video){
-          await FirebaseFirestore.instance.collection('cards').doc(cardId).update(
+          await _firestore.collection('cards').doc(cardId).update(
               cardData.toJson()
           );
           // print('+++++++++++++++${cardId}');
         }
         else if(contain.first!.type == MemoryCardType.text){
-          await FirebaseFirestore.instance.collection('cards').doc(cardId).update(
+          await _firestore.collection('cards').doc(cardId).update(
               cardData.toJsonTextCard()
           );
           // print('=====================${cardId}');
@@ -177,7 +176,7 @@ class CardService extends GetxService {
             fontWeight: currentCard.fontWeight,
             fontSize: currentCard.fontSize,
           );
-          await FirebaseFirestore.instance.collection('cards').doc(cardId).update(
+          await _firestore.collection('cards').doc(cardId).update(
               newCard.toJsonTextCard()
           );
         }
@@ -198,7 +197,7 @@ class CardService extends GetxService {
             // fontWeight: currentCard.fontWeight,
             // fontSize: currentCard.fontSize,
           );
-          await FirebaseFirestore.instance.collection('cards').doc(cardId).update(
+          await _firestore.collection('cards').doc(cardId).update(
               newCard.toJson()
           );
         }
@@ -228,10 +227,11 @@ class CardService extends GetxService {
       currentCards.where((element) => element!.name == name);
       if (!contain.isEmpty) {
         String cardId = await getCardId(contain.first!.name);
-        await FirebaseFirestore.instance.collection('cards').doc(cardId).delete();
-        await FirebaseFirestore.instance.collection('users').doc("1").update({
+        await _firestore.collection('cards').doc(cardId).delete();
+        await _firestore.collection('users').doc("1").update({
           'cardsFK': FieldValue.arrayRemove([cardId]),
         });
+        await _storage.refFromURL(contain.first!.path).delete();
 
         print('Card deleted successfully.');
         return 200;

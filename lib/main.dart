@@ -15,6 +15,7 @@ import 'package:trip_tales/src/pages/my_tales.dart';
 import 'package:trip_tales/src/pages/tale.dart';
 import 'package:trip_tales/src/services/auth_service.dart';
 import 'package:trip_tales/src/services/card_service.dart';
+import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/utils/device_info.dart';
 import 'package:trip_tales/src/pages/home.dart';
 import 'package:trip_tales/src/widgets/menu_bar_tale.dart';
@@ -52,11 +53,12 @@ class MyApp extends StatelessWidget {
         '/favoriteTalesPage': (context) => FavoriteTales([]),
         '/profilePage': (context) => ProfilePage(),
       },
-      initialRoute: '/talePage',
+      initialRoute: '/customMenu',
       initialBinding: BindingsBuilder(() {
         Get.put(AuthService(), permanent: true);
         Get.put(AuthController(), permanent: true);
         Get.put(CardService(), permanent: true);
+        Get.put(TaleService(), permanent: true);
       }),
     );
   }

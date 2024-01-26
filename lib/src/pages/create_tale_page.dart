@@ -1,8 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
+import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/widgets/canvas_card.dart';
 import '../constants/color.dart';
+import '../constants/error_messages.dart';
+import '../controllers/media_controller.dart';
 import '../utils/device_info.dart';
+import '../utils/validator.dart';
 import '../widgets/button.dart';
 import '../widgets/text_field.dart';
 import '../widgets/app_bar_tale.dart';
@@ -14,20 +22,37 @@ class CreateTalePage extends StatefulWidget {
 
 class _CreateTalePage extends State<CreateTalePage> {
   late final TextEditingController _taleNameController;
+  final MediaController mediaController = Get.put(MediaController());
+  final TaleService _taleService = Get.find<TaleService>();
+  final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
+  final Validator _validator = Validator();
   final _formKey = GlobalKey<FormState>();
-  int selectedIndex = -1;
+  int selectedIndex = 0;
 
   static const backgroundNum = 6;
   static const backgroundPaths = ['assets/images/canvas1.jpg', 'assets/images/canvas2.jpg', 'assets/images/canvas3.jpg', 'assets/images/canvas4.jpg', 'assets/images/canvas5.jpg', 'assets/images/canvas6.jpg'];
   static const backgroundNames = ['Nostalgic', 'Village', 'Cities', 'Winter', 'Summer', 'Spring'];
 
-  void _submit() {
+  void _submit() async {
     final isValid = _formKey.currentState?.validate();
     if (isValid == null || !isValid) {
       return;
     }
-    _formKey.currentState?.save();
-    Navigator.of(context).pushNamed('/talePage');
+    print(selectedIndex.toString());
+    TaleModel taleData = TaleModel(name: _taleNameController.text, imagePath: '${_taleNameController.text}_TALE.png', canvas: selectedIndex.toString());
+    File? imageFile = mediaController.getImage();
+    int result = 400;
+    if(imageFile != null) {
+      result = await _taleService.addTale(taleData, imageFile!);
+    }
+    if(result == 200){
+      _formKey.currentState?.save();
+      Navigator.of(context).pushNamed('/talePage');
+    }
+    else{
+      ErrorController.showSnackBarError(ErrorController.createTale);
+      return;
+    }
   }
 
   @override
@@ -74,76 +99,81 @@ class _CreateTalePage extends State<CreateTalePage> {
   Widget buildScreen() {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            height: 320,
-            child: SetPhotoScreen(),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          SizedBox(
-            height: 60,
-            width: 330,
-            child: CustomTextField(
-              key: const Key('taleNameCustomTextFieldKey'),
-              controller: _taleNameController,
-              labelText: 'Tale Name',
-              hintText: 'Enter your Tale Name',
-              prefixIcon: Icons.abc,
-              obscureText: false,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 15,
             ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          //SizedBox(
-          // height: 305,
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text(
-                  '  Choose your canvas:',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.main1,
-                    fontSize: 20,
+            SizedBox(
+              height: 320,
+              child: SetPhotoScreen(isImage: true),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            SizedBox(
+              height: 60,
+              width: 330,
+              child: CustomTextField(
+                key: const Key('taleNameCustomTextFieldKey'),
+                controller: _taleNameController,
+                labelText: 'Tale Name',
+                hintText: 'Enter your Tale Name',
+                prefixIcon: Icons.abc,
+                obscureText: false,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                validator: _validator.nameValidator,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            //SizedBox(
+            // height: 305,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text(
+                    '  Choose your canvas:',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.main1,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                buildCanvasList(),
-              ],
+                  buildCanvasList(),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 50,
-            child: CustomButton(
-              key: const Key('startCreatingCustomButtonKey'),
-              fontSize: 18,
-              padding: 2,
-              backgroundColor: AppColors.main2,
-              textColor: Colors.white,
-              text: "Start Creating",
-              onPressed: () => _submit(),
+            const SizedBox(
+              height: 10,
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-        ],
+            SizedBox(
+              height: 50,
+              child: CustomButton(
+                key: const Key('startCreatingCustomButtonKey'),
+                fontSize: 18,
+                padding: 2,
+                backgroundColor: AppColors.main2,
+                textColor: Colors.white,
+                text: "Start Creating",
+                onPressed: _submit,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
       ),
+
     );
   }
 

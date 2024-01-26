@@ -12,7 +12,11 @@ class MediaController extends GetxController {
   }
 
   File? getImage() {
-    return image.value;
+    try {
+      return image.value;
+    } catch (e) {
+      return null;
+    }
   }
 
   void setVideo(XFile? file) {
@@ -20,6 +24,10 @@ class MediaController extends GetxController {
   }
 
   XFile? getVideo() {
-    return video.value;
+    try {
+      return video.value;
+    } catch (e) {
+      return null;
+    }
   }
 }

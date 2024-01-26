@@ -8,6 +8,7 @@ class UserModel {
   final String bio;
   final String gender;
   final String profileImage;
+  final List<String>? talesFK;
   final List<String>? cardsFK;
 
   UserModel({
@@ -20,6 +21,7 @@ class UserModel {
     this.bio = '',
     this.gender = '',
     this.profileImage = '',
+    this.talesFK,
     this.cardsFK,
   });
 
@@ -34,6 +36,9 @@ class UserModel {
       bio: json['bio'] ?? '',
       gender: json['gender'] ?? '',
       profileImage: json['profileImage'] ?? '',
+      talesFK: json['talesFK'] != null
+          ? List<String>.from(json['talesFK'])
+          : null,
       cardsFK: json['cardsFK'] != null
           ? List<String>.from(json['cardsFK'])
           : null,
@@ -51,6 +56,7 @@ class UserModel {
       'bio': bio,
       'gender': gender,
       'profileImage': profileImage,
+      'talesFK': talesFK,
       'cardsFK': cardsFK,
     };
   }
