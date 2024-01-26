@@ -4,7 +4,6 @@ import '../constants/color.dart';
 class CustomTale extends StatefulWidget {
   final String talePath;
   final String taleName;
-  final bool talePos;
   final int index;
   bool isFavorited; // Include isFavorited in CustomTale
 
@@ -12,7 +11,6 @@ class CustomTale extends StatefulWidget {
     Key? key,
     required this.talePath,
     required this.taleName,
-    required this.talePos,
     required this.index,
     this.isFavorited = false, // Set default to false
   }) : super(key: key);

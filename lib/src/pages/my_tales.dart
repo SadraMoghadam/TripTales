@@ -26,32 +26,23 @@ class _MyTalesPage extends State<MyTalesPage> {
   }
 
   Widget buildBody() {
-    return Container(
-      /*
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/background_tale.jpg'),
-              fit: BoxFit.cover,
-              opacity: 0.3)),
-              */
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Flexible(
-            fit: FlexFit.tight,
-            flex: 14,
-            child: buildCards(),
-          ),
-          /*
-          Flexible(
-            fit: FlexFit.tight,
-            flex: 1,
-            child: buildFooter(),
-          ),
-          */
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Flexible(
+          fit: FlexFit.tight,
+          flex: 14,
+          child: buildCards(),
+        ),
+        /*
+        Flexible(
+          fit: FlexFit.tight,
+          flex: 1,
+          child: buildFooter(),
+        ),
+        */
+      ],
     );
   }
 
@@ -74,46 +65,15 @@ class _MyTalesPage extends State<MyTalesPage> {
           CustomTale(
             talePath: 'assets/images/createTale_background.jpg',
             taleName: 'Create new Tale',
-            talePos: true,
             index: 0,
             //taleOnPressed :
           ),
-          CustomTale(
-            talePath: 'assets/images/tale_sample.jpg',
-            taleName: 'Summer Holidays',
-            talePos: false,
-            index: 1,
-          ),
-          CustomTale(
-            talePath: 'assets/images/winter_tale.jpg',
-            taleName: 'Winter holidays 2022',
-            talePos: true,
-            index: 2,
-          ),
-          CustomTale(
-            talePath: 'assets/images/london_tale.jpg',
-            taleName: 'London vibes',
-            talePos: false,
-            index: 3,
-          ),
-          CustomTale(
-            talePath: 'assets/images/roadTrip_tale.jpg',
-            taleName: 'RoadTrip 2021',
-            talePos: true,
-            index: 4,
-          ),
-          CustomTale(
-            talePath: 'assets/images/china_tale.jpg',
-            taleName: 'Shanghai',
-            talePos: false,
-            index: 5,
-          ),
-          CustomTale(
-            talePath: 'assets/images/solo_tale.jpg',
-            taleName: 'Backpack solo trip',
-            talePos: true,
-            index: 6,
-          ),
+          for (int i = 0; i < taleNum; i++)
+            CustomTale(
+              talePath: 'assets/images/tale_sample.jpg',
+              taleName: 'Summer Holidays',
+              index: i + 1,
+            ),
         ],
       ),
     );
