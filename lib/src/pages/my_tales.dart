@@ -74,7 +74,6 @@ class _MyTalesPage extends State<MyTalesPage> {
           data = snapshot.data!;
           numOfTales = data.length;
           for (int i = 0; i < numOfTales; i++) {
-            print("--___--${data[i]!.liked}");
             _widgetKeyList = List.generate(
                 numOfTales, (index) => GlobalObjectKey<FormState>(index));
           }

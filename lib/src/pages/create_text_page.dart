@@ -84,7 +84,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
       fontWeight: TextUtils.textToFontWeight(_selectedFontWeight),
       fontSize: _fontSize,
     );
-    int result = await _cardService.addTextCard(textCardData);
+    int result = await _cardService.addTextCard(_appManager.getCurrentTale(), textCardData);
     if (result == 200) {
       _formKey.currentState?.save();
       Navigator.of(context).pop(true);

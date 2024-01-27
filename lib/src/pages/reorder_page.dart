@@ -31,7 +31,6 @@ class _ReorderPageState extends State<ReorderPage> {
   List<CardModel?> newCardsOrder = [];
   bool canClose = true;
 
-
   @override
   void initState() {
     super.initState();
@@ -111,9 +110,9 @@ class _ReorderPageState extends State<ReorderPage> {
                 title: Text(cardsOrder[i]!.name),
                 leading:
                     const Icon(Icons.drag_handle_rounded, color: Colors.black),
-                trailing: deleteButton(cardsOrder[i]!.name),
-
-
+                trailing: Container(
+                  child: deleteButton(cardsOrder[i]!.name),
+                ),
               ),
             ),
         ],
@@ -132,23 +131,23 @@ class _ReorderPageState extends State<ReorderPage> {
   }
 
   Widget deleteButton(String name) {
-    return Positioned(
-      top: 5,
-      right: 5,
-      child: GestureDetector(
-        onTap: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return DeleteItemDialog(name: name);
-              }).then((value) => setState(() {
-            cardsOrder.removeAt(cardsOrder.indexWhere((element) => element!.name == name));
-          }));
-        },
-        child: Container(
-          padding: EdgeInsets.all(1),
-          child: const Icon(Icons.delete_rounded, size: 22, color: AppColors.main3),
-        ),
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return DeleteItemDialog(name: name);
+            }).then((value) => setState(() {
+              if(value) {
+                cardsOrder.removeAt(
+                  cardsOrder.indexWhere((element) => element!.name == name));
+              }
+            }));
+      },
+      child: Container(
+        padding: EdgeInsets.all(1),
+        child:
+            const Icon(Icons.delete_rounded, size: 22, color: AppColors.main3),
       ),
     );
   }
@@ -156,9 +155,10 @@ class _ReorderPageState extends State<ReorderPage> {
   void reorderCards() {
     canClose = false;
     newCardsOrder = [];
-    for(int i = 0; i < cardsOrder.length!; i++){
+    for (int i = 0; i < cardsOrder.length!; i++) {
       // print('------------__________${cardsOrder[i]!.name} ===== ${cardsOrder[i]!.order}');
-      if(cardsOrder[i]!.type == MemoryCardType.image || cardsOrder[i]!.type == MemoryCardType.video){
+      if (cardsOrder[i]!.type == MemoryCardType.image ||
+          cardsOrder[i]!.type == MemoryCardType.video) {
         newCardsOrder.add(CardModel(
           // id: cardsOrder[i]!.id,
           order: i,
@@ -174,8 +174,7 @@ class _ReorderPageState extends State<ReorderPage> {
           // fontWeight: cardsOrder[i]!.fontWeight,
           // fontSize: cardsOrder[i]!.fontSize,
         ));
-      }
-      else if(cardsOrder[i]!.type == MemoryCardType.text){
+      } else if (cardsOrder[i]!.type == MemoryCardType.text) {
         newCardsOrder.add(CardModel(
           // id: cardsOrder[i]!.id,
           order: i,
@@ -195,10 +194,11 @@ class _ReorderPageState extends State<ReorderPage> {
 
       // print('__________------------${newCardsOrder[i]!.name} ===== ${newCardsOrder[i]!.order}');
     }
-    for(int i = 0; i < newCardsOrder.length!; i++){
-      print('__________------------${newCardsOrder[i]!.name} ===== ${newCardsOrder[i]!.order}');
-      _cardService.updateCard(newCardsOrder[i]!).then((value) {
-        if(i == newCardsOrder.length! - 1) {
+    for (int i = 0; i < newCardsOrder.length!; i++) {
+      _cardService
+          .updateCard(_appManager.getCurrentTale(), newCardsOrder[i]!)
+          .then((value) {
+        if (i == newCardsOrder.length! - 1) {
           setState(() {
             canClose = true;
           });
@@ -207,5 +207,4 @@ class _ReorderPageState extends State<ReorderPage> {
     }
     _appManager.setCards(newCardsOrder);
   }
-
 }

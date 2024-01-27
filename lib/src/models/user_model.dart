@@ -9,7 +9,6 @@ class UserModel {
   final String gender;
   final String profileImage;
   final List<String>? talesFK;
-  final List<String>? cardsFK;
 
   UserModel({
     required this.id,
@@ -22,7 +21,6 @@ class UserModel {
     this.gender = '',
     this.profileImage = '',
     this.talesFK,
-    this.cardsFK,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -39,9 +37,6 @@ class UserModel {
       talesFK: json['talesFK'] != null
           ? List<String>.from(json['talesFK'])
           : null,
-      cardsFK: json['cardsFK'] != null
-          ? List<String>.from(json['cardsFK'])
-          : null,
     );
   }
 
@@ -57,7 +52,6 @@ class UserModel {
       'gender': gender,
       'profileImage': profileImage,
       'talesFK': talesFK,
-      'cardsFK': cardsFK,
     };
   }
 }

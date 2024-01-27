@@ -30,10 +30,10 @@ class CardService extends GetxService {
     super.onInit();
   }
 
-  Future<int> addImageCard(CardModel cardData, File imageFile) async {
+  Future<int> addImageCard(String taleId, CardModel cardData, File imageFile) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<CardModel?> currentCards = await getCards("1");
+      List<CardModel?> currentCards = await getCards(taleId);
       var contain =
           currentCards.where((element) => element!.name == cardData.name);
       if (!contain.isEmpty) {
@@ -45,7 +45,7 @@ class CardService extends GetxService {
           cardData.toJson()
       );
 
-      await _firestore.collection('users').doc("1").update({
+      await _firestore.collection('tales').doc(taleId).update({
         'cardsFK': FieldValue.arrayUnion([cardReference.id]),
       });
 
@@ -57,10 +57,10 @@ class CardService extends GetxService {
     }
   }
 
-  Future<int> addVideoCard(CardModel cardData, XFile videoFile) async {
+  Future<int> addVideoCard(String taleId, CardModel cardData, XFile videoFile) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<CardModel?> currentCards = await getCards("1");
+      List<CardModel?> currentCards = await getCards(taleId);
       var contain =
           currentCards.where((element) => element!.name == cardData.name);
       if (!contain.isEmpty) {
@@ -72,7 +72,7 @@ class CardService extends GetxService {
           cardData.toJson()
       );
 
-      await _firestore.collection('users').doc("1").update({
+      await _firestore.collection('tales').doc(taleId).update({
         'cardsFK': FieldValue.arrayUnion([cardReference.id]),
       });
 
@@ -84,10 +84,10 @@ class CardService extends GetxService {
     }
   }
 
-  Future<int> addTextCard(CardModel cardData) async {
+  Future<int> addTextCard(String taleId, CardModel cardData) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<CardModel?> currentCards = await getCards("1");
+      List<CardModel?> currentCards = await getCards(taleId);
       var contain =
           currentCards.where((element) => element!.name == cardData.name);
       if (!contain.isEmpty) {
@@ -98,7 +98,7 @@ class CardService extends GetxService {
         cardData.toJsonTextCard()
       );
       // print("__________________$cardReference");
-      await _firestore.collection('users').doc("1").update({
+      await _firestore.collection('tales').doc(taleId).update({
         'cardsFK': FieldValue.arrayUnion([cardReference.id]),
       });
       print('Card added successfully.');
@@ -109,18 +109,18 @@ class CardService extends GetxService {
     }
   }
 
-  Future<int> updateCard(CardModel cardData) async {
+  Future<int> updateCard(String taleId, CardModel cardData) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<CardModel?> currentCards = await getCards("1");
-      final DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await _firestore.collection('users').doc('1').get();
-      final userData = userDoc.data();
-      print(userData);
+      List<CardModel?> currentCards = await getCards(taleId);
+      final DocumentSnapshot<Map<String, dynamic>> taleDoc =
+      await _firestore.collection('tales').doc(taleId).get();
+      final taleData = taleDoc.data();
+      print(taleData);
       var contain =
           currentCards.where((element) => element!.name == cardData.name);
       if (!contain.isEmpty) {
-        String cardId = await getCardId(contain.first!.name);
+        String cardId = await getCardId(taleId, contain.first!.name);
         // print('(((((((((((((${cardId}');
         if(contain.first!.type == MemoryCardType.image || contain.first!.type == MemoryCardType.video){
           await _firestore.collection('cards').doc(cardId).update(
@@ -147,19 +147,19 @@ class CardService extends GetxService {
     }
   }
 
-  Future<int> updateCardTransform(String name, Matrix4 transform) async {
+  Future<int> updateCardTransform(String taleId, String name, Matrix4 transform) async {
     try {
-      // String? currentUserId = _authService.currentUserId;
-      List<CardModel?> currentCards = await getCards("1");
-      final DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await _firestore.collection('users').doc('1').get();
-      final userData = userDoc.data();
-      print(userData);
+      // String? currenttaleId = _authService.currenttaleId;
+      List<CardModel?> currentCards = await getCards(taleId);
+      final DocumentSnapshot<Map<String, dynamic>> taleDoc =
+      await _firestore.collection('tales').doc(taleId).get();
+      final taleData = taleDoc.data();
+      print(taleData);
       var contain = currentCards.where((element) => element!.name == name);
       if (!contain.isEmpty) {
         CardModel newCard;
         CardModel currentCard = contain.first!;
-        String cardId = await getCardId(currentCard.name);
+        String cardId = await getCardId(taleId, currentCard.name);
         if(currentCard.type == MemoryCardType.text){
           newCard = CardModel(
             // id: currentCard.id,
@@ -215,23 +215,25 @@ class CardService extends GetxService {
     }
   }
 
-  Future<int> deleteCardByName(String name) async {
+  Future<int> deleteCardByName(String taleId, String name) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<CardModel?> currentCards = await getCards("1");
-      final DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await _firestore.collection('users').doc('1').get();
-      final userData = userDoc.data();
-      print(userData);
+      print("############${0}");
+      List<CardModel?> currentCards = await getCards(taleId);
+      final DocumentSnapshot<Map<String, dynamic>> taleDoc =
+      await _firestore.collection('tales').doc(taleId).get();
+
+      final taleData = taleDoc.data();
       var contain =
       currentCards.where((element) => element!.name == name);
       if (!contain.isEmpty) {
-        String cardId = await getCardId(contain.first!.name);
+        String cardId = await getCardId(taleId, contain.first!.name);
         await _firestore.collection('cards').doc(cardId).delete();
-        await _firestore.collection('users').doc("1").update({
+        await _firestore.collection('tales').doc(taleId).update({
           'cardsFK': FieldValue.arrayRemove([cardId]),
         });
-        await _storage.refFromURL(contain.first!.path).delete();
+        if(contain.first!.type != MemoryCardType.text)
+          await _storage.refFromURL(contain.first!.path).delete();
 
         print('Card deleted successfully.');
         return 200;
@@ -245,18 +247,18 @@ class CardService extends GetxService {
     }
   }
 
-  Future<List<CardModel?>> getCards(String uid) async {
+  Future<List<CardModel?>> getCards(String taleId) async {
     try {
 
       // print("+=+=+=+=${0}");
       List<CardModel> cards = [];
-      final DocumentSnapshot<Map<String, dynamic>> userDoc =
-          await _firestore.collection('users').doc(uid).get();
-      final userData = userDoc.data();
-      for (int i = 0; i < userData?['cardsFK'].length; i++) {
+      final DocumentSnapshot<Map<String, dynamic>> taleDoc =
+          await _firestore.collection('tales').doc(taleId).get();
+      final taleData = taleDoc.data();
+      for (int i = 0; i < taleData?['cardsFK'].length; i++) {
         final DocumentSnapshot<Map<String, dynamic>> cardDoc = await _firestore
             .collection('cards')
-            .doc(userData?['cardsFK'][i])
+            .doc(taleData?['cardsFK'][i])
             .get();
         final cardData = cardDoc.data()!;
 
@@ -336,15 +338,15 @@ class CardService extends GetxService {
     }
   }
 
-  Future<String> getCardId(String name) async {
-    List<CardModel?> currentCards = await getCards("1");
-    final DocumentSnapshot<Map<String, dynamic>> userDoc =
-        await _firestore.collection('users').doc('1').get();
-    final userData = userDoc.data();
-    print(userData);
+  Future<String> getCardId(String taleId, String name) async {
+    List<CardModel?> currentCards = await getCards(taleId);
+    final DocumentSnapshot<Map<String, dynamic>> taleDoc =
+        await _firestore.collection('tales').doc(taleId).get();
+    final taleData = taleDoc.data();
+    print(taleData);
     for (int i = 0; i < currentCards.length; i++){
       if(name == currentCards[i]!.name){
-        return userData!['cardsFK'][i];
+        return taleData!['cardsFK'][i];
       }
     }
     return "";

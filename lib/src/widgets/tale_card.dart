@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
 import '../constants/color.dart';
+import '../utils/app_manager.dart';
 
 class CustomTale extends StatefulWidget {
   final String talePath;
@@ -26,6 +27,7 @@ class CustomTale extends StatefulWidget {
 
 class _CustomTaleState extends State<CustomTale> {
   final Completer<ImageInfo> _imageInfoCompleter = Completer<ImageInfo>();
+  final AppManager _appManager = Get.put(AppManager());
   final TaleService _taleService = Get.find<TaleService>();
   Size size = Size(320, 220);
 
@@ -64,13 +66,11 @@ class _CustomTaleState extends State<CustomTale> {
           : AlignmentDirectional.topEnd,
           */
       child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushNamed('/createTalePage');
-          /*
-          setState(() {
-            widget.isFavorited = !widget.isFavorited;
-          });
-          */
+        onTap: () async {
+          String taleId = await _taleService.getTaleId(widget.taleName);
+          _appManager.setCurrentTale(taleId);
+          Navigator.of(context).pushNamed('/talePage');
+
         },
         child: taleCard(),
       ),

@@ -132,7 +132,6 @@ class AuthService extends GetxService {
       bio: '',
       gender: '',
       profileImage: '',
-      cardsFK: List<String>.empty(),
     );
     DocumentReference documentReference = await users.add(newUser.toJson());
     String firebaseGeneratedId = documentReference.id;

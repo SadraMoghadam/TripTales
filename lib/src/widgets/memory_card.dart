@@ -11,6 +11,7 @@ import 'package:video_player/video_player.dart';
 
 import '../constants/memory_card_type.dart';
 import '../services/card_service.dart';
+import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
@@ -71,6 +72,7 @@ class MemoryCard extends StatefulWidget {
 class _MemoryCardState extends State<MemoryCard> {
   late VideoPlayerController _videoController;
   final CardService _cardService = Get.find<CardService>();
+  final AppManager _appManager = Get.put(AppManager());
   late Future<void> _initializeVideoPlayerFuture;
   Size currentSize = Size(300, 300);
   double maxScale = 2.7;
@@ -183,7 +185,7 @@ class _MemoryCardState extends State<MemoryCard> {
   }
 
   void updateTransform(Matrix4 transform, int counter) {
-    _cardService.updateCardTransform(widget.name, transform).then((value) {
+    _cardService.updateCardTransform(_appManager.getCurrentTale(), widget.name, transform).then((value) {
       if (counter == updateCounter) print("SSSSSSSSSSSSSSSSSSSSSSs");
     });
   }
@@ -431,7 +433,6 @@ class _MemoryCardState extends State<MemoryCard> {
   }
 
   Widget textMemory() {
-    print("-------------${widget.text}");
     return Container(
         // key: _widgetKeyList[2],
         // transform: transform,

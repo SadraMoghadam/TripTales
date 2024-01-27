@@ -28,9 +28,10 @@ class _DeleteItemDialogState extends State<DeleteItemDialog> {
   final MediaController mediaController = Get.put(MediaController());
   final CardService _cardService = Get.find<CardService>();
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
+  final AppManager _appManager = Get.put(AppManager());
 
   void _submit() async {
-    int result = await _cardService.deleteCardByName(widget.name);
+    int result = await _cardService.deleteCardByName(_appManager.getCurrentTale(), widget.name);
     if (result == 200) {
       Navigator.of(context).pop(true);
     } else {
@@ -81,7 +82,7 @@ class _DeleteItemDialogState extends State<DeleteItemDialog> {
             backgroundColor: AppColors.main3,
             text: "close",
             textColor: Colors.white,
-            onPressed: () => Navigator.of(context).pop()),
+            onPressed: () => Navigator.of(context).pop(false)),
 
       ],
     );

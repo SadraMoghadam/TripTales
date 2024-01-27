@@ -6,6 +6,16 @@ import 'package:trip_tales/src/models/card_model.dart';
 
 class AppManager extends GetxController {
   Rx<List<CardModel?>?> userCards = Rx<List<CardModel?>?>(null);
+  Rx<String> currentTaleId = Rx<String>("");
+  Rx<String> currentUserId = Rx<String>("");
+
+  void setCurrentTale(String taleId) {
+    currentTaleId.value = taleId;
+  }
+
+  void setCurrentUser(String userId) {
+    currentUserId.value = userId;
+  }
 
   void setCards(List<CardModel?>? cards) {
     userCards.value = cards;
@@ -15,6 +25,14 @@ class AppManager extends GetxController {
   //   userCards.value![userCards.value!.indexWhere((element) => element!.name == card!.name)] = card!;
   // }
 
+
+  String getCurrentTale() {
+    return currentTaleId.value;
+  }
+
+  String getCurrentUser() {
+    return currentUserId.value;
+  }
 
   List<CardModel?>? getCards() {
     if(userCards == Rx<List<CardModel?>?>(null))

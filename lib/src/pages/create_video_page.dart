@@ -44,7 +44,7 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
         transform: Matrix4.identity(),
         name: '${_nameController.text}.mp4');
     int result = await _cardService.addVideoCard(
-        videoCardData, mediaController.getVideo()!);
+        _appManager.getCurrentTale(), videoCardData, mediaController.getVideo()!);
     if (result == 200) {
       Timer(Duration(seconds: 2), () {
         _formKey.currentState?.save();

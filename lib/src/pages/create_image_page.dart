@@ -35,7 +35,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
       return;
     }
     CardModel imageCardData = CardModel(order: _appManager.getCardsNum(), type: MemoryCardType.image, transform: Matrix4.identity(), name: '${_nameController.text}.png');
-    int result = await _cardService.addImageCard(imageCardData, mediaController.getImage()!);
+    int result = await _cardService.addImageCard(_appManager.getCurrentTale(), imageCardData, mediaController.getImage()!);
     if(result == 200){
       _formKey.currentState?.save();
       Navigator.of(context).pop(true);
