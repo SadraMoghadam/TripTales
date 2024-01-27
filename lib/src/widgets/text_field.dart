@@ -155,7 +155,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           validator: widget.validator,
           onChanged: widget.onChanged,
-          onTap: widget.readOnly ? widget.onTap : null,
+          onTap: widget.onTap,
           inputFormatters: widget.inputFormatters,
         ));
   }

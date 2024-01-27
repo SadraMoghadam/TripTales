@@ -7,6 +7,8 @@ class CustomDropdownButton extends StatefulWidget {
   final List<String> items;
   final Function(String?) onValueChanged;
   String? selectedValue;
+  final IconData icon;
+  final bool readOnly;
 
   CustomDropdownButton({
     super.key,
@@ -14,6 +16,8 @@ class CustomDropdownButton extends StatefulWidget {
     required this.label,
     required this.items,
     required this.onValueChanged,
+    this.icon = Icons.list,
+    this.readOnly = false,
   });
 
   @override
@@ -30,8 +34,8 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         isExpanded: true,
         hint: Row(
           children: [
-            const Icon(
-              Icons.list,
+            Icon(
+              widget.icon,
               size: 24,
               color: AppColors.main1,
               //shadows: [Shadow(color: Colors.grey, offset: Offset(-2, 2))]
@@ -55,8 +59,8 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
                   value: item,
                   child: Row(
                     children: [
-                      const Icon(
-                        Icons.list,
+                      Icon(
+                        widget.icon,
                         size: 24,
                         color: AppColors.main1,
                         //shadows: [Shadow(color: Colors.grey, offset: Offset(0, 3))]
@@ -78,8 +82,10 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         value: widget.selectedValue,
         onChanged: (String? value) {
           setState(() {
-            widget.selectedValue = value;
-            widget.onValueChanged(value);
+            if(!widget.readOnly){
+              widget.selectedValue = value;
+              widget.onValueChanged(value);
+            }
           });
         },
         buttonStyleData: ButtonStyleData(
@@ -107,7 +113,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           width: 300,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
-            color: Colors.transparent,
+            color: Colors.white,
             border: Border.all(
               color: AppColors.main1,
             ),

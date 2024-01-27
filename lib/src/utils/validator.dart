@@ -15,6 +15,21 @@ class Validator {
     return null;
   }
 
+  String? phoneNumberValidator(String? value) {
+    bool isPhoneNumber = RegExp(r'^[0-9]{10}$').hasMatch(value.toString());
+
+    String? defaultText = defaultValidator(value, 'Phone Number');
+    if (defaultText != null) {
+      return defaultText;
+    }
+
+    if (!isPhoneNumber) {
+      return 'Phone number is invalid';
+    }
+
+    return null;
+  }
+
   String? emailValidator(String? value) {
     bool isEmail = RegExp(
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")

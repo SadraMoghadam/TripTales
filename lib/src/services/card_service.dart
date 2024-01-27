@@ -151,10 +151,10 @@ class CardService extends GetxService {
     try {
       // String? currenttaleId = _authService.currenttaleId;
       List<CardModel?> currentCards = await getCards(taleId);
-      final DocumentSnapshot<Map<String, dynamic>> taleDoc =
-      await _firestore.collection('tales').doc(taleId).get();
-      final taleData = taleDoc.data();
-      print(taleData);
+      // final DocumentSnapshot<Map<String, dynamic>> taleDoc =
+      // await _firestore.collection('tales').doc(taleId).get();
+      // final taleData = taleDoc.data();
+      // print(taleData);
       var contain = currentCards.where((element) => element!.name == name);
       if (!contain.isEmpty) {
         CardModel newCard;

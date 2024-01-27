@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trip_tales/src/constants/color.dart';
@@ -12,6 +15,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 class AuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   Rx<User?> user = Rx<User?>(null);
@@ -115,6 +119,52 @@ class AuthService extends GetxService {
     }
   }
 
+  Future<int?> updateUser(
+      String uid, UserModel userData) async {
+    try {
+      UserModel? user = await getUserById("1");
+      // UserModel newUser = UserModel(
+      //   id: uid,
+      //   email: userData.email,
+      //   name: userData.name,
+      //   surname: userData.surname,
+      //   birthDate: userData.birthDate,
+      //   phoneNumber: userData.phoneNumber,
+      //   bio: userData.bio,
+      //   gender: userData.gender,
+      // );
+      print("000");
+      await _firestore.collection('users').doc("1").update({
+        'email': userData.email,
+        'name': userData.name,
+        'surname': userData.surname,
+        'birthDate': userData.birthDate,
+        'phoneNumber': userData.phoneNumber,
+        'bio': userData.bio,
+        'gender': userData.gender,
+      });
+      print("111");
+      print('User updated successfully.');
+      return 200;
+    } catch (e) {
+      ErrorController.showSnackBarError(ErrorController.updateUser);
+      return null;
+    }
+  }
+
+  Future<bool> updateUserImage(File imageFile, String imagePath) async {
+    try {
+      await _storage.ref().child(imagePath).putFile(imageFile);
+      await _firestore.collection('users').doc("1").update(
+          {'profileImage': imagePath});
+      print('Image uploaded successfully.');
+      return Future.value(true);
+    } on FirebaseException catch (e) {
+      ErrorController.showSnackBarError(ErrorController.updateUserImage);
+      return Future.value(false);
+    }
+  }
+
   Future<void> signOut() async {
     await _auth.signOut();
   }
@@ -146,15 +196,27 @@ class AuthService extends GetxService {
           await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
       if (userData != null) {
-        return UserModel(
-            id: uid,
-            email: userData['email'],
-            name: userData['name'],
-            surname: userData['surname'],
-            birthDate: userData['birth_date'],
-        );
+        String downloadURL = '';
+        print(userData.containsKey('profileImage'));
+        if(userData.containsKey('profileImage')){
+          print(downloadURL);
+          downloadURL = await _storage.ref().child(userData['profileImage']).getDownloadURL();
+        }
+        UserModel user = UserModel.fromJson(userData, "");
+        print("pppppppppppppppppppppp");
+        return user;
+        //   id: uid,
+        //   email: userData['email'],
+        //   name: userData['name'],
+        //   surname: userData['surname'],
+        //   birthDate: userData['birthDate'],
+        //   bio: userData['bio'],
+        //   gender: userData['gender'],
+        //   phoneNumber: userData['phoneNumber'],
+        //   profileImage: userData['profileImage'],
+        //   talesFK: userData['profileImage'],
+        // );
       }
-      return null;
     } catch (e) {
       // Get.snackbar('Error', e.toString());
       return null;
