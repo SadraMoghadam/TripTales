@@ -12,10 +12,13 @@ import '../models/user_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
+import '../utils/app_manager.dart';
+
 class AuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final AppManager _appManager = Get.put(AppManager());
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   Rx<User?> user = Rx<User?>(null);
@@ -133,7 +136,6 @@ class AuthService extends GetxService {
       //   bio: userData.bio,
       //   gender: userData.gender,
       // );
-      print("000");
       await _firestore.collection('users').doc("1").update({
         'email': userData.email,
         'name': userData.name,
@@ -142,8 +144,9 @@ class AuthService extends GetxService {
         'phoneNumber': userData.phoneNumber,
         'bio': userData.bio,
         'gender': userData.gender,
+        'profileImage': "1" + ".png",
       });
-      print("111");
+      print(user!.profileImage);
       print('User updated successfully.');
       return 200;
     } catch (e) {
@@ -161,6 +164,18 @@ class AuthService extends GetxService {
       return Future.value(true);
     } on FirebaseException catch (e) {
       ErrorController.showSnackBarError(ErrorController.updateUserImage);
+      return Future.value(false);
+    }
+  }
+
+  Future<bool> updatePassword(String password) async {
+    try {
+      await _firestore.collection('users').doc("1").update(
+          {'password': password});
+      print('Password updated successfully.');
+      return Future.value(true);
+    } on FirebaseException catch (e) {
+      ErrorController.showSnackBarError(ErrorController.updateUserPass);
       return Future.value(false);
     }
   }
@@ -197,13 +212,13 @@ class AuthService extends GetxService {
       final userData = userDoc.data();
       if (userData != null) {
         String downloadURL = '';
-        print(userData.containsKey('profileImage'));
+        print("_____________${userData.containsKey('profileImage')}");
         if(userData.containsKey('profileImage')){
-          print(downloadURL);
           downloadURL = await _storage.ref().child(userData['profileImage']).getDownloadURL();
+          _appManager.setProfileImage(downloadURL);
+          print(downloadURL);
         }
-        UserModel user = UserModel.fromJson(userData, "");
-        print("pppppppppppppppppppppp");
+        UserModel user = UserModel.fromJson(userData, downloadURL);
         return user;
         //   id: uid,
         //   email: userData['email'],

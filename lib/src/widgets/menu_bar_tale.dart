@@ -1,34 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/pages/favorite_tales.dart';
 import 'package:trip_tales/src/pages/my_tales.dart';
 import 'package:trip_tales/src/pages/profile.dart';
 
+import '../utils/app_manager.dart';
+
 class CustomMenu extends StatefulWidget {
+  late int index;
+
+  CustomMenu({super.key, this.index = 0});
   @override
   _CustomMenuState createState() => _CustomMenuState();
 }
 
 class _CustomMenuState extends State<CustomMenu> {
-  int index = 0;
   final screens = [MyTalesPage(), FavoriteTalesPage(), ProfilePage()];
+  final AppManager _appManager = Get.put(AppManager());
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: screens[index],
+        body: screens[widget.index],
         bottomNavigationBar: _bottomNavigationBar(),
       );
 
   _bottomNavigationBar() {
+
+    String profileImageUrl = _appManager.getProfileImage();
     return NavigationBar(
       backgroundColor: Colors.white,
       animationDuration: const Duration(seconds: 1),
       labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       height: 48,
-      selectedIndex: index,
-      onDestinationSelected: (index) => setState(() => this.index = index),
-      destinations: const [
-        NavigationDestination(
+      selectedIndex: widget.index,
+      onDestinationSelected: (index) => setState(() => widget.index = index),
+      destinations: [
+        const NavigationDestination(
           icon: Icon(Icons.home_outlined),
           selectedIcon: Icon(
             Icons.home,
@@ -37,7 +45,7 @@ class _CustomMenuState extends State<CustomMenu> {
           label: "Home",
           tooltip: "Home Page",
         ),
-        NavigationDestination(
+        const NavigationDestination(
           icon: Icon(Icons.favorite_border_rounded),
           selectedIcon: Icon(
             Icons.favorite,
@@ -48,21 +56,15 @@ class _CustomMenuState extends State<CustomMenu> {
         ),
         NavigationDestination(
           icon: CircleAvatar(
-            backgroundColor: AppColors.main1,
+            backgroundColor: Colors.transparent,
             radius: 15.0,
-            backgroundImage: AssetImage(
-              'assets/images/profile_pic.png',
-            ),
+            backgroundImage: profileImageUrl.isNotEmpty
+                ? NetworkImage(profileImageUrl) as ImageProvider<Object>?
+                : AssetImage('assets/images/profile_pic.png') as ImageProvider<Object>?,
           ),
           label: 'Profile',
           tooltip: "Profile Settings",
         ),
-/*
-          icon: Icon(Icons.search),
-          selectedIcon: Icon(Icons.saved_search),
-          label: "Search",
-         
-        ),  */
       ],
     );
   }

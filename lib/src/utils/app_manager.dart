@@ -8,6 +8,11 @@ class AppManager extends GetxController {
   Rx<List<CardModel?>?> userCards = Rx<List<CardModel?>?>(null);
   Rx<String> currentTaleId = Rx<String>("");
   Rx<String> currentUserId = Rx<String>("");
+  Rx<String> profileImage = Rx<String>("");
+
+  void setProfileImage(String profileImagePath) {
+    profileImage.value = profileImagePath;
+  }
 
   void setCurrentTale(String taleId) {
     currentTaleId.value = taleId;
@@ -24,7 +29,9 @@ class AppManager extends GetxController {
   // void setCardByName(CardModel? card) {
   //   userCards.value![userCards.value!.indexWhere((element) => element!.name == card!.name)] = card!;
   // }
-
+  String getProfileImage() {
+    return profileImage.value;
+  }
 
   String getCurrentTale() {
     return currentTaleId.value;

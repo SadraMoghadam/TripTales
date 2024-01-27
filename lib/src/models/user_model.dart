@@ -38,15 +38,15 @@ class UserModel {
           ? List<String>.from(json['talesFK'])
           : null,
     );
-    print(user.id);
-    print(user.email);
-    print(user.name);
-    print(user.surname);
-    print(user.birthDate);
-    print(user.bio);
-    print(user.gender);
-    print(user.profileImage);
-    print(user.talesFK);
+    // print(user.id);
+    // print(user.email);
+    // print(user.name);
+    // print(user.surname);
+    // print(user.birthDate);
+    // print(user.bio);
+    // print(user.gender);
+    // print(user.profileImage);
+    // print(user.talesFK);
     return user;
   }
 

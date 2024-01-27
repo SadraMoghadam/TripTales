@@ -8,11 +8,13 @@ import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/services/auth_service.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
+import 'package:trip_tales/src/widgets/change_password.dart';
+import 'package:trip_tales/src/widgets/menu_bar_tale.dart';
 import '../constants/color.dart';
 import '../constants/error_messages.dart';
+import '../controllers/media_controller.dart';
 import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
-import '../utils/password_strength_indicator.dart';
 import '../utils/validator.dart';
 import '../widgets/button.dart';
 import '../widgets/dropdown_button.dart';
@@ -26,6 +28,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final AuthService _authService = Get.find<AuthService>();
+  final MediaController mediaController = Get.put(MediaController());
   late Future<UserModel?> user;
   final AppManager _appManager = Get.put(AppManager());
   final Validator _validator = Validator();
@@ -38,15 +41,9 @@ class _ProfilePageState extends State<ProfilePage> {
   late final TextEditingController _phoneNumberController;
   late final TextEditingController _bioController;
 
-  // late final TextEditingController _passwordController;
-
-  // late final TextEditingController _genderController;
-  // late final TextEditingController _confirmPasswordController;
   ImageProvider<Object>? _profileImage;
 
   bool readOnlyTextField = true;
-  bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
   bool hasUppercase = false;
   bool hasLowercase = false;
   bool hasDigits = false;
@@ -59,37 +56,6 @@ class _ProfilePageState extends State<ProfilePage> {
     'Female',
     'Other'
   ];
-
-  // ImageProvider<Object>? _getImage() {
-  //   return _profileImage; // Return the selected profile image or null
-  // }
-  //
-  // void _changeProfilePicture() async {
-  //   final selectedImage = await Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => SetPhotoScreen(
-  //         isImage: true,
-  //         contDef: true,
-  //         // containerWidget: _profilePictureContainer(),
-  //       ),
-  //     ),
-  //   );
-  //
-  //   if (selectedImage != null && selectedImage is File) {
-  //     setState(() {
-  //       _profileImage = FileImage(selectedImage);
-  //     });
-  //   }
-  // }
-  //
-  // Widget _profilePictureContainer() {
-  //   return CircleAvatar(
-  //     radius: 70,
-  //     backgroundImage: _getImage(),
-  //     backgroundColor: AppColors.main2,
-  //   );
-  // }
 
   void _submit() async {
     final isValid = _formKey.currentState?.validate();
@@ -106,6 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
       phoneNumber: _phoneNumberController.text,
       bio: _bioController.text,
       gender: _selectedGender,
+      profileImage: _appManager.getProfileImage(),
     );
     int? result = await _authService.updateUser("1", userData);
     if (result == 200) {
@@ -126,37 +93,9 @@ class _ProfilePageState extends State<ProfilePage> {
   void refreshPage() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => ProfilePage()),
+      MaterialPageRoute(builder: (context) => CustomMenu(index: 2,)),
     );
   }
-
-  // void checkPasswordStrength(String value) {
-  //   setState(() {
-  //     // Reset criteria
-  //     hasUppercase = false;
-  //     hasLowercase = false;
-  //     hasDigits = false;
-  //     hasSpecialCharacters = false;
-  //
-  //     // Check criteria for password strength
-  //     hasUppercase = value.contains(RegExp(r'[A-Z]'));
-  //     hasLowercase = value.contains(RegExp(r'[a-z]'));
-  //     hasDigits = value.contains(RegExp(r'[0-9]'));
-  //     hasSpecialCharacters = value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
-  //   });
-  // }
-  //
-  // void onPasswordVisibilityPressed() {
-  //   setState(() {
-  //     _isPasswordVisible = !_isPasswordVisible;
-  //   });
-  // }
-  //
-  // void onConfirmPasswordVisibilityPressed() {
-  //   setState(() {
-  //     _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-  //   });
-  // }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -211,8 +150,6 @@ class _ProfilePageState extends State<ProfilePage> {
     _surnameController.dispose();
     _emailController.dispose();
     _birthDateController.dispose();
-    // _passwordController.dispose();
-    // _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -277,6 +214,27 @@ class _ProfilePageState extends State<ProfilePage> {
                     context: context,
                     builder: (context) {
                       return modifyProfileImage();
+                    }).then((value) => {
+                  setState(() {
+                        File imageFile = mediaController.getImage()!;
+                        _authService.updateUserImage(imageFile, "1" + ".png").then((value) => {
+                        });
+                        user = Future.value(UserModel(
+                          id: "1",
+                          email: _emailController.text,
+                          name: _nameController.text,
+                          surname: _surnameController.text,
+                          birthDate: _birthDateController.text,
+                          phoneNumber: _phoneNumberController.text,
+                          bio: _bioController.text,
+                          gender: _selectedGender,
+                          profileImage: _appManager.getProfileImage(),
+                        ));
+                        setState(() {
+
+                        });
+                        refreshPage();
+                      })
                     });
                 //  _changeProfilePicture(); // Invoke method to change profile picture
               },
@@ -299,10 +257,10 @@ class _ProfilePageState extends State<ProfilePage> {
       key: _futureBuilderKey,
         future: user,
         builder: (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          }
-          else if (snapshot.hasData) {
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return CircularProgressIndicator();
+          // }
+          if (snapshot.hasData) {
             UserModel userData = snapshot.data!;
             _nameController.text = userData.name;
             _surnameController.text = userData.surname;
@@ -312,6 +270,7 @@ class _ProfilePageState extends State<ProfilePage> {
             _bioController.text = userData.bio;
             _phoneNumberController.text = userData.phoneNumber;
             if(userData.profileImage != ''){
+              print(userData.profileImage);
               _profileImage = NetworkImage(userData.profileImage);
             }
             else {
@@ -357,7 +316,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 20),
                   CustomTextField(
                     key: const Key('bioCustomTextFieldKey'),
-                    maxLines: 5,
+                    maxLines: 1,
                     readOnly: readOnlyTextField,
                     controller: _bioController,
                     labelText: 'Bio',
@@ -396,22 +355,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     textInputAction: TextInputAction.next,
                     validator: _validator.emailValidator,
                   ),
-                  // const SizedBox(height: 20),
-                  // CustomTextField(
-                  //   key: const Key('passwordCustomTextFieldKey'),
-                  //   readOnly: readOnlyTextField,
-                  //   controller: _passwordController,
-                  //   labelText: 'Password',
-                  //   hintText: 'Enter your Password',
-                  //   prefixIcon: Icons.password,
-                  //   isPassword: true,
-                  //   isPasswordVisible: _isPasswordVisible,
-                  //   onVisibilityPressed: onPasswordVisibilityPressed,
-                  //   obscureText: !_isPasswordVisible,
-                  //   keyboardType: TextInputType.visiblePassword,
-                  //   textInputAction: TextInputAction.next,
-                  //   validator: _validator.passwordValidator,
-                  // ),
                   const SizedBox(height: 20),
                   CustomDropdownButton(
                     selectedValue: _selectedGender,
@@ -434,7 +377,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     textInputAction: TextInputAction.next,
                     validator: _validator.phoneNumberValidator,
                   ),
-
                   const SizedBox(height: 20),
                   CustomButton(
                     key: const Key('editSaveCustomButtonKey'),
@@ -450,12 +392,28 @@ class _ProfilePageState extends State<ProfilePage> {
                         _submit();
                       }
                       else {
-                        setState(
-                              () {
+                        setState(() {
                             readOnlyTextField = !readOnlyTextField;
                           },
                         );
                       }
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomButton(
+                    key: const Key('changePasswordCustomButtonKey'),
+                    fontSize: 12,
+                    height: 12,
+                    width: 15,
+                    text: "Change Password",
+                    textColor: Colors.white,
+                    backgroundColor: AppColors.main3,
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const ChangePasswordDialog();
+                          });
                     },
                   ),
                   const SizedBox(height: 20),
@@ -496,6 +454,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+
+
   Widget buildProfileBody(DeviceInfo device) {
     return SingleChildScrollView(
       child: Container(
@@ -506,7 +466,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             children: [
               Flexible(
-                flex: 8,
+                flex: 5,
                 fit: FlexFit.tight,
                 child: Container(
                   height: 310,
