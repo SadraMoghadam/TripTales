@@ -3,6 +3,7 @@ import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/pages/favorite_tales.dart';
 import 'package:trip_tales/src/pages/my_tales.dart';
 import 'package:trip_tales/src/pages/profile.dart';
+import 'package:trip_tales/src/utils/device_info.dart';
 
 class CustomMenu extends StatefulWidget {
   @override
@@ -14,12 +15,29 @@ class _CustomMenuState extends State<CustomMenu> {
   final screens = [MyTalesPage(), FavoriteTales(const []), ProfilePage()];
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: screens[index],
-        bottomNavigationBar: _bottomNavigationBar(),
-      );
+  Widget build(BuildContext context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    return Scaffold(
+      body: screens[index],
+      bottomNavigationBar: _bottomNavigationBar(),
+    );
+  }
 
-  _bottomNavigationBar() {
+  Widget _bottomNavigationBar() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    return isTablet
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [buildNavigationBar()])
+        : buildNavigationBar();
+  }
+
+  Widget buildNavigationBar() {
     return NavigationBar(
       backgroundColor: Colors.white,
       animationDuration: const Duration(seconds: 1),

@@ -43,6 +43,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   flutter_colorpicker: ^1.0.3
   flutter_lorem: ^2.0.0
+  mockito: ^5.4.4
 
 
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trip_tales/src/pages/create_tale_page.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
-import 'package:trip_tales/src/widgets/button.dart';
 import 'package:trip_tales/src/widgets/tale_card.dart';
 import '../utils/device_info.dart';
 
