@@ -147,6 +147,8 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -179,16 +181,30 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget buildHeader() {
-    return const Center(
-      child: Text(
-        'Create your account for free',
-        style: TextStyle(
-            color: AppColors.text1, fontSize: 20, fontWeight: FontWeight.w900),
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    double fontSize = isTablet ? 28.0 : 20.0;
+    double paddingVertical = isTablet ? 15.0 : 10.0;
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: paddingVertical),
+        child: Text(
+          'Create your account for free',
+          style: TextStyle(
+            color: AppColors.text1,
+            fontSize: fontSize,
+            //fontWeight: FontWeight.w900,
+          ),
+        ),
       ),
     );
   }
 
   Widget buildBody() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return Column(
       // mainAxisAlignment: MainAxisAlignment.center,
       // crossAxisAlignment: CrossAxisAlignment.center,
@@ -198,6 +214,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Expanded(
             flex: 1,
             child: CustomTextField(
+              isTablet: isTablet,
               key: const Key('nameCustomTextFieldKey'),
               controller: _nameController,
               labelText: 'Name',
@@ -213,10 +230,11 @@ class _RegisterPageState extends State<RegisterPage> {
         Expanded(
             flex: 1,
             child: CustomTextField(
+              isTablet: isTablet,
               key: const Key('surnameCustomTextFieldKey'),
               controller: _surnameController,
               labelText: 'Surname',
-              hintText: 'Enter your Surname',
+              hintText: 'Enter your surname',
               prefixIcon: Icons.person,
               obscureText: false,
               keyboardType: TextInputType.name,
@@ -228,10 +246,11 @@ class _RegisterPageState extends State<RegisterPage> {
         Expanded(
             flex: 1,
             child: CustomTextField(
+              isTablet: isTablet,
               key: const Key('emailCustomTextFieldKey'),
               controller: _emailController,
               labelText: 'Email',
-              hintText: 'Enter your username',
+              hintText: 'Enter your email',
               prefixIcon: Icons.email,
               obscureText: false,
               keyboardType: TextInputType.emailAddress,
@@ -243,6 +262,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Expanded(
             flex: 1,
             child: CustomTextField(
+              isTablet: isTablet,
               key: const Key('dateBirthCustomTextFieldKey'),
               controller: _birthDateController,
               labelText: 'Date of birth',
@@ -262,6 +282,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Expanded(
             flex: 1,
             child: CustomTextField(
+              isTablet: isTablet,
               key: const Key('passwordCustomTextFieldKey'),
               controller: _passwordController,
               labelText: 'Password',
@@ -280,6 +301,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Expanded(
           flex: 1,
           child: CustomTextField(
+            isTablet: isTablet,
             key: const Key('confirmPasswordCustomTextFieldKey'),
             controller: _confirmPasswordController,
             labelText: 'Confirm Password',
@@ -302,14 +324,16 @@ class _RegisterPageState extends State<RegisterPage> {
               crossAxisAlignment: WrapCrossAlignment.center,
               alignment: WrapAlignment.center,
               children: [
-                const Text(
+                Text(
                   'Password Strength',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     color: AppColors.text2,
+                    fontSize: isTablet ? 18.0 : 15.0,
                   ),
                 ),
                 PasswordStrengthIndicator(
+                  isTablet: isTablet,
                   hasUppercase: hasUppercase,
                   hasLowercase: hasLowercase,
                   hasDigits: hasDigits,
@@ -322,6 +346,9 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget buildFooter() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -332,6 +359,9 @@ class _RegisterPageState extends State<RegisterPage> {
             CustomButton(
               key: const Key('createAccountCustomButtonKey'),
               text: "Create Account",
+              height: isTablet ? 30 : 20,
+              width: isTablet ? 300 : 200,
+              fontSize: isTablet ? 20 : 18,
               textColor: Colors.white,
               onPressed: _submit,
             ),
@@ -341,9 +371,10 @@ class _RegisterPageState extends State<RegisterPage> {
           onPressed: () {
             Navigator.pushReplacementNamed(context, '/loginPage');
           },
-          child: const Text('Already have an account?',
-              key: Key('loginTextKey'),
+          child: Text('Already have an account?',
+              key: const Key('loginTextKey'),
               style: TextStyle(
+                  fontSize: isTablet ? 16 : 12,
                   color: AppColors.text2,
                   decoration: TextDecoration.underline)),
         ),

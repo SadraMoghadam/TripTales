@@ -96,10 +96,10 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
                   });
                   if (isMenuOpen) {
                     _controller.animateTo(0.5,
-                        duration: Duration(milliseconds: 500));
+                        duration: const Duration(milliseconds: 500));
                   } else {
                     _controller.animateTo(0,
-                        duration: Duration(milliseconds: 500));
+                        duration: const Duration(milliseconds: 500));
                   }
                 },
                 child: Lottie.asset(

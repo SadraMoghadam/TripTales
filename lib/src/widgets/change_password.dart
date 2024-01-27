@@ -148,6 +148,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
   }
 
   Widget buildChangePassBody(DeviceInfo device) {
+    bool isTablet = device.isTablet;
     return Form(
       key: _formKey,
       child: Column(
@@ -211,6 +212,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
                       ),
                     ),
                     PasswordStrengthIndicator(
+                      isTablet: isTablet,
                       hasUppercase: hasUppercase,
                       hasLowercase: hasLowercase,
                       hasDigits: hasDigits,

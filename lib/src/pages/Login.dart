@@ -7,7 +7,6 @@ import '../constants/color.dart';
 import '../controllers/auth_controller.dart';
 import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';
-import '../utils/validator.dart';
 import '../widgets/button.dart';
 import '../widgets/text_field.dart';
 
@@ -106,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -141,6 +141,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget buildHeader() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -150,16 +153,16 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(8.0),
             child: Image.asset(
               'assets/images/TripTales_logo.png',
-              height: 200.0,
+              height: isTablet ? 250 : 200,
               fit: BoxFit.cover,
             ),
           ),
         ),
-        const Text(
+        Text(
           'Welcome Back',
           style: TextStyle(
               color: AppColors.text1,
-              fontSize: 25,
+              fontSize: isTablet ? 30 : 25,
               fontWeight: FontWeight.w900),
         ),
       ],
@@ -167,12 +170,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget buildBody() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return Column(
       children: [
         Flexible(
             fit: FlexFit.tight,
             flex: 3,
             child: CustomTextField(
+              isTablet: isTablet,
               key: const Key('emailCustomTextField'),
               controller: _emailController,
               labelText: 'Email',
@@ -187,6 +194,7 @@ class _LoginPageState extends State<LoginPage> {
             fit: FlexFit.tight,
             flex: 3,
             child: CustomTextField(
+              isTablet: isTablet,
               key: const Key('passwordCustomTextField'),
               controller: _passwordController,
               labelText: 'Password',
@@ -206,11 +214,12 @@ class _LoginPageState extends State<LoginPage> {
           child: Wrap(
             alignment: WrapAlignment.center,
             children: [
-              const Text(
-                key: Key('passwordStrengthKey'),
-                'Pasword Strength',
+              Text(
+                key: const Key('passwordStrengthKey'),
+                'Password Strength',
                 textAlign: TextAlign.start,
                 style: TextStyle(
+                  fontSize: isTablet ? 18.0 : 15.0,
                   color: AppColors.text2,
                 ),
               ),
@@ -219,15 +228,17 @@ class _LoginPageState extends State<LoginPage> {
                 hasLowercase: hasLowercase,
                 hasDigits: hasDigits,
                 hasSpecialCharacters: hasSpecialCharacters,
+                isTablet: isTablet,
               ),
               TextButton(
                 onPressed: () {},
-                child: const Text('Forgot Password',
-                    key: Key('forgotPasswordKey'),
+                child: Text('Forgot Password',
+                    key: const Key('forgotPasswordKey'),
                     style: TextStyle(
+                        fontSize: isTablet ? 15 : 10,
                         color: AppColors.text2,
                         decoration: TextDecoration.underline)),
-              )
+              ),
             ],
           ),
         ),
@@ -293,6 +304,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget buildFooter() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -303,8 +317,9 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               CustomButton(
                   key: const Key('loginButtonKey'),
-                  height: 20,
-                  width: 200,
+                  height: isTablet ? 30 : 20,
+                  width: isTablet ? 300 : 200,
+                  fontSize: isTablet ? 20 : 18,
                   text: "Login",
                   textColor: Colors.white,
                   onPressed: () => _submit(1))
@@ -314,11 +329,13 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, '/registerPage'),
-            child: const Text(
+            child: Text(
               'Create Account',
-              key: Key('createAccountButtonKey'),
+              key: const Key('createAccountButtonKey'),
               style: TextStyle(
-                  color: AppColors.text2, decoration: TextDecoration.underline),
+                  fontSize: isTablet ? 16 : 12,
+                  color: AppColors.text2,
+                  decoration: TextDecoration.underline),
             ),
           ),
         ]),

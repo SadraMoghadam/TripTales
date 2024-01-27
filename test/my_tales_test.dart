@@ -23,4 +23,40 @@ void main() {
     expect(find.byType(CustomAppBar), findsOneWidget);
     expect(find.byType(CustomTale), findsNWidgets(7));
   });
+  testWidgets('MyTalesPage builds correctly', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MyTalesPage()));
+
+    expect(find.byType(CustomTale),
+        findsNWidgets(7)); // Expects to find 7 CustomTale widgets
+    expect(find.text('Create new Tale'),
+        findsOneWidget); // Expects to find a specific tale name
+  });
+
+  testWidgets('Testing on different screen sizes', (WidgetTester tester) async {
+    // Testing on a larger screen
+    tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
+    tester.binding.window.devicePixelRatioTestValue = 2.0;
+    addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+
+    await tester.pumpWidget(MaterialApp(home: MyTalesPage()));
+    // Add expectations for the layout on larger screens
+
+    // Testing on a smaller screen
+    tester.binding.window.physicalSizeTestValue = Size(320, 480);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+
+    await tester.pumpWidget(MaterialApp(home: MyTalesPage()));
+    // Add expectations for the layout on smaller screens
+  });
+
+  testWidgets('Testing performance', (WidgetTester tester) async {
+    final Stopwatch stopwatch = Stopwatch()..start();
+
+    // Measure the time taken to build the widget
+    await tester.pumpWidget(MaterialApp(home: MyTalesPage()));
+
+    stopwatch.stop();
+    print('Widget build time: ${stopwatch.elapsedMilliseconds}ms');
+  });
 }

@@ -10,6 +10,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
@@ -18,19 +20,34 @@ class HomePage extends StatelessWidget {
           height: device.height,
           width: device.width,
           alignment: Alignment.center,
-          child: Column(
+          child: buildBody(context),
+
+          /*Column(
             children: <Widget>[
               Flexible(fit: FlexFit.tight, flex: 7, child: buildHome()),
               Flexible(
                   fit: FlexFit.tight, flex: 2, child: buildButtons(context)),
             ],
           ),
+          */
         ),
       ),
     );
   }
 
-  Widget buildHome() {
+  Widget buildBody(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Flexible(fit: FlexFit.tight, flex: 7, child: buildHome(context)),
+        Flexible(fit: FlexFit.tight, flex: 2, child: buildButtons(context)),
+      ],
+    );
+  }
+
+  Widget buildHome(context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -38,7 +55,7 @@ class HomePage extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.only(
-                top: 40.0,
+                top: 50,
                 bottom: 170,
               ),
               child: ClipRRect(
@@ -46,25 +63,25 @@ class HomePage extends StatelessWidget {
                 child: Image.asset(
                   key: const Key('logoKey'),
                   'assets/images/TripTales_logo.png',
-                  height: 250.0,
+                  height: isTablet ? 300.0 : 200,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-            const Positioned(
+            Positioned(
               left: 2,
               bottom: 100,
               child: Text(
                 'Live',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: isTablet ? 50 : 40,
                   color: AppColors.main1,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            const Positioned(
+            Positioned(
               left: 2,
               // Adjust the value to move the text outside the box
               bottom: 50,
@@ -72,20 +89,20 @@ class HomePage extends StatelessWidget {
                 'Feel',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: isTablet ? 50 : 40,
                   color: AppColors.main3,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            const Positioned(
+            Positioned(
               left: 2,
               bottom: 0,
               child: Text(
                 'Discover',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: isTablet ? 50 : 40,
                   color: AppColors.main2,
                   fontWeight: FontWeight.w700,
                 ),
@@ -98,6 +115,9 @@ class HomePage extends StatelessWidget {
   }
 
   Widget buildButtons(BuildContext context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -107,6 +127,9 @@ class HomePage extends StatelessWidget {
             alignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CustomButton(
+                  height: isTablet ? 30 : 20,
+                  width: isTablet ? 300 : 200,
+                  fontSize: isTablet ? 20 : 18,
                   key: const Key('loginCustomButtonKey'),
                   textColor: Colors.white,
                   text: "Login",
@@ -117,9 +140,10 @@ class HomePage extends StatelessWidget {
           TextButton(
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, '/registerPage'),
-            child: const Text('Create Account',
+            child: Text('Create Account',
                 key: Key('createAccountCustomButtonKey'),
                 style: TextStyle(
+                    fontSize: isTablet ? 15 : 10,
                     color: Colors.black87,
                     decoration: TextDecoration.underline)),
           ),

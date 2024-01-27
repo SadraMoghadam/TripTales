@@ -4,6 +4,7 @@ import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/pages/favorite_tales.dart';
 import 'package:trip_tales/src/pages/my_tales.dart';
 import 'package:trip_tales/src/pages/profile.dart';
+import 'package:trip_tales/src/utils/device_info.dart';
 
 import '../utils/app_manager.dart';
 
@@ -20,14 +21,30 @@ class _CustomMenuState extends State<CustomMenu> {
   final AppManager _appManager = Get.put(AppManager());
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    return Scaffold(
         body: screens[widget.index],
         bottomNavigationBar: _bottomNavigationBar(),
       );
+  } 
 
   _bottomNavigationBar() {
-
     String profileImageUrl = _appManager.getProfileImage();
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    return isTablet
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [buildNavigationBar(profileImageUrl)])
+        : buildNavigationBar(profileImageUrl);
+  }
+
+  Widget buildNavigationBar(String profileImageUrl) {
     return NavigationBar(
       backgroundColor: Colors.white,
       animationDuration: const Duration(seconds: 1),

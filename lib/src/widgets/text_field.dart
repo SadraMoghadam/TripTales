@@ -36,6 +36,7 @@ class CustomTextField extends StatefulWidget {
   final double fontSize;
   final FontStyle fontStyle;
   final bool isFieldColor;
+  final bool isTablet; //added for the tablet version
 
   CustomTextField({
     Key? key,
@@ -71,6 +72,7 @@ class CustomTextField extends StatefulWidget {
     this.fontSize = 16,
     this.fontStyle = FontStyle.normal,
     this.isFieldColor = false,
+    this.isTablet = false,
   }) : super(key: key);
 
   @override
@@ -81,8 +83,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 50,
-        width: 300,
+        width: widget.isTablet ? 400 : 300,
+        height: widget.isTablet ? 70 : 40,
         child: TextFormField(
           style: TextStyle(
             color: widget.textColor,

@@ -27,9 +27,33 @@ void main() {
     final emailTextFieldFinder = find.byKey(const Key('emailCustomTextField'));
     expect(emailTextFieldFinder, findsOneWidget);
 
-    // Test typing in Email and Password fields
+    // Enter text into the email form field
     await tester.enterText(emailTextFieldFinder, 'example@example.com');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the text in the field
     expect(find.text('example@example.com'), findsOneWidget);
+
+    // Clear the text field
+    await tester.enterText(emailTextFieldFinder, '');
+    await tester.pump(); // Trigger a rebuild
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+
+    // Verify "Enter your email" error is displayed
+    expect(find.text('Enter your email'), findsOneWidget);
+
+    // Enter text into the email form field again
+    await tester.enterText(emailTextFieldFinder, 'anotherexample@example.com');
+    await tester.pump(); // Trigger a rebuild
+
+    // Verify the new text in the field
+    expect(find.text('anotherexample@example.com'), findsOneWidget);
+
+    // Trigger validation
+    await tester.pumpAndSettle();
+    // We might not need this additional pump, but it's included for consistency
   });
 
   testWidgets('LoginPage password', (WidgetTester tester) async {
