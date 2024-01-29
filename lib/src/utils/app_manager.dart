@@ -14,10 +14,10 @@ class AppManager extends GetxController {
   Rx<String> currentUserId = Rx<String>("");
   Rx<String> profileImage = Rx<String>("");
   Rx<List<Tuple<String, Matrix4>>?> cardsTransform = Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
-  // Rx<bool> isCardsTransformChanged = Rx<bool>(false);
+  Rx<bool> isCardsTransformChanged = Rx<bool>(false);
 
   void setCardTransform(String name, Matrix4 transform) {
-    // setIsCardsTransformChanged(true);
+    setIsCardsTransformChanged(true);
     if (cardsTransform.value == null) {
       cardsTransform.value = [Tuple(name, transform)];
       return;
@@ -34,9 +34,9 @@ class AppManager extends GetxController {
     }
   }
 
-  // void setIsCardsTransformChanged(bool isChanged) {
-  //   isCardsTransformChanged.value = isChanged;
-  // }
+  void setIsCardsTransformChanged(bool isChanged) {
+    isCardsTransformChanged.value = isChanged;
+  }
 
   void setProfileImage(String profileImagePath) {
     profileImage.value = profileImagePath;
@@ -61,9 +61,9 @@ class AppManager extends GetxController {
     return cardsTransform.value;
   }
 
-  // bool getIsCardsTransformChanged() {
-  //   return isCardsTransformChanged.value;
-  // }
+  bool getIsCardsTransformChanged() {
+    return isCardsTransformChanged.value;
+  }
 
   String getProfileImage() {
     return profileImage.value;

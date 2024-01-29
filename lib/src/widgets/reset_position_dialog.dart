@@ -15,21 +15,21 @@ import '../utils/device_info.dart';
 import '../widgets/button.dart';
 import '../widgets/text_field.dart';
 
-class DeleteItemDialog extends StatefulWidget {
+class ResetPositionDialog extends StatefulWidget {
   final String name;
 
-  const DeleteItemDialog({super.key, required this.name});
+  const ResetPositionDialog({super.key, required this.name});
 
   @override
-  _DeleteItemDialogState createState() => _DeleteItemDialogState();
+  _ResetPositionDialog createState() => _ResetPositionDialog();
 }
 
-class _DeleteItemDialogState extends State<DeleteItemDialog> {
+class _ResetPositionDialog extends State<ResetPositionDialog> {
   final CardService _cardService = Get.find<CardService>();
   final AppManager _appManager = Get.put(AppManager());
 
   void _submit() async {
-    int result = await _cardService.deleteCardByName(_appManager.getCurrentTale(), widget.name);
+    int result = await _cardService.updateCardTransform(_appManager.getCurrentTale(), widget.name, Matrix4.identity());
     if (result == 200) {
       Navigator.of(context).pop(true);
     } else {
@@ -53,12 +53,12 @@ class _DeleteItemDialogState extends State<DeleteItemDialog> {
     return AlertDialog(
       // shadowColor: Colors.red,
       title: const Text(
-        'Delete Card',
+        'Reset Card Position',
         style: TextStyle(
             color: AppColors.main1, fontSize: 25, fontWeight: FontWeight.w700),
       ),
       content: const Text(
-        'Are you sure you want to delete this card?',
+        'Are you sure you want to reset the position of this card?',
         style: TextStyle(
             color: AppColors.text1, fontSize: 17, fontWeight: FontWeight.normal),
       ),
@@ -69,7 +69,7 @@ class _DeleteItemDialogState extends State<DeleteItemDialog> {
             fontSize: 12,
             padding: 10,
             backgroundColor: AppColors.main2,
-            text: "Delete",
+            text: "reset",
             textColor: Colors.white,
             onPressed: () => _submit()),
         CustomButton(

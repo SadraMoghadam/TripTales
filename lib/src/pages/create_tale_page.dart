@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trip_tales/src/constants/tale_background.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
@@ -28,10 +29,6 @@ class _CreateTalePage extends State<CreateTalePage> {
   final Validator _validator = Validator();
   final _formKey = GlobalKey<FormState>();
   int selectedIndex = 0;
-
-  static const backgroundNum = 6;
-  static const backgroundPaths = ['assets/images/canvas1.jpg', 'assets/images/canvas2.jpg', 'assets/images/canvas3.jpg', 'assets/images/canvas4.jpg', 'assets/images/canvas5.jpg', 'assets/images/canvas6.jpg'];
-  static const backgroundNames = ['Nostalgic', 'Village', 'Cities', 'Winter', 'Summer', 'Spring'];
 
   void _submit() async {
     final isValid = _formKey.currentState?.validate();
@@ -185,10 +182,10 @@ class _CreateTalePage extends State<CreateTalePage> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            for (int i = 0; i < backgroundNum; i++)
+            for (int i = 0; i < TaleBackground.totalNum; i++)
               CustomCanvas(
-                talePath: backgroundPaths[i],
-                taleName: backgroundNames[i],
+                talePath: TaleBackground.paths[i],
+                taleName: TaleBackground.names[i],
                 onTap: () {
                   setState(() {
                     selectedIndex = i; // Mark this item as selected

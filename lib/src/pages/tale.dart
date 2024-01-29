@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trip_tales/src/constants/color.dart';
+import 'package:trip_tales/src/constants/tale_background.dart';
+import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/pages/reorder_page.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
@@ -28,12 +30,20 @@ class _TalePageState extends State<TalePage> {
   final CardService _cardService = Get.find<CardService>();
   final TaleService _taleService = Get.find<TaleService>();
   final AppManager _appManager = Get.put(AppManager());
+  final String canvas = 'assets/images/background_tale.jpg';
+  late Future<TaleModel?> taleModel;
 
   callback() {
     setState(() {
       reload = true;
       _contentKey = UniqueKey();
     });
+  }
+
+  @override
+  void initState() {
+    taleModel = _taleService.getTaleById(_appManager.getCurrentTale());
+    super.initState();
   }
 
   final MaterialStateProperty<Icon?> thumbIcon =
@@ -60,32 +70,50 @@ class _TalePageState extends State<TalePage> {
   }
 
   Widget buildBody(DeviceInfo device) {
-    return Container(
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/background_tale.jpg'),
+    return FutureBuilder(
+        future: taleModel,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Display a loading indicator while waiting for data
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            // Handle errors when fetching data
+            return Center(child: Text('Error fetching data'));
+          } else if (!snapshot.hasData) {
+            // Handle the case where data is not available
+            return Center(child: Text('No data available'));
+          } else {
+            // Data is available, build the widget tree
+            final decorationImage = DecorationImage(
+              image: AssetImage(
+                  TaleBackground.paths[int.parse(snapshot.data!.canvas)]),
               fit: BoxFit.cover,
-              opacity: 0.3)),
-      child: Stack(
-        children: [
-          SingleChildScrollView(
-            // physics: isEditMode ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
-            // physics: isEditMode ? const FixedExtentScrollPhysics() : const AlwaysScrollableScrollPhysics(),
-            physics: NeverScrollableScrollPhysics(),
-            child: TaleBuilder(
-                callback: callback,
-                isEditMode: isEditMode,
-                reload: reload,
-                taleKey: _contentKey),
-          ),
-          // TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
-          buildAddMemory(),
-          isEditMode ? buildReorder() : Container(),
-          isEditMode ? buildSave() : Container(),
-          buildEditModeButton(),
-        ],
-      ),
-    );
+              opacity: 0.3,
+            );
+            return Container(
+              decoration: BoxDecoration(image: decorationImage),
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    // physics: isEditMode ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
+                    // physics: isEditMode ? const FixedExtentScrollPhysics() : const AlwaysScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
+                    child: TaleBuilder(
+                        callback: callback,
+                        isEditMode: isEditMode,
+                        reload: reload,
+                        taleKey: _contentKey),
+                  ),
+                  // TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
+                  buildAddMemory(),
+                  isEditMode ? buildReorder() : Container(),
+                  isEditMode ? buildSave() : Container(),
+                  buildEditModeButton(),
+                ],
+              ),
+            );
+          }
+        });
   }
 
   // Widget buildMemories() {
@@ -104,6 +132,7 @@ class _TalePageState extends State<TalePage> {
       right: 10,
       child: GestureDetector(
         onTap: () {
+          _appManager.setIsCardsTransformChanged(false);
           if (isEditMode) {
             Timer(
               Duration(seconds: 0),
@@ -187,10 +216,10 @@ class _TalePageState extends State<TalePage> {
             BoxShadow(color: Colors.black45, blurRadius: 3, spreadRadius: 3)
           ], borderRadius: BorderRadius.circular(30), color: AppColors.main1),
           child: const Center(
-              // child: Text(
-              //   'Save',
-              //   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              // ),
+            // child: Text(
+            //   'Save',
+            //   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            // ),
             child: Icon(
               Icons.check,
               color: Colors.white,
@@ -206,13 +235,37 @@ class _TalePageState extends State<TalePage> {
     String currentTale = _appManager.getCurrentTale();
     // var taleCards = await _cardService.getCards(currentTale);
     var cardsNewTransform = _appManager.getCardsTransform();
-    if(cardsNewTransform != null){
+    if (cardsNewTransform != null) {
       int numOfCards = cardsNewTransform.length;
-      for(int i = 0; i < numOfCards; i++){
-        _cardService.updateCardTransform(currentTale, cardsNewTransform[i].item1, cardsNewTransform[i].item2);
+      for (int i = 0; i < numOfCards; i++) {
+        _cardService.updateCardTransform(currentTale,
+            cardsNewTransform[i].item1, cardsNewTransform[i].item2);
       }
     }
-    // _appManager.setIsCardsTransformChanged(false);
+    showSaveDialog();
+    _appManager.setIsCardsTransformChanged(false);
+  }
+
+  void showSaveDialog() {
+    if (_appManager.getIsCardsTransformChanged()) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            content: Text(
+              'Cards positions are saved successfully',
+              style: TextStyle(
+                  color: AppColors.main1,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
+          );
+        },
+      );
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.of(context).pop();
+      });
+    }
   }
 
   Widget buildReorder() {

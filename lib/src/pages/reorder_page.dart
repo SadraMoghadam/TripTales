@@ -11,6 +11,7 @@ import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/services/card_service.dart';
 import 'package:trip_tales/src/utils/app_manager.dart';
 import 'package:trip_tales/src/utils/validator.dart';
+import 'package:trip_tales/src/widgets/reset_position_dialog.dart';
 import '../constants/color.dart';
 import '../controllers/media_controller.dart';
 import '../utils/device_info.dart';
@@ -110,8 +111,14 @@ class _ReorderPageState extends State<ReorderPage> {
                 title: Text(cardsOrder[i]!.name),
                 leading:
                     const Icon(Icons.drag_handle_rounded, color: Colors.black),
-                trailing: Container(
-                  child: deleteButton(cardsOrder[i]!.name),
+                trailing:
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    resetPositionButton(cardsOrder[i]!.name),
+                    SizedBox(width: 2), // Adjust the spacing between buttons
+                    deleteButton(cardsOrder[i]!.name),
+                  ],
                 ),
               ),
             ),
@@ -126,6 +133,23 @@ class _ReorderPageState extends State<ReorderPage> {
           cardsOrder.insert(newIndex, task);
           reorderCards();
         },
+      ),
+    );
+  }
+
+  Widget resetPositionButton(String name) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return ResetPositionDialog(name: name);
+            });
+      },
+      child: Container(
+        padding: EdgeInsets.all(1),
+        child:
+        const Icon(Icons.restart_alt, size: 22, color: AppColors.main1),
       ),
     );
   }

@@ -23,15 +23,14 @@ class TaleService extends GetxService {
       // String? currentUserId = _authService.currentUserId;
       List<TaleModel?> currentTales = await getTales("1");
       var contain =
-        currentTales.where((element) => element!.name == taleData.name);
+          currentTales.where((element) => element!.name == taleData.name);
       if (!contain.isEmpty) {
         return 400;
       }
       Future<bool> isUploaded = _uploadImage(imageFile, taleData.imagePath);
       print("___________________________---${await isUploaded}");
-      DocumentReference taleReference = await _talesCollection.add(
-          taleData.toJson()
-      );
+      DocumentReference taleReference =
+          await _talesCollection.add(taleData.toJson());
 
       await FirebaseFirestore.instance.collection('users').doc("1").update({
         'talesFK': FieldValue.arrayUnion([taleReference.id]),
@@ -50,16 +49,17 @@ class TaleService extends GetxService {
       // String? currentUserId = _authService.currentUserId;
       List<TaleModel?> currentTales = await getTales("1");
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await _firestore.collection('users').doc('1').get();
+          await _firestore.collection('users').doc('1').get();
       final userData = userDoc.data();
       print(userData);
       var contain =
           currentTales.where((element) => element!.name == taleData.name);
       if (!contain.isEmpty) {
         String taleId = await getTaleId(contain.first!.name);
-        await FirebaseFirestore.instance.collection('tales').doc(taleId).update(
-            taleData.toJson()
-        );
+        await FirebaseFirestore.instance
+            .collection('tales')
+            .doc(taleId)
+            .update(taleData.toJson());
         print('Tale updated successfully.');
         return 200;
       }
@@ -77,16 +77,18 @@ class TaleService extends GetxService {
       // String? currentUserId = _authService.currentUserId;
       List<TaleModel?> currentTales = await getTales("1");
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await _firestore.collection('users').doc('1').get();
+          await _firestore.collection('users').doc('1').get();
       final userData = userDoc.data();
       print(userData);
-      var contain =
-      currentTales.where((element) => element!.name == name);
+      var contain = currentTales.where((element) => element!.name == name);
       if (!contain.isEmpty) {
         String taleId = await getTaleId(contain.first!.name);
-        await FirebaseFirestore.instance.collection('tales').doc(taleId).update({
-              'liked': liked,
-            });
+        await FirebaseFirestore.instance
+            .collection('tales')
+            .doc(taleId)
+            .update({
+          'liked': liked,
+        });
         print('Tale updated successfully.');
         return 200;
       }
@@ -104,14 +106,16 @@ class TaleService extends GetxService {
       // String? currentUserId = _authService.currentUserId;
       List<TaleModel?> currentTales = await getTales("1");
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await _firestore.collection('users').doc('1').get();
+          await _firestore.collection('users').doc('1').get();
       final userData = userDoc.data();
       print(userData);
-      var contain =
-      currentTales.where((element) => element!.name == name);
+      var contain = currentTales.where((element) => element!.name == name);
       if (!contain.isEmpty) {
         String taleId = await getTaleId(contain.first!.name);
-        await FirebaseFirestore.instance.collection('tales').doc(taleId).delete();
+        await FirebaseFirestore.instance
+            .collection('tales')
+            .doc(taleId)
+            .delete();
         await FirebaseFirestore.instance.collection('users').doc("1").update({
           'talesFK': FieldValue.arrayRemove([taleId]),
         });
@@ -144,19 +148,23 @@ class TaleService extends GetxService {
 
         if (taleData != null) {
           // print("=+=========${taleData['imagePath']}");
-            String downloadURL =
-                await _storage.ref().child(taleData['imagePath']).getDownloadURL();
-            // print("video:      ${downloadURL}");
-            TaleModel taleModel = TaleModel(
-              name: taleData['name'],
-              imagePath: downloadURL,
-              canvas: taleData['canvas'],
-              liked: taleData['liked'],
-              cardsFK: List<String>.empty(),
-            );
-            tales.add(taleModel);
-          }
+          String downloadURL = await _storage
+              .ref()
+              .child(taleData['imagePath'])
+              .getDownloadURL();
+          // print("video:      ${downloadURL}");
+          TaleModel taleModel = TaleModel(
+            name: taleData['name'],
+            imagePath: downloadURL,
+            canvas: taleData['canvas'],
+            liked: taleData['liked'],
+            cardsFK: taleData['cardsFK'] != null
+                ? List<String>.from(taleData['cardsFK'])
+                : null,
+          );
+          tales.add(taleModel);
         }
+      }
       return tales;
     } catch (e) {
       // Get.snackbar('Error', e.toString());
@@ -168,7 +176,7 @@ class TaleService extends GetxService {
     try {
       List<TaleModel> tales = [];
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await _firestore.collection('users').doc(uid).get();
+          await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
       print("=+=========${userData}");
       for (int i = 0; i < userData?['talesFK'].length; i++) {
@@ -180,15 +188,19 @@ class TaleService extends GetxService {
 
         if (taleData != null && taleData['liked'] == true) {
           print("=+=========${taleData['imagePath']}");
-          String downloadURL =
-          await _storage.ref().child(taleData['imagePath']).getDownloadURL();
+          String downloadURL = await _storage
+              .ref()
+              .child(taleData['imagePath'])
+              .getDownloadURL();
           // print("video:      ${downloadURL}");
           TaleModel taleModel = TaleModel(
             name: taleData['name'],
             imagePath: downloadURL,
             canvas: taleData['canvas'],
             liked: taleData['liked'],
-            cardsFK: List<String>.empty(),
+            cardsFK: taleData['cardsFK'] != null
+                ? List<String>.from(taleData['cardsFK'])
+                : null,
           );
           tales.add(taleModel);
         }
@@ -197,6 +209,32 @@ class TaleService extends GetxService {
     } catch (e) {
       // Get.snackbar('Error', e.toString());
       return List.empty();
+    }
+  }
+
+  Future<TaleModel?> getTaleById(String taleId) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> taleDoc =
+          await _firestore.collection('tales').doc(taleId).get();
+      final taleData = taleDoc.data();
+      if (taleData != null) {
+        String downloadURL =
+            await _storage.ref().child(taleData['imagePath']).getDownloadURL();
+        TaleModel taleModel = TaleModel(
+          name: taleData['name'],
+          imagePath: downloadURL,
+          canvas: taleData['canvas'],
+          liked: taleData['liked'],
+          cardsFK: taleData['cardsFK'] != null
+              ? List<String>.from(taleData['cardsFK'])
+              : null,
+        );
+        return taleModel;
+      }
+      return null;
+    } catch (e) {
+      // Get.snackbar('Error', e.toString());
+      return null;
     }
   }
 
@@ -217,8 +255,8 @@ class TaleService extends GetxService {
         await _firestore.collection('users').doc('1').get();
     final userData = userDoc.data();
     print(userData);
-    for (int i = 0; i < currentTales.length; i++){
-      if(name == currentTales[i]!.name){
+    for (int i = 0; i < currentTales.length; i++) {
+      if (name == currentTales[i]!.name) {
         return userData!['talesFK'][i];
       }
     }
