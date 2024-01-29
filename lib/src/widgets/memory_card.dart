@@ -16,6 +16,8 @@ import '../utils/device_info.dart';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 
+import '../utils/tuple.dart';
+
 class MemoryCard extends StatefulWidget {
   // final Function(Size) onSizeChanged;
   final bool isEditable;
@@ -184,11 +186,16 @@ class _MemoryCardState extends State<MemoryCard> {
     //     'Position: ${(offset.dx + size.width) / 2}, ${(offset.dy + size.height) / 2}');
   }
 
-  void updateTransform(Matrix4 transform, int counter) {
-    _cardService.updateCardTransform(_appManager.getCurrentTale(), widget.name, transform).then((value) {
-      if (counter == updateCounter) print("SSSSSSSSSSSSSSSSSSSSSSs");
-    });
+  // void updateTransform(Matrix4 transform, int counter) {
+  //   _cardService.updateCardTransform(_appManager.getCurrentTale(), widget.name, transform).then((value) {
+  //     if (counter == updateCounter) print("SSSSSSSSSSSSSSSSSSSSSSs");
+  //   });
+  // }
+
+  void updateTransform(Matrix4 transform){
+    _appManager.setCardTransform(widget.name, transform);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +237,7 @@ class _MemoryCardState extends State<MemoryCard> {
         });
         if (counter % maxThreshold == 0) {
           // print("====================\n====================\n====================\n====================\n");
-          updateTransform(notifier.value * transform, updateCounter);
+          updateTransform(notifier.value * transform);
           updateCounter++;
           counter = 1;
         }
@@ -464,7 +471,7 @@ class _MemoryCardState extends State<MemoryCard> {
               );
               }
               else {
-                return Container();
+                return Container(height: 0, width: 0,);
               }
             }));
   }

@@ -1,10 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/pages/reorder_page.dart';
+import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
 import 'package:trip_tales/src/widgets/button_slider.dart';
+import '../services/card_service.dart';
+import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 import '../widgets/tale_builder.dart';
 
@@ -21,6 +25,9 @@ class _TalePageState extends State<TalePage> {
   bool isEditMode = false;
   Key _contentKey = UniqueKey();
   late Completer<void> flagCompleter;
+  final CardService _cardService = Get.find<CardService>();
+  final TaleService _taleService = Get.find<TaleService>();
+  final AppManager _appManager = Get.put(AppManager());
 
   callback() {
     setState(() {
@@ -74,6 +81,7 @@ class _TalePageState extends State<TalePage> {
           // TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
           buildAddMemory(),
           isEditMode ? buildReorder() : Container(),
+          isEditMode ? buildSave() : Container(),
           buildEditModeButton(),
         ],
       ),
@@ -98,7 +106,7 @@ class _TalePageState extends State<TalePage> {
         onTap: () {
           if (isEditMode) {
             Timer(
-              Duration(seconds: 2),
+              Duration(seconds: 0),
               () {
                 setState(
                   () {
@@ -161,9 +169,53 @@ class _TalePageState extends State<TalePage> {
     );
   }
 
-  Widget buildReorder() {
+  Widget buildSave() {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
+    // bool a = _appManager.getIsCardsTransformChanged();
+    return Positioned(
+      bottom: 25,
+      left: (device.width - 70) / 2,
+      child: GestureDetector(
+        onTap: () {
+          onSaveButtonClick();
+        },
+        child: Container(
+          width: 70,
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(boxShadow: const [
+            BoxShadow(color: Colors.black45, blurRadius: 3, spreadRadius: 3)
+          ], borderRadius: BorderRadius.circular(30), color: AppColors.main1),
+          child: const Center(
+              // child: Text(
+              //   'Save',
+              //   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              // ),
+            child: Icon(
+              Icons.check,
+              color: Colors.white,
+              size: 22,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void onSaveButtonClick() async {
+    String currentTale = _appManager.getCurrentTale();
+    // var taleCards = await _cardService.getCards(currentTale);
+    var cardsNewTransform = _appManager.getCardsTransform();
+    if(cardsNewTransform != null){
+      int numOfCards = cardsNewTransform.length;
+      for(int i = 0; i < numOfCards; i++){
+        _cardService.updateCardTransform(currentTale, cardsNewTransform[i].item1, cardsNewTransform[i].item2);
+      }
+    }
+    // _appManager.setIsCardsTransformChanged(false);
+  }
+
+  Widget buildReorder() {
     return Positioned(
       bottom: 25,
       left: 20,

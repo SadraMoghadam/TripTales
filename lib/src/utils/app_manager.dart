@@ -1,14 +1,42 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trip_tales/src/models/card_model.dart';
+
+import 'tuple.dart';
 
 class AppManager extends GetxController {
   Rx<List<CardModel?>?> userCards = Rx<List<CardModel?>?>(null);
   Rx<String> currentTaleId = Rx<String>("");
   Rx<String> currentUserId = Rx<String>("");
   Rx<String> profileImage = Rx<String>("");
+  Rx<List<Tuple<String, Matrix4>>?> cardsTransform = Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
+  // Rx<bool> isCardsTransformChanged = Rx<bool>(false);
+
+  void setCardTransform(String name, Matrix4 transform) {
+    // setIsCardsTransformChanged(true);
+    if (cardsTransform.value == null) {
+      cardsTransform.value = [Tuple(name, transform)];
+      return;
+    }
+
+    int index = cardsTransform.value!.indexWhere((tuple) => tuple.item1 == name);
+
+    if (index != -1) {
+      // "transform1" exists, update its item2
+      cardsTransform.value![index] = Tuple(name, transform);
+    } else {
+      // "transform1" doesn't exist, add it to the list
+      cardsTransform.value!.add(Tuple(name, transform));
+    }
+  }
+
+  // void setIsCardsTransformChanged(bool isChanged) {
+  //   isCardsTransformChanged.value = isChanged;
+  // }
 
   void setProfileImage(String profileImagePath) {
     profileImage.value = profileImagePath;
@@ -29,6 +57,14 @@ class AppManager extends GetxController {
   // void setCardByName(CardModel? card) {
   //   userCards.value![userCards.value!.indexWhere((element) => element!.name == card!.name)] = card!;
   // }
+  List<Tuple<String, Matrix4>>? getCardsTransform() {
+    return cardsTransform.value;
+  }
+
+  // bool getIsCardsTransformChanged() {
+  //   return isCardsTransformChanged.value;
+  // }
+
   String getProfileImage() {
     return profileImage.value;
   }
