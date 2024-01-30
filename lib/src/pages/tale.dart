@@ -66,6 +66,7 @@ class _TalePageState extends State<TalePage> {
           bodyTale: buildBody(device),
           showIcon: true,
           isScrollable: !isEditMode,
+          navigationPath: '/customMenu',
         ));
   }
 

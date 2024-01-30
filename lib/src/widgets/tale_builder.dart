@@ -58,7 +58,7 @@ class _TaleBuilderState extends State<TaleBuilder>
   @override
   void initState() {
     super.initState();
-    print("YYYYYYYYYYYYYYYYYYYYYYYYYYYY HHHHHHHHHHHEEEEEEEEEEEE");
+    // print("YYYYYYYYYYYYYYYYYYYYYYYYYYYY HHHHHHHHHHHEEEEEEEEEEEE");
     setState(() {
       cards = _cardService.getCards(_appManager.getCurrentTale());
     });
@@ -71,7 +71,7 @@ class _TaleBuilderState extends State<TaleBuilder>
 
 
   void _getWidgetInfo(int widgetId) {
-    print("------------$widgetId------------");
+    // print("------------$widgetId------------");
     GlobalKey widgetKey = _widgetKeyList[widgetId];
     final RenderBox renderBox =
     widgetKey.currentContext?.findRenderObject() as RenderBox;

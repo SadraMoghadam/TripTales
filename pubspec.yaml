@@ -90,6 +90,7 @@ flutter:
    - assets/animations/add_button_circle.json
    - assets/animations/placeholder.json
    - assets/animations/place_here.json
+   - assets/animations/loading.json
    - assets/images/profile_pic.png
    - assets/images/TripTales_logo.png
    - assets/images/background_tale.jpg

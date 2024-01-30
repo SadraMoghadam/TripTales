@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/pages/favorite_tales.dart';
 import 'package:trip_tales/src/pages/my_tales.dart';
@@ -7,6 +8,7 @@ import 'package:trip_tales/src/pages/profile.dart';
 import 'package:trip_tales/src/utils/device_info.dart';
 
 import '../utils/app_manager.dart';
+import 'app_bar_tale.dart';
 
 class CustomMenu extends StatefulWidget {
   late int index;
@@ -16,9 +18,29 @@ class CustomMenu extends StatefulWidget {
   _CustomMenuState createState() => _CustomMenuState();
 }
 
-class _CustomMenuState extends State<CustomMenu> {
+class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
   final screens = [MyTalesPage(), FavoriteTalesPage(), ProfilePage()];
   final AppManager _appManager = Get.put(AppManager());
+  late final AnimationController _controller;
+
+  Future<void> fetchData() async {
+    if(widget.index == 0){
+      await Future.delayed(Duration(seconds: 3));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 4));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +48,47 @@ class _CustomMenuState extends State<CustomMenu> {
     device.computeDeviceInfo(context);
     bool isTablet = device.isTablet;
     return Scaffold(
-        body: screens[widget.index],
-        bottomNavigationBar: _bottomNavigationBar(),
+    //   body: CustomAppBar(
+    // bodyTale: screens[widget.index],
+    //   showIcon: false,
+    // ),
+      body: _buildScreenContent(),
+      bottomNavigationBar: _bottomNavigationBar(),
+    );
+  }
+
+  Widget _buildScreenContent() {
+    if (widget.index == 0) {
+      return FutureBuilder(
+        future: fetchData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            _controller.reset();
+            _controller.forward();
+            return Center(
+              child: Lottie.asset(
+                "assets/animations/loading.json",
+                width: 400,
+                height: 400,
+                controller: _controller,
+              ),);
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error fetching data'));
+          } else {
+            return CustomAppBar(
+              bodyTale: screens[widget.index],
+              showIcon: false,
+            );
+          }
+        },
       );
-  } 
+    } else {
+      return CustomAppBar(
+        bodyTale: screens[widget.index],
+        showIcon: false,
+      );
+    }
+  }
 
   _bottomNavigationBar() {
     String profileImageUrl = _appManager.getProfileImage();

@@ -79,6 +79,7 @@ class _CreateTalePage extends State<CreateTalePage> {
       body: CustomAppBar(
         bodyTale: buildBody(),
         showIcon: true,
+        navigationPath: '/customMenu',
       ),
     );
   }

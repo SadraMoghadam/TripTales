@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:trip_tales/src/models/user_model.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/services/auth_service.dart';
@@ -26,7 +27,8 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage>
+    with TickerProviderStateMixin {
   final AuthService _authService = Get.find<AuthService>();
   final MediaController mediaController = Get.put(MediaController());
   late Future<UserModel?> user;
@@ -42,6 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late final TextEditingController _bioController;
 
   ImageProvider<Object>? _profileImage;
+  late final AnimationController _controller;
 
   bool readOnlyTextField = true;
   bool hasUppercase = false;
@@ -74,15 +77,15 @@ class _ProfilePageState extends State<ProfilePage> {
       gender: _selectedGender,
       profileImage: _appManager.getProfileImage(),
     );
-    int? result = await _authService.updateUser(_appManager.getCurrentUser(), userData);
+    int? result =
+        await _authService.updateUser(_appManager.getCurrentUser(), userData);
     if (result == 200) {
       // _formKey.currentState?.save();
       // user = _authService.getUserById(_appManager.getCurrentUser());
-      setState(
-              () {
-                user = Future.value(userData);
-            readOnlyTextField = !readOnlyTextField;
-          });
+      setState(() {
+        user = Future.value(userData);
+        readOnlyTextField = !readOnlyTextField;
+      });
       // refreshPage();
     } else {
       ErrorController.showSnackBarError(ErrorController.updateUser);
@@ -93,7 +96,10 @@ class _ProfilePageState extends State<ProfilePage> {
   void refreshPage() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => CustomMenu(index: 2,)),
+      MaterialPageRoute(
+          builder: (context) => CustomMenu(
+                index: 2,
+              )),
     );
   }
 
@@ -122,26 +128,15 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     user = _authService.getUserById(_appManager.getCurrentUser());
-    _nameController = TextEditingController()
-      ..addListener(() {
-      });
-    _surnameController = TextEditingController()
-      ..addListener(() {
-      });
-    _emailController = TextEditingController()
-      ..addListener(() {
-      });
-    _birthDateController = TextEditingController()
-      ..addListener(() {
-      });
-    _phoneNumberController = TextEditingController()
-      ..addListener(() {
-      });
-    _bioController = TextEditingController()
-      ..addListener(() {
-      });
+    _nameController = TextEditingController()..addListener(() {});
+    _surnameController = TextEditingController()..addListener(() {});
+    _emailController = TextEditingController()..addListener(() {});
+    _birthDateController = TextEditingController()..addListener(() {});
+    _phoneNumberController = TextEditingController()..addListener(() {});
+    _bioController = TextEditingController()..addListener(() {});
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 4));
     // _profileImage = const AssetImage('assets/images/profile_pic.png');
-
   }
 
   @override
@@ -150,6 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
     _surnameController.dispose();
     _emailController.dispose();
     _birthDateController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -157,12 +153,13 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
-    return Scaffold(
-      body: CustomAppBar(
-        bodyTale: buildBody(context),
-        showIcon: false,
-      ),
-    );
+    return buildBody(context);
+    //   Scaffold(
+    //   body: CustomAppBar(
+    //     bodyTale: buildBody(context),
+    //     showIcon: false,
+    //   ),
+    // );
   }
 
   Widget buildBody(context) {
@@ -189,10 +186,10 @@ class _ProfilePageState extends State<ProfilePage> {
             decoration: const BoxDecoration(
               // color: AppColors.main3,
               border: Border(
-                  top: BorderSide(color: AppColors.main2, width: 4),
-                  right: BorderSide(color: AppColors.main2, width: 4),
-                  bottom: BorderSide(color: AppColors.main2, width: 4),
-                  left: BorderSide(color: AppColors.main2, width: 4),
+                top: BorderSide(color: AppColors.main2, width: 4),
+                right: BorderSide(color: AppColors.main2, width: 4),
+                bottom: BorderSide(color: AppColors.main2, width: 4),
+                left: BorderSide(color: AppColors.main2, width: 4),
               ),
               shape: BoxShape.circle,
             ),
@@ -215,10 +212,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     builder: (context) {
                       return modifyProfileImage();
                     }).then((value) => {
-                  setState(() {
+                      setState(() {
                         File imageFile = mediaController.getImage()!;
-                        _authService.updateUserImage(imageFile, _appManager.getCurrentUser() + ".png").then((value) => {
-                        });
+                        _authService
+                            .updateUserImage(imageFile,
+                                _appManager.getCurrentUser() + ".png")
+                            .then((value) => {});
                         user = Future.value(UserModel(
                           id: _appManager.getCurrentUser(),
                           email: _emailController.text,
@@ -230,11 +229,26 @@ class _ProfilePageState extends State<ProfilePage> {
                           gender: _selectedGender,
                           profileImage: _appManager.getProfileImage(),
                         ));
-                        setState(() {
-
-                        });
-                        refreshPage();
-                      })
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              _controller.reset();
+                              _controller.forward();
+                              return AlertDialog(
+                                content: Lottie.asset(
+                                    "assets/animations/loading.json",
+                                    width: 400,
+                                    height: 400,
+                                    controller: _controller,
+                                  ),
+                              );
+                            });
+                              Future.delayed(Duration(seconds: 3), () {
+                                print("hiii");
+                                Navigator.of(context).pop();
+                                refreshPage();
+                            });
+                      }),
                     });
                 //  _changeProfilePicture(); // Invoke method to change profile picture
               },
@@ -254,7 +268,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget buildScreen() {
     return FutureBuilder<UserModel?>(
-      key: _futureBuilderKey,
+        key: _futureBuilderKey,
         future: user,
         builder: (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
           // if (snapshot.connectionState == ConnectionState.waiting) {
@@ -268,14 +282,15 @@ class _ProfilePageState extends State<ProfilePage> {
             _surnameController.text = userData.surname ?? '';
             _emailController.text = userData.email ?? '';
             _birthDateController.text = userData.birthDate ?? '';
-            _selectedGender = userData.gender == '' ? '--Choose Your Gender--' : userData.gender;
+            _selectedGender = userData.gender == ''
+                ? '--Choose Your Gender--'
+                : userData.gender;
             _bioController.text = userData.bio ?? '';
             _phoneNumberController.text = userData.phoneNumber ?? '';
-            if(userData.profileImage != ''){
+            if (userData.profileImage != '') {
               print(userData.profileImage);
               _profileImage = NetworkImage(userData.profileImage);
-            }
-            else {
+            } else {
               _profileImage = const AssetImage('assets/images/profile_pic.png');
             }
 
@@ -393,9 +408,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () {
                       if (!readOnlyTextField) {
                         _submit();
-                      }
-                      else {
-                        setState(() {
+                      } else {
+                        setState(
+                          () {
                             readOnlyTextField = !readOnlyTextField;
                           },
                         );
@@ -456,8 +471,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
-
-
 
   Widget buildProfileBody(DeviceInfo device) {
     return SingleChildScrollView(

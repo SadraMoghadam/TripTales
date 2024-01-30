@@ -5,12 +5,14 @@ class CustomAppBar extends StatelessWidget {
   final Widget bodyTale;
   final bool showIcon;
   final bool isScrollable;
+  final String? navigationPath;
 
   const CustomAppBar({
     Key? key,
     required this.bodyTale,
     required this.showIcon,
     this.isScrollable = true,
+    this.navigationPath = '/customMenu',
   }) : super(key: key);
 
   @override
@@ -54,7 +56,8 @@ class CustomAppBar extends StatelessWidget {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        Navigator.maybePop(context);
+                        // Navigator.maybePop(context);
+                        Navigator.of(context).pushNamed(navigationPath!);
                       },
                     ),
                   )

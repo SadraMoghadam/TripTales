@@ -23,23 +23,24 @@ class _MyTalesPage extends State<MyTalesPage> {
 
   @override
   void initState() {
-    super.initState();
     setState(() {
       tales = _taleService.getTales(_appManager.getCurrentUser());
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
-    return Scaffold(
-      //debugShowCheckedModeBanner: false,
-      body: CustomAppBar(
-        bodyTale: buildBody(),
-        showIcon: false,
-      ),
-    );
+    return buildBody();
+    //   Scaffold(
+    //   //debugShowCheckedModeBanner: false,
+    //   body: CustomAppBar(
+    //     bodyTale: buildBody(),
+    //     showIcon: false,
+    //   ),
+    // );
     //  );
   }
 
@@ -71,13 +72,14 @@ class _MyTalesPage extends State<MyTalesPage> {
       builder:
           (BuildContext context, AsyncSnapshot<List<TaleModel?>> snapshot) {
         if (snapshot.hasData) {
-          List<TaleModel?> data = [];
-          // print("###########");
-          data = snapshot.data!;
+          print("###########");
+          List<TaleModel?> data = snapshot.data!;
+          print(snapshot.data!);
           numOfTales = data.length;
           for (int i = 0; i < numOfTales; i++) {
             _widgetKeyList = List.generate(
-                numOfTales, (index) => GlobalObjectKey<FormState>(index));
+                numOfTales, (index) => GlobalObjectKey<FormState>(index + data[i]!.name.codeUnits.fold<int>(
+                0, (previousValue, element) => previousValue * 256 + element)));
           }
           return SingleChildScrollView(
             child: Column(

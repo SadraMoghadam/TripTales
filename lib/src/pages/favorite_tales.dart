@@ -33,13 +33,14 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> {
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
-    return Scaffold(
-      //debugShowCheckedModeBanner: false,
-      body: CustomAppBar(
-        bodyTale: buildBody(),
-        showIcon: false,
-      ),
-    );
+    return buildBody();
+    //   Scaffold(
+    //   //debugShowCheckedModeBanner: false,
+    //   body: CustomAppBar(
+    //     bodyTale: buildBody(),
+    //     showIcon: false,
+    //   ),
+    // );
     //  );
   }
 
