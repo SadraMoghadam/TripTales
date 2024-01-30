@@ -73,7 +73,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
   @override
   void initState() {
     super.initState();
-    // user = _authService.getUserById("1");
+    // user = _authService.getUserById(_appManager.getCurrentUser());
     _passwordController = TextEditingController()..addListener(() {
       checkPasswordStrength(_passwordController.text);});
     _confirmPasswordController = TextEditingController()..addListener(() {});

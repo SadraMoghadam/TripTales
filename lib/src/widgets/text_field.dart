@@ -87,6 +87,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         height: widget.isTablet ? 70 : 40,
         child: TextFormField(
           style: TextStyle(
+            overflow: TextOverflow.ellipsis,
             color: widget.textColor,
             fontSize: widget.fontSize,
             fontStyle: widget.fontStyle,
@@ -103,6 +104,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           enableSuggestions: widget.enableSuggestions,
           decoration: InputDecoration(
             labelText: widget.labelText,
+            contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
             filled: widget.filled,
             fillColor: widget.fillColor,
             labelStyle: TextStyle(color: widget.labelTextColor),
@@ -159,6 +161,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           onChanged: widget.onChanged,
           onTap: widget.onTap,
           inputFormatters: widget.inputFormatters,
+
         ));
   }
 }

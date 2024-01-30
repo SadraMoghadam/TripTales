@@ -5,6 +5,7 @@ import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
 import 'package:trip_tales/src/widgets/tale_card.dart';
+import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 
 class FavoriteTalesPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> {
   final TaleService _taleService = Get.find<TaleService>();
   late Future<List<TaleModel?>> tales;
   late List<GlobalKey> _widgetKeyList;
+  final AppManager _appManager = Get.put(AppManager());
 
   static int numOfTales = 0;
 
@@ -23,7 +25,7 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> {
   void initState() {
     super.initState();
     setState(() {
-      tales = _taleService.getFavoriteTales("1");
+      tales = _taleService.getFavoriteTales(_appManager.getCurrentUser());
     });
   }
 

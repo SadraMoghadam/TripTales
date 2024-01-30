@@ -64,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
       // return;
     }
     UserModel userData = UserModel(
-      id: "1",
+      id: _appManager.getCurrentUser(),
       email: _emailController.text,
       name: _nameController.text,
       surname: _surnameController.text,
@@ -74,10 +74,10 @@ class _ProfilePageState extends State<ProfilePage> {
       gender: _selectedGender,
       profileImage: _appManager.getProfileImage(),
     );
-    int? result = await _authService.updateUser("1", userData);
+    int? result = await _authService.updateUser(_appManager.getCurrentUser(), userData);
     if (result == 200) {
       // _formKey.currentState?.save();
-      // user = _authService.getUserById("1");
+      // user = _authService.getUserById(_appManager.getCurrentUser());
       setState(
               () {
                 user = Future.value(userData);
@@ -121,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    user = _authService.getUserById("1");
+    user = _authService.getUserById(_appManager.getCurrentUser());
     _nameController = TextEditingController()
       ..addListener(() {
       });
@@ -217,10 +217,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     }).then((value) => {
                   setState(() {
                         File imageFile = mediaController.getImage()!;
-                        _authService.updateUserImage(imageFile, "1" + ".png").then((value) => {
+                        _authService.updateUserImage(imageFile, _appManager.getCurrentUser() + ".png").then((value) => {
                         });
                         user = Future.value(UserModel(
-                          id: "1",
+                          id: _appManager.getCurrentUser(),
                           email: _emailController.text,
                           name: _nameController.text,
                           surname: _surnameController.text,
@@ -262,13 +262,15 @@ class _ProfilePageState extends State<ProfilePage> {
           // }
           if (snapshot.hasData) {
             UserModel userData = snapshot.data!;
-            _nameController.text = userData.name;
-            _surnameController.text = userData.surname;
-            _emailController.text = userData.email;
-            _birthDateController.text = userData.birthDate;
-            _selectedGender = userData.gender;
-            _bioController.text = userData.bio;
-            _phoneNumberController.text = userData.phoneNumber;
+            print(userData.email);
+            print(userData.gender);
+            _nameController.text = userData.name ?? '';
+            _surnameController.text = userData.surname ?? '';
+            _emailController.text = userData.email ?? '';
+            _birthDateController.text = userData.birthDate ?? '';
+            _selectedGender = userData.gender == '' ? '--Choose Your Gender--' : userData.gender;
+            _bioController.text = userData.bio ?? '';
+            _phoneNumberController.text = userData.phoneNumber ?? '';
             if(userData.profileImage != ''){
               print(userData.profileImage);
               _profileImage = NetworkImage(userData.profileImage);
@@ -324,7 +326,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     prefixIcon: Icons.textsms_rounded,
                     obscureText: false,
                     keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.newline,
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
@@ -345,7 +347,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 20),
                   CustomTextField(
                     key: const Key('emailCustomTextFieldKey'),
-                    readOnly: readOnlyTextField,
+                    readOnly: true,
+                    textColor: AppColors.text3,
                     controller: _emailController,
                     labelText: 'Email',
                     hintText: 'Enter your Email',

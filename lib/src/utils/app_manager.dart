@@ -74,6 +74,7 @@ class AppManager extends GetxController {
   }
 
   String getCurrentUser() {
+    // return "1";
     return currentUserId.value;
   }
 

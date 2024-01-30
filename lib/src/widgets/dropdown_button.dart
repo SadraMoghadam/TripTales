@@ -89,7 +89,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           });
         },
         buttonStyleData: ButtonStyleData(
-          height: 50,
+          height: 40,
           width: 300,
           padding: const EdgeInsets.only(left: 14, right: 14),
           decoration: BoxDecoration(

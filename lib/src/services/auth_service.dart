@@ -34,7 +34,7 @@ class AuthService extends GetxService {
     try {
       print("0");
       final LoginResult result = await FacebookAuth.instance.login();
-      print("1");
+      print(_appManager.getCurrentUser());
       final facebookAuthCredential = FacebookAuthProvider.credential(result.accessToken!.token);
       print("2");
       final UserCredential authResult = await _auth.signInWithCredential(facebookAuthCredential);
@@ -126,7 +126,7 @@ class AuthService extends GetxService {
   Future<int?> updateUser(
       String uid, UserModel userData) async {
     try {
-      UserModel? user = await getUserById("1");
+      UserModel? user = await getUserById(_appManager.getCurrentUser());
       // UserModel newUser = UserModel(
       //   id: uid,
       //   email: userData.email,
@@ -137,7 +137,7 @@ class AuthService extends GetxService {
       //   bio: userData.bio,
       //   gender: userData.gender,
       // );
-      await _firestore.collection('users').doc("1").update({
+      await _firestore.collection('users').doc(_appManager.getCurrentUser()).update({
         'email': userData.email,
         'name': userData.name,
         'surname': userData.surname,
@@ -145,7 +145,7 @@ class AuthService extends GetxService {
         'phoneNumber': userData.phoneNumber,
         'bio': userData.bio,
         'gender': userData.gender,
-        'profileImage': "1" + ".png",
+        'profileImage': _appManager.getCurrentUser() + ".png",
       });
       print(user!.profileImage);
       print('User updated successfully.');
@@ -159,7 +159,7 @@ class AuthService extends GetxService {
   Future<bool> updateUserImage(File imageFile, String imagePath) async {
     try {
       await _storage.ref().child(imagePath).putFile(imageFile);
-      await _firestore.collection('users').doc("1").update(
+      await _firestore.collection('users').doc(_appManager.getCurrentUser()).update(
           {'profileImage': imagePath});
       print('Image uploaded successfully.');
       return Future.value(true);
@@ -171,7 +171,7 @@ class AuthService extends GetxService {
 
   Future<bool> updatePassword(String password) async {
     try {
-      await _firestore.collection('users').doc("1").update(
+      await _firestore.collection('users').doc(_appManager.getCurrentUser()).update(
           {'password': password});
       print('Password updated successfully.');
       return Future.value(true);

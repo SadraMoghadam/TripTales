@@ -6,12 +6,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
 
+import '../utils/app_manager.dart';
+
 class TaleService extends GetxService {
   // final AuthService _authService = Get.find<AuthService>();
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final CollectionReference _talesCollection =
       FirebaseFirestore.instance.collection('tales');
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final AppManager _appManager = Get.put(AppManager());
 
   @override
   void onInit() {
@@ -21,7 +24,7 @@ class TaleService extends GetxService {
   Future<int> addTale(TaleModel taleData, File imageFile) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<TaleModel?> currentTales = await getTales("1");
+      List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
       var contain =
           currentTales.where((element) => element!.name == taleData.name);
       if (!contain.isEmpty) {
@@ -32,7 +35,7 @@ class TaleService extends GetxService {
       DocumentReference taleReference =
           await _talesCollection.add(taleData.toJson());
 
-      await FirebaseFirestore.instance.collection('users').doc("1").update({
+      await FirebaseFirestore.instance.collection('users').doc(_appManager.getCurrentUser()).update({
         'talesFK': FieldValue.arrayUnion([taleReference.id]),
       });
 
@@ -47,9 +50,9 @@ class TaleService extends GetxService {
   Future<int> updateTale(TaleModel taleData) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<TaleModel?> currentTales = await getTales("1");
+      List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
-          await _firestore.collection('users').doc('1').get();
+          await _firestore.collection('users').doc(_appManager.getCurrentUser()).get();
       final userData = userDoc.data();
       print(userData);
       var contain =
@@ -75,9 +78,9 @@ class TaleService extends GetxService {
   Future<int> updateTaleLikeByName(String name, bool liked) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<TaleModel?> currentTales = await getTales("1");
+      List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
-          await _firestore.collection('users').doc('1').get();
+          await _firestore.collection('users').doc(_appManager.getCurrentUser()).get();
       final userData = userDoc.data();
       print(userData);
       var contain = currentTales.where((element) => element!.name == name);
@@ -104,9 +107,9 @@ class TaleService extends GetxService {
   Future<int> deleteTaleByName(String name) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<TaleModel?> currentTales = await getTales("1");
+      List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
-          await _firestore.collection('users').doc('1').get();
+          await _firestore.collection('users').doc(_appManager.getCurrentUser()).get();
       final userData = userDoc.data();
       print(userData);
       var contain = currentTales.where((element) => element!.name == name);
@@ -116,7 +119,7 @@ class TaleService extends GetxService {
             .collection('tales')
             .doc(taleId)
             .delete();
-        await FirebaseFirestore.instance.collection('users').doc("1").update({
+        await FirebaseFirestore.instance.collection('users').doc(_appManager.getCurrentUser()).update({
           'talesFK': FieldValue.arrayRemove([taleId]),
         });
 
@@ -250,9 +253,9 @@ class TaleService extends GetxService {
   }
 
   Future<String> getTaleId(String name) async {
-    List<TaleModel?> currentTales = await getTales("1");
+    List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
     final DocumentSnapshot<Map<String, dynamic>> userDoc =
-        await _firestore.collection('users').doc('1').get();
+        await _firestore.collection('users').doc(_appManager.getCurrentUser()).get();
     final userData = userDoc.data();
     print(userData);
     for (int i = 0; i < currentTales.length; i++) {

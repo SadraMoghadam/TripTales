@@ -269,7 +269,7 @@ class CardService extends GetxService {
                 await _storage.ref().child(cardData['name']).getDownloadURL();
             // print("video:      ${downloadURL}");
             CardModel cardModel = CardModel(
-              // id: '1',
+              // id: _appManager.getCurrentUser(),
               order: cardData['order'],
               type: type,
               transform: CustomMatrixUtils.jsonToMatrix4(cardData['transform']),

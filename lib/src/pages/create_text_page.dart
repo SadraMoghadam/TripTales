@@ -70,7 +70,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
       return;
     }
     CardModel textCardData = CardModel(
-      // id: "1",
+      // id: _appManager.getCurrentUser(),
       order: _appManager.getCardsNum(),
       type: MemoryCardType.text,
       transform: Matrix4.identity(),

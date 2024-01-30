@@ -49,7 +49,7 @@ class _TaleBuilderState extends State<TaleBuilder>
   //
   //   print("sadawdwadawwdafdw HHHHHHHHHHHEEEEEEEEEEEE");
   //   setState(() {
-  //     cards = _cardService.getCards("1");
+  //     cards = _cardService.getCards(_appManager.getCurrentUser());
   //   });
   //   // for(int i = 0; i <
   //   //     print(cards.then((value) => print(value.nam)));)
