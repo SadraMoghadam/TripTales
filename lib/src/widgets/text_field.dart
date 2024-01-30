@@ -11,7 +11,9 @@ class CustomTextField extends StatefulWidget {
   final Color? hintTextColor;
   final int maxLines;
   final IconData prefixIcon;
+  final IconData suffixIcon;
   final bool isPassword;
+  final bool isEditableOnOtherWindow;
   late final bool isPasswordVisible;
   final VoidCallback? onVisibilityPressed;
   final bool obscureText;
@@ -47,7 +49,9 @@ class CustomTextField extends StatefulWidget {
     this.hintTextColor = AppColors.text3,
     this.maxLines = 1,
     this.prefixIcon = Icons.person,
+    this.suffixIcon = Icons.visibility_off,
     this.isPassword = false,
+    this.isEditableOnOtherWindow = false,
     this.isPasswordVisible = false,
     this.onVisibilityPressed,
     this.obscureText = false,
@@ -104,7 +108,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           enableSuggestions: widget.enableSuggestions,
           decoration: InputDecoration(
             labelText: widget.labelText,
-            contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
             filled: widget.filled,
             fillColor: widget.fillColor,
             labelStyle: TextStyle(color: widget.labelTextColor),
@@ -123,7 +128,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     color: AppColors.main1,
                     onPressed: widget.onVisibilityPressed,
                   )
-                : null,
+                : widget.isEditableOnOtherWindow
+                    ? IconButton(
+                        icon: Icon(widget.suffixIcon),
+                        color: AppColors.main1,
+                        onPressed: widget.onVisibilityPressed,
+                      )
+                    : null,
             errorStyle: const TextStyle(
               fontSize: 10.0,
               height: 0.4,
@@ -161,7 +172,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
           onChanged: widget.onChanged,
           onTap: widget.onTap,
           inputFormatters: widget.inputFormatters,
-
         ));
   }
 }

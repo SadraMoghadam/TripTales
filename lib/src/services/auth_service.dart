@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/constants/error_messages.dart';
+import 'package:trip_tales/src/models/tale_model.dart';
 import '../constants/firestore_collections.dart';
 import '../models/user_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,6 +33,7 @@ class AuthService extends GetxService {
 
   Future<User?> signInWithFacebook() async {
     try {
+      signOut();
       print("0");
       final LoginResult result = await FacebookAuth.instance.login();
       print(_appManager.getCurrentUser());
@@ -41,7 +43,7 @@ class AuthService extends GetxService {
       final User? fbUser = authResult.user;
 
       if (fbUser != null) {
-        await _createUserDocument(fbUser.email!, _getFirstName(fbUser?.displayName), _getLastName(fbUser?.displayName));
+        await _createUserDocument(fbUser.uid, fbUser.email!, _getFirstName(fbUser?.displayName), _getLastName(fbUser?.displayName));
       }
       print(fbUser);
 
@@ -54,6 +56,7 @@ class AuthService extends GetxService {
 
   Future<User?> signInWithGoogle() async {
     try {
+      signOut();
       final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
       await googleSignInAccount!.authentication;
@@ -66,8 +69,8 @@ class AuthService extends GetxService {
       final UserCredential authResult = await _auth.signInWithCredential(credential);
       final User? googleUser = authResult.user;
 
-      if (googleUser != null) {
-        await _createUserDocument(googleUser.email!, _getFirstName(googleUser?.displayName), _getLastName(googleUser?.displayName));
+      if (googleUser != null && getUserByEmail(googleUser.email!) == null) {
+        await _createUserDocument(googleUser.uid, googleUser.email!, _getFirstName(googleUser?.displayName), _getLastName(googleUser?.displayName));
       }
       setUserDataOnLogin(googleUser!.uid);
       return googleUser;
@@ -90,11 +93,13 @@ class AuthService extends GetxService {
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
+      signOut();
       final UserCredential authResult = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       final User? signedInUser = authResult.user;
+      print("----------${signedInUser!.uid}");
       setUserDataOnLogin(signedInUser!.uid);
       return signedInUser;
     } catch (e) {
@@ -106,16 +111,18 @@ class AuthService extends GetxService {
   Future<User?> registerWithEmailAndPassword(
       String email, String password,String name, String surname, String birthDate) async {
     try {
+      signOut();
       final UserCredential authResult =
           await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       final User? registeredUser = authResult.user;
-
+      print("aaaaaa");
       if (registeredUser != null) {
-        await _createUserDocument(email, name, surname, birthDate: birthDate);
+        await _createUserDocument(registeredUser.uid, email, name, surname, birthDate: birthDate);
       }
+      print("aaaaaa");
       return registeredUser;
     } catch (e) {
       ErrorController.showSnackBarError(ErrorController.register);
@@ -185,11 +192,12 @@ class AuthService extends GetxService {
     await _auth.signOut();
   }
 
-  Future<void> _createUserDocument(String email, String name,
+  Future<void> _createUserDocument(String id, String email, String name,
       String surname, {String? birthDate}) async {
     CollectionReference users = _firestore.collection('users');
+    print("bbbbbbbb${id}");
     UserModel newUser = UserModel(
-      id: '',
+      id: id,
       email: email,
       name: name,
       surname: surname,
@@ -199,44 +207,85 @@ class AuthService extends GetxService {
       gender: '',
       profileImage: '',
     );
-    DocumentReference documentReference = await users.add(newUser.toJson());
-    String firebaseGeneratedId = documentReference.id;
-    await users.doc(firebaseGeneratedId).update({
-      'id': firebaseGeneratedId,
-    });
-    setUserDataOnLogin(firebaseGeneratedId);
+    print("bbbbbbbb${id}");
+    DocumentReference documentReference = users.doc(id);
+    await documentReference.set(newUser.toJson());
+    // await users.doc(id).update({
+    //   'id': id,
+    // });
+    setUserDataOnLogin(id);
   }
 
   Future<UserModel?> getUserById(String uid) async {
     try {
+      // if(uid == '' || uid == null){
+      //   // uid = _auth.currentUser!.uid;
+      //   _appManager.setCurrentUser(uid);
+      // }
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
           await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
+      print(uid);
       if (userData != null) {
         String downloadURL = '';
-        print("_____________${userData.containsKey('profileImage')}");
-        if(userData.containsKey('profileImage')){
+        if(userData.containsKey('profileImage') && userData['profileImage'] != ''){
           downloadURL = await _storage.ref().child(userData['profileImage']).getDownloadURL();
           _appManager.setProfileImage(downloadURL);
           print(downloadURL);
         }
         UserModel user = UserModel.fromJson(userData, downloadURL);
         return user;
-        //   id: uid,
-        //   email: userData['email'],
-        //   name: userData['name'],
-        //   surname: userData['surname'],
-        //   birthDate: userData['birthDate'],
-        //   bio: userData['bio'],
-        //   gender: userData['gender'],
-        //   phoneNumber: userData['phoneNumber'],
-        //   profileImage: userData['profileImage'],
-        //   talesFK: userData['profileImage'],
-        // );
       }
     } catch (e) {
-      // Get.snackbar('Error', e.toString());
+      print('Error get user: $e');
       return null;
+    }
+  }
+
+  Future<UserModel?> getUserByEmail(String email) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> usersSnapshot =
+      await _firestore.collection('users').where('email', isEqualTo: email).get();
+
+      if (usersSnapshot.docs.isNotEmpty) {
+        final userData = usersSnapshot.docs.first.data();
+        String downloadURL = '';
+
+        if (userData.containsKey('profileImage')) {
+          downloadURL =
+          await _storage.ref().child(userData['profileImage']).getDownloadURL();
+          _appManager.setProfileImage(downloadURL);
+        }
+
+        UserModel user = UserModel.fromJson(userData, downloadURL);
+        return user;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+
+  Future<List<UserModel>> getAllUsers() async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> usersSnapshot =
+      await _firestore.collection('users').get();
+
+      final List<UserModel> users = [];
+
+      for (final userDoc in usersSnapshot.docs) {
+        final userData = userDoc.data();
+
+        UserModel user = UserModel.fromJson(userData, '');
+        users.add(user);
+      }
+
+      return users;
+    } catch (e) {
+      print('Error: $e');
+      return [];
     }
   }
 
@@ -246,16 +295,16 @@ class AuthService extends GetxService {
       await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
       if (userData != null) {
+        print("=====================${uid}");
+        _appManager.setCurrentUser(uid);
         String downloadURL = '';
-        if(userData.containsKey('profileImage')){
+        if(userData.containsKey('profileImage') && userData['profileImage'] != ''){
           downloadURL = await _storage.ref().child(userData['profileImage']).getDownloadURL();
           _appManager.setProfileImage(downloadURL);
         }
-        print("=====================${currentUserId}");
-        _appManager.setCurrentUser(uid);
       }
     } catch (e) {
-      // Get.snackbar('Error', e.toString());
+      print('Error: $e');
     }
   }
 

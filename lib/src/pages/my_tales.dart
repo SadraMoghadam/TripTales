@@ -72,9 +72,9 @@ class _MyTalesPage extends State<MyTalesPage> {
       builder:
           (BuildContext context, AsyncSnapshot<List<TaleModel?>> snapshot) {
         if (snapshot.hasData) {
-          print("###########");
+          // print("###########");
           List<TaleModel?> data = snapshot.data!;
-          print(snapshot.data!);
+          // print(snapshot.data!);
           numOfTales = data.length;
           for (int i = 0; i < numOfTales; i++) {
             _widgetKeyList = List.generate(

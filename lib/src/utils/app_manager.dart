@@ -16,6 +16,15 @@ class AppManager extends GetxController {
   Rx<List<Tuple<String, Matrix4>>?> cardsTransform = Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
   Rx<bool> isCardsTransformChanged = Rx<bool>(false);
 
+  void reset(){
+    setCurrentUser('');
+    setCards(List.empty());
+    setCurrentTale('');
+    setIsCardsTransformChanged(false);
+    setProfileImage('');
+    cardsTransform.value = List.empty();
+  }
+
   void setCardTransform(String name, Matrix4 transform) {
     setIsCardsTransformChanged(true);
     if (cardsTransform.value == null) {
@@ -74,8 +83,8 @@ class AppManager extends GetxController {
   }
 
   String getCurrentUser() {
-    return "1";
-    // return currentUserId.value;
+    // return "1";
+    return currentUserId.value;
   }
 
   List<CardModel?>? getCards() {

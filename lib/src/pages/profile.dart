@@ -10,6 +10,8 @@ import 'package:trip_tales/src/services/auth_service.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
 import 'package:trip_tales/src/widgets/change_password.dart';
+import 'package:trip_tales/src/widgets/delete_user_dialog.dart';
+import 'package:trip_tales/src/widgets/dialog_popup.dart';
 import 'package:trip_tales/src/widgets/menu_bar_tale.dart';
 import '../constants/color.dart';
 import '../constants/error_messages.dart';
@@ -42,6 +44,7 @@ class _ProfilePageState extends State<ProfilePage>
   late final TextEditingController _birthDateController;
   late final TextEditingController _phoneNumberController;
   late final TextEditingController _bioController;
+  late final TextEditingController _passwordController;
 
   ImageProvider<Object>? _profileImage;
   late final AnimationController _controller;
@@ -93,6 +96,16 @@ class _ProfilePageState extends State<ProfilePage>
     }
   }
 
+  void logout() {
+    _authService.signOut();
+    _appManager.reset();
+    DialogPopup(text: "Logging out ...", duration: 2).show(context);
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    });
+
+  }
+
   void refreshPage() {
     Navigator.pushReplacement(
       context,
@@ -134,6 +147,8 @@ class _ProfilePageState extends State<ProfilePage>
     _birthDateController = TextEditingController()..addListener(() {});
     _phoneNumberController = TextEditingController()..addListener(() {});
     _bioController = TextEditingController()..addListener(() {});
+    _passwordController = TextEditingController()..addListener(() {});
+    _passwordController.text = "Password";
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 4));
     // _profileImage = const AssetImage('assets/images/profile_pic.png');
@@ -145,6 +160,9 @@ class _ProfilePageState extends State<ProfilePage>
     _surnameController.dispose();
     _emailController.dispose();
     _birthDateController.dispose();
+    _phoneNumberController.dispose();
+    _bioController.dispose();
+    _passwordController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -396,6 +414,32 @@ class _ProfilePageState extends State<ProfilePage>
                     validator: _validator.phoneNumberValidator,
                   ),
                   const SizedBox(height: 20),
+                CustomTextField(
+                  key: const Key('passwordCustomTextField'),
+                  controller: _passwordController,
+                  labelText: 'Password',
+                  hintText: 'Enter your password',
+                  prefixIcon: Icons.password,
+                  suffixIcon: Icons.edit,
+                  isEditableOnOtherWindow: true,
+                  isPassword: true,
+                  readOnly: true,
+                  isPasswordVisible: false,
+                  onVisibilityPressed: () => !readOnlyTextField ? showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const ChangePasswordDialog();
+                      }) : null,
+                  onTap: () => !readOnlyTextField ? showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const ChangePasswordDialog();
+                      }) : null,
+                  obscureText: true,
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.next,
+                ),
+                  const SizedBox(height: 20),
                   CustomButton(
                     key: const Key('editSaveCustomButtonKey'),
                     fontSize: 15,
@@ -418,22 +462,41 @@ class _ProfilePageState extends State<ProfilePage>
                     },
                   ),
                   const SizedBox(height: 20),
-                  CustomButton(
-                    key: const Key('changePasswordCustomButtonKey'),
-                    fontSize: 12,
-                    height: 12,
-                    width: 15,
-                    text: "Change Password",
-                    textColor: Colors.white,
-                    backgroundColor: AppColors.main3,
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const ChangePasswordDialog();
-                          });
-                    },
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CustomButton(
+                        key: const Key('LogoutCustomButtonKey'),
+                        fontSize: 12,
+                        height: 12,
+                        width: 15,
+                        text: "Logout",
+                        textColor: Colors.white,
+                        backgroundColor: AppColors.main3,
+                        onPressed: () {
+                          logout();
+                        },
+                      ),
+                      SizedBox(width: 20),
+                      CustomButton(
+                        key: const Key('DeleteAccountCustomButtonKey'),
+                        fontSize: 12,
+                        height: 12,
+                        width: 15,
+                        text: "Delete",
+                        textColor: Colors.white,
+                        backgroundColor: AppColors.main3,
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const DeleteAccountDialog();
+                              });
+                        },
+                      ),
+                  ],),
+
                   const SizedBox(height: 20),
                 ],
               ),

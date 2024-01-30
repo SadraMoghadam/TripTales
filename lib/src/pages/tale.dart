@@ -9,6 +9,7 @@ import 'package:trip_tales/src/pages/reorder_page.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
 import 'package:trip_tales/src/widgets/button_slider.dart';
+import 'package:trip_tales/src/widgets/dialog_popup.dart';
 import '../services/card_service.dart';
 import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
@@ -249,23 +250,7 @@ class _TalePageState extends State<TalePage> {
 
   void showSaveDialog() {
     if (_appManager.getIsCardsTransformChanged()) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return const AlertDialog(
-            content: Text(
-              'Cards positions are saved successfully',
-              style: TextStyle(
-                  color: AppColors.main1,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
-          );
-        },
-      );
-      Future.delayed(Duration(seconds: 1), () {
-        Navigator.of(context).pop();
-      });
+      DialogPopup(text: 'Cards positions are saved successfully', duration: 2).show(context);
     }
   }
 

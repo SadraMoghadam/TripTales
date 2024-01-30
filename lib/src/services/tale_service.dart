@@ -122,6 +122,7 @@ class TaleService extends GetxService {
         await FirebaseFirestore.instance.collection('users').doc(_appManager.getCurrentUser()).update({
           'talesFK': FieldValue.arrayRemove([taleId]),
         });
+        await _storage.refFromURL(contain.first!.imagePath).delete();
 
         print('Tale deleted successfully.');
         return 200;
