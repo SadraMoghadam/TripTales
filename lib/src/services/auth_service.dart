@@ -69,7 +69,7 @@ class AuthService extends GetxService {
       if (googleUser != null) {
         await _createUserDocument(googleUser.email!, _getFirstName(googleUser?.displayName), _getLastName(googleUser?.displayName));
       }
-
+      setUserDataOnLogin(googleUser!.uid);
       return googleUser;
     } catch (error) {
       ErrorController.showSnackBarError(ErrorController.loginGmail);
@@ -95,6 +95,7 @@ class AuthService extends GetxService {
         password: password,
       );
       final User? signedInUser = authResult.user;
+      setUserDataOnLogin(signedInUser!.uid);
       return signedInUser;
     } catch (e) {
       ErrorController.showSnackBarError(ErrorController.login);
@@ -192,7 +193,7 @@ class AuthService extends GetxService {
       email: email,
       name: name,
       surname: surname,
-      birthDate: birthDate!,
+      birthDate: '',
       phoneNumber: '',
       bio: '',
       gender: '',
@@ -203,6 +204,7 @@ class AuthService extends GetxService {
     await users.doc(firebaseGeneratedId).update({
       'id': firebaseGeneratedId,
     });
+    setUserDataOnLogin(firebaseGeneratedId);
   }
 
   Future<UserModel?> getUserById(String uid) async {
@@ -238,8 +240,28 @@ class AuthService extends GetxService {
     }
   }
 
+  void setUserDataOnLogin(String uid) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await _firestore.collection('users').doc(uid).get();
+      final userData = userDoc.data();
+      if (userData != null) {
+        String downloadURL = '';
+        if(userData.containsKey('profileImage')){
+          downloadURL = await _storage.ref().child(userData['profileImage']).getDownloadURL();
+          _appManager.setProfileImage(downloadURL);
+        }
+        print("=====================${currentUserId}");
+        _appManager.setCurrentUser(uid);
+      }
+    } catch (e) {
+      // Get.snackbar('Error', e.toString());
+    }
+  }
+
   String? get currentUserId {
-    return FirebaseAuth.instance.currentUser?.uid;
+    print(_auth.currentUser?.uid);
+    return _auth.currentUser?.uid;
   }
 
 }

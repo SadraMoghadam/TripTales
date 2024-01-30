@@ -187,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Container(
             padding: const EdgeInsets.all(3),
             decoration: const BoxDecoration(
-              color: AppColors.main3,
+              // color: AppColors.main3,
               border: Border(
                   top: BorderSide(color: AppColors.main2, width: 4),
                   right: BorderSide(color: AppColors.main2, width: 4),

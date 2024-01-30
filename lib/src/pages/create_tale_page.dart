@@ -10,6 +10,7 @@ import 'package:trip_tales/src/widgets/canvas_card.dart';
 import '../constants/color.dart';
 import '../constants/error_messages.dart';
 import '../controllers/media_controller.dart';
+import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 import '../utils/validator.dart';
 import '../widgets/button.dart';
@@ -25,6 +26,7 @@ class _CreateTalePage extends State<CreateTalePage> {
   late final TextEditingController _taleNameController;
   final MediaController mediaController = Get.put(MediaController());
   final TaleService _taleService = Get.find<TaleService>();
+  final AppManager _appManager = Get.put(AppManager());
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
   final _formKey = GlobalKey<FormState>();
@@ -44,6 +46,8 @@ class _CreateTalePage extends State<CreateTalePage> {
     }
     if(result == 200){
       _formKey.currentState?.save();
+      String taleId = await _taleService.getTaleId(_taleNameController.text);
+      _appManager.setCurrentTale(taleId);
       Navigator.of(context).pushNamed('/talePage');
     }
     else{
