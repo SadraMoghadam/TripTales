@@ -52,6 +52,9 @@ dependencies:
   google_sign_in: ^6.2.1
   flutter_facebook_auth: ^6.0.4
   mockito: ^5.4.4
+  google_maps_flutter: ^2.5.3
+  dio: ^5.4.0
+  flutter_polyline_points: ^2.0.0
 
 
 

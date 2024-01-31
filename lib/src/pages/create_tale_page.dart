@@ -1,12 +1,16 @@
+import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:trip_tales/src/constants/tale_background.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/widgets/canvas_card.dart';
+import 'package:trip_tales/src/widgets/map.dart';
 import '../constants/color.dart';
 import '../constants/error_messages.dart';
 import '../controllers/media_controller.dart';
@@ -29,7 +33,11 @@ class _CreateTalePage extends State<CreateTalePage> {
   final AppManager _appManager = Get.put(AppManager());
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
+  bool _isScrollingDisabled = false;
   final _formKey = GlobalKey<FormState>();
+  GoogleMapController? _mapController;
+  Set<Marker> _markers = HashSet<Marker>();
+  LatLng? _selectedLocation;
   int selectedIndex = 0;
 
   void _submit() async {
@@ -38,19 +46,21 @@ class _CreateTalePage extends State<CreateTalePage> {
       return;
     }
     print(selectedIndex.toString());
-    TaleModel taleData = TaleModel(name: _taleNameController.text, imagePath: '${_taleNameController.text}_TALE.png', canvas: selectedIndex.toString());
+    TaleModel taleData = TaleModel(
+        name: _taleNameController.text,
+        imagePath: '${_taleNameController.text}_TALE.png',
+        canvas: selectedIndex.toString());
     File? imageFile = mediaController.getImage();
     int result = 400;
-    if(imageFile != null) {
+    if (imageFile != null) {
       result = await _taleService.addTale(taleData, imageFile!);
     }
-    if(result == 200){
+    if (result == 200) {
       _formKey.currentState?.save();
       String taleId = await _taleService.getTaleId(_taleNameController.text);
       _appManager.setCurrentTale(taleId);
       Navigator.of(context).pushNamed('/talePage');
-    }
-    else{
+    } else {
       ErrorController.showSnackBarError(ErrorController.createTale);
       return;
     }
@@ -157,6 +167,10 @@ class _CreateTalePage extends State<CreateTalePage> {
             const SizedBox(
               height: 10,
             ),
+            buildGoogleMap(),
+            const SizedBox(
+              height: 20,
+            ),
             SizedBox(
               height: 50,
               child: CustomButton(
@@ -175,10 +189,149 @@ class _CreateTalePage extends State<CreateTalePage> {
           ],
         ),
       ),
-
     );
   }
 
+  // Widget buildGoogleMap() {
+  //   return Container(
+  //     height: 400, // Adjust the height as needed
+  //     width: 400,  // Adjust the width as needed
+  //     child: ClipRRect(
+  //       borderRadius: BorderRadius.circular(16.0),
+  //       child: InteractiveViewer(
+  //         boundaryMargin: EdgeInsets.all(double.infinity),
+  //         child: GoogleMap(
+  //           onMapCreated: _onMapCreated,
+  //           markers: _markers,
+  //           initialCameraPosition: CameraPosition(
+  //             target: LatLng(37.7749, -122.4194),
+  //             zoom: 12,
+  //           ),
+  //           onTap: _onMapTap,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+  //
+  // void _onMapCreated(GoogleMapController controller) {
+  //   setState(() {
+  //     _mapController = controller;
+  //   });
+  // }
+  //
+  // void _onMapTap(LatLng tappedPoint) {
+  //   setState(() {
+  //     _markers.add(
+  //       Marker(
+  //         markerId: MarkerId(tappedPoint.toString()),
+  //         position: tappedPoint,
+  //         infoWindow: InfoWindow(
+  //           title: 'Marker',
+  //           snippet: 'This is a custom marker',
+  //         ),
+  //       ),
+  //     );
+  //   });
+  // }
+
+  Widget buildGoogleMap() {
+    return Container(
+      height: 400,
+      width: 400,
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.main2),
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16.0),
+        child: Container(
+          height: 400,
+          child: GoogleMap(
+            onMapCreated: _onMapCreated,
+            markers: _markers,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(37.7749, -122.4194),
+              zoom: 12,
+            ),
+            onTap: _onMapTap,
+          ),
+        ),
+        // GoogleMap(
+        // onMapCreated: (controller) {
+        //   setState(() {
+        //     _mapController = controller;
+        //   });
+        // },
+        // onCameraMove: (CameraPosition position) {
+        //   // Update the selected location based on camera movement
+        //   setState(() {
+        //     _selectedLocation = position.target;
+        //   });
+        // },
+        // onTap: (latLng) {
+        //   // Handle the tapped location
+        //   setState(() {
+        //     _selectedLocation = latLng;
+        //   });
+        // },
+        //
+        //   onTap: (latLng) {
+        //     print("Map tapped at: $latLng");
+        //     showDialog(
+        //       context: context,
+        //       builder: (context) {
+        //         return MapScreen();
+        //       },
+        //     );
+        //   },
+        //   initialCameraPosition: CameraPosition(
+        //     target: LatLng(37.7749, -122.4194),
+        //     zoom: 15,
+        //   ),
+        //   markers: _selectedLocation != null
+        //       ? {
+        //           Marker(
+        //             markerId: MarkerId('selected'),
+        //             position: _selectedLocation!,
+        //             draggable: true,
+        //             onDragEnd: (dragEndPosition) {
+        //               setState(() {
+        //                 _selectedLocation = dragEndPosition;
+        //               });
+        //             },
+        //           ),
+        //         }
+        //       : {},
+        // ),
+      ),
+    );
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    setState(() {
+      _mapController = controller;
+    });
+  }
+
+  void _onMapTap(LatLng tappedPoint) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return MapScreen();
+      },
+    );
+    // setState(() {
+    //   _markers.add(Marker(
+    //     markerId: MarkerId(tappedPoint.toString()),
+    //     position: tappedPoint,
+    //     infoWindow: InfoWindow(
+    //       title: 'Marker',
+    //       snippet: 'This is a custom marker',
+    //     ),
+    //   ));
+    // });
+  }
 
   Widget buildCanvasList() {
     return SizedBox(
@@ -196,7 +349,8 @@ class _CreateTalePage extends State<CreateTalePage> {
                     selectedIndex = i; // Mark this item as selected
                   });
                 },
-                isSelected: selectedIndex == i, // Check if this item is selected
+                isSelected:
+                    selectedIndex == i, // Check if this item is selected
               ),
           ],
         ),
