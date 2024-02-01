@@ -15,6 +15,7 @@ import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';
 import '../widgets/button.dart';
+import '../widgets/map.dart';
 import '../widgets/text_field.dart';
 
 class CreateVideoPage extends StatefulWidget {
@@ -37,21 +38,25 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
     if (isValid == null || !isValid) {
       return;
     }
+    var cardLocation = _appManager.getChosenLocation();
     CardModel videoCardData = CardModel(
-        // id: _appManager.getCurrentUser(),
-        order: _appManager.getCardsNum(),
-        type: MemoryCardType.video,
-        transform: Matrix4.identity(),
-        name: '${_nameController.text}.mp4');
-    int result = await _cardService.addVideoCard(
-        _appManager.getCurrentTale(), videoCardData, mediaController.getVideo()!);
+      // id: _appManager.getCurrentUser(),
+      order: _appManager.getCardsNum(),
+      type: MemoryCardType.video,
+      transform: Matrix4.identity(),
+      name: '${_nameController.text}.mp4',
+      locationLatitude: cardLocation!.item1,
+      locationLongitude: cardLocation!.item2,
+    );
+    int result = await _cardService.addVideoCard(_appManager.getCurrentTale(),
+        videoCardData, mediaController.getVideo()!);
     if (result == 200) {
       Timer(Duration(seconds: 2), () {
         _formKey.currentState?.save();
         Navigator.of(context).pop(true);
       });
     } else {
-      ErrorController.showSnackBarError(ErrorController.createImage);
+      ErrorController.showSnackBarError(ErrorController.createVideo);
       return;
     }
   }
@@ -88,6 +93,13 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       content: buildBody(device),
       actions: <Widget>[
+        CustomButton(
+            height: 5,
+            width: 100,
+            fontSize: 12,
+            text: "Submit",
+            textColor: Colors.white,
+            onPressed: () => _submit()),
         CustomButton(
             height: 5,
             width: 30,
@@ -138,15 +150,27 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
                 child: Center(
                     child: CustomButton(
                         height: 20,
-                        width: 200,
-                        text: "Submit",
+                        width: 100,
+                        fontSize: 15,
+                        backgroundColor: AppColors.main1,
+                        icon: Icons.location_on,
+                        text: "Location",
                         textColor: Colors.white,
-                        onPressed: () => _submit())),
-              )
+                        onPressed: () => _onMapTap())),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void _onMapTap() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const MapScreen();
+      },
     );
   }
 }

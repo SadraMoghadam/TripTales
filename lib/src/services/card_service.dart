@@ -93,7 +93,7 @@ class CardService extends GetxService {
       if (!contain.isEmpty) {
         return 400;
       }
-      // print("__________________${cardData.toJsonTextCard()}");
+      print("__________________${cardData.toJsonTextCard()}");
       DocumentReference cardReference = await _cardsCollection.add(
         cardData.toJsonTextCard()
       );
@@ -175,6 +175,8 @@ class CardService extends GetxService {
             fontStyle: currentCard.fontStyle,
             fontWeight: currentCard.fontWeight,
             fontSize: currentCard.fontSize,
+            locationLatitude: currentCard.locationLatitude,
+            locationLongitude: currentCard.locationLongitude,
           );
           await _firestore.collection('cards').doc(cardId).update(
               newCard.toJsonTextCard()
@@ -189,6 +191,8 @@ class CardService extends GetxService {
             transform: transform,
             path: currentCard.path,
             name: currentCard.name,
+            locationLatitude: currentCard.locationLatitude,
+            locationLongitude: currentCard.locationLongitude,
             // text: currentCard.text,
             // textColor: currentCard.textColor,
             // textBackgroundColor: currentCard.textBackgroundColor,
@@ -283,6 +287,8 @@ class CardService extends GetxService {
               // fontStyle: FontStyle.normal,
               // fontWeight: FontWeight.normal,
               fontSize: 0,
+              locationLatitude: cardData['locationLatitude'],
+              locationLongitude: cardData['locationLongitude'],
             );
             cards.add(cardModel);
           } else if (type == MemoryCardType.text) {
@@ -303,6 +309,8 @@ class CardService extends GetxService {
               fontStyle: TextUtils.textToFontStyle(cardData['fontStyle']),
               fontWeight: TextUtils.textToFontWeight(cardData['fontWeight']),
               fontSize: cardData['fontSize'],
+              locationLatitude: cardData['locationLatitude'],
+              locationLongitude: cardData['locationLongitude'],
             );
             cards.add(cardModel);
           }

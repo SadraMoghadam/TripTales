@@ -34,17 +34,17 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
     _requestLocationPermission();
     _getCurrentLocation();
-    _startLocationUpdates();
+    // _startLocationUpdates();
     _initMarker();
   }
 
   @override
   void dispose() {
     super.dispose();
+    _disposeLocationUpdates();
     mapController.dispose();
     searchController.dispose();
     // _appManager.dispose();
-    _disposeLocationUpdates();
   }
 
   void _disposeLocationUpdates() {
@@ -266,17 +266,17 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  void _startLocationUpdates() {
-    var location = loc.Location();
-    location.onLocationChanged.listen((loc.LocationData locationData) {
-      setState(() {
-        currentLocation = LatLng(
-          locationData.latitude!,
-          locationData.longitude!,
-        );
-      });
-    });
-  }
+  // void _startLocationUpdates() {
+  //   var location = loc.Location();
+  //   location.onLocationChanged.listen((loc.LocationData locationData) {
+  //     setState(() {
+  //       currentLocation = LatLng(
+  //         locationData.latitude!,
+  //         locationData.longitude!,
+  //       );
+  //     });
+  //   });
+  // }
 
   Future<void> _searchLocation(String locationName) async {
     try {

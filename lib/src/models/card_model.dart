@@ -21,6 +21,8 @@ class CardModel {
   final FontStyle fontStyle;
   final FontWeight fontWeight;
   final double fontSize;
+  final double? locationLatitude;
+  final double? locationLongitude;
 
   CardModel({
     // required this.id,
@@ -38,6 +40,8 @@ class CardModel {
     this.fontStyle = FontStyle.normal,
     this.fontWeight = FontWeight.normal,
     this.fontSize = 16,
+    this.locationLatitude,
+    this.locationLongitude,
   });
 
   void setOrder(int order){
@@ -63,6 +67,8 @@ class CardModel {
       // 'fontStyle': '',
       // 'fontWeight': '',
       // 'fontSize': '',
+      'locationLatitude': locationLatitude,
+      'locationLongitude': locationLongitude,
     };
   }
 
@@ -81,52 +87,8 @@ class CardModel {
       'fontStyle': fontStyle.name,
       'fontWeight': TextUtils.fontWeightToText(fontWeight),
       'fontSize': fontSize,
+      'locationLatitude': locationLatitude,
+      'locationLongitude': locationLongitude,
     };
   }
 }
-
-
-
-
-
-
-
-//
-// class ImageCardModel extends CardModel {
-//   final String name;
-//   final String path;
-//   ImageCardModel({
-//     required super.id,
-//     required super.order,
-//     required super.type,
-//     required super.transform,
-//     this.path = "",
-//     this.name = "image",
-//   });
-//
-//
-// }
-//
-//
-// class VideoCardModel extends CardModel {
-//   final String name;
-//   final String path;
-//   VideoCardModel({
-//     required super.id,
-//     required super.order,
-//     required super.type,
-//     required super.transform,
-//     this.path = "",
-//     this.name = "image",
-//   });
-//
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'order': order,
-//       'type': type.name,
-//       'transform': CustomMatrixUtils.matrix4ToJson(transform),
-//       'path': name,
-//       'name': name,
-//     };
-//   }
-// }

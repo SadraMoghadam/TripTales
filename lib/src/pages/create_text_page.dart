@@ -70,6 +70,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
     if (isValid == null || !isValid) {
       return;
     }
+    var cardLocation = _appManager.getChosenLocation();
     CardModel textCardData = CardModel(
       // id: _appManager.getCurrentUser(),
       order: _appManager.getCardsNum(),
@@ -83,13 +84,15 @@ class _CreateTextPageState extends State<CreateTextPage> {
       fontStyle: TextUtils.textToFontStyle(_selectedFontStyle),
       fontWeight: TextUtils.textToFontWeight(_selectedFontWeight),
       fontSize: _fontSize,
+      locationLatitude: cardLocation!.item1,
+      locationLongitude: cardLocation!.item2,
     );
     int result = await _cardService.addTextCard(_appManager.getCurrentTale(), textCardData);
     if (result == 200) {
       _formKey.currentState?.save();
       Navigator.of(context).pop(true);
     } else {
-      ErrorController.showSnackBarError(ErrorController.createImage);
+      ErrorController.showSnackBarError(ErrorController.createText);
       return;
     }
   }
@@ -157,7 +160,6 @@ class _CreateTextPageState extends State<CreateTextPage> {
     _textController.dispose();
     _colorController.dispose();
     _backgroundColorController.dispose();
-    // _appManager.dispose();
 
   }
 
@@ -399,13 +401,8 @@ class _CreateTextPageState extends State<CreateTextPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return MapScreen();
+        return const MapScreen();
       },
-    ).then((result) {
-      // Check if the widget is still mounted before calling setState
-      if (mounted) {
-        // Process the result or perform any other setState operations
-      }
-    });
+    );
   }
 }
