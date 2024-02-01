@@ -13,6 +13,7 @@ import '../constants/color.dart';
 import '../controllers/media_controller.dart';
 import '../utils/device_info.dart';
 import '../widgets/button.dart';
+import '../widgets/map.dart';
 import '../widgets/text_field.dart';
 
 class CreateImagePage extends StatefulWidget {
@@ -80,6 +81,13 @@ class _CreateImagePageState extends State<CreateImagePage> {
       actions: <Widget>[
         CustomButton(
             height: 5,
+            width: 100,
+            fontSize: 12,
+            text: "Submit",
+            textColor: Colors.white,
+            onPressed: () => _submit()),
+        CustomButton(
+            height: 5,
             width: 30,
             fontSize: 12,
             backgroundColor: AppColors.main3,
@@ -115,7 +123,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
                     ),
                   )),
               Flexible(
-                flex: 11,
+                flex: 8,
                 fit: FlexFit.tight,
                 child: Container(
                   height: 310,
@@ -123,20 +131,32 @@ class _CreateImagePageState extends State<CreateImagePage> {
                 ),
               ),
               Flexible(
-                flex: 2,
+                flex: 4,
                 fit: FlexFit.tight,
                 child: Center(
                     child: CustomButton(
                         height: 20,
-                        width: 200,
-                        text: "Submit",
+                        width: 100,
+                        fontSize: 15,
+                        backgroundColor: AppColors.main1,
+                        icon: Icons.location_on,
+                        text: "Location",
                         textColor: Colors.white,
-                        onPressed: () => _submit())),
+                        onPressed: () => _onMapTap())),
               )
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void _onMapTap() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return MapScreen();
+      },
     );
   }
 }

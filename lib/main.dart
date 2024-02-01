@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         '/favoriteTalesPage': (context) => FavoriteTalesPage(),
         '/profilePage': (context) => ProfilePage(),
       },
-      initialRoute: '/createTalePage',
+      initialRoute: '/customMenu',
       initialBinding: BindingsBuilder(() {
         Get.put(AuthService(), permanent: true);
         Get.put(AuthController(), permanent: true);

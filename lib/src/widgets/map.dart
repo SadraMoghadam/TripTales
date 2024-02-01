@@ -1,15 +1,21 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:trip_tales/src/utils/app_manager.dart';
 
 import '../constants/color.dart';
 import 'button.dart';
 
 class MapScreen extends StatefulWidget {
+  final bool multipleLoc;
+
+  const MapScreen({super.key, this.multipleLoc = false});
+
   @override
   _MapScreenState createState() => _MapScreenState();
 }
@@ -17,7 +23,9 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
   Set<Marker> markers = HashSet<Marker>();
-  late LatLng currentLocation = LatLng(37.7749, -122.4194); // Default center (San Francisco)
+  final AppManager _appManager = Get.put(AppManager());
+  late LatLng currentLocation = LatLng(37.7749, -122.4194);
+  late LatLng? zoomLocation;
 
   TextEditingController searchController = TextEditingController();
 
@@ -27,6 +35,21 @@ class _MapScreenState extends State<MapScreen> {
     _requestLocationPermission();
     _getCurrentLocation();
     _startLocationUpdates();
+    _initMarker();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    mapController.dispose();
+    searchController.dispose();
+    // _appManager.dispose();
+    _disposeLocationUpdates();
+  }
+
+  void _disposeLocationUpdates() {
+    var location = loc.Location();
+    location.onLocationChanged.listen(null)?.cancel();
   }
 
   @override
@@ -37,74 +60,90 @@ class _MapScreenState extends State<MapScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(16.0)),
       ),
-      content: Container(
-        height: 650,
-        width: 600,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: TextFormField(
-                      controller: searchController,
-                      onChanged: (value) {
-                        // Implement search suggestions here if needed
-                      },
-                      onFieldSubmitted: (value) {
-                        _searchLocation(value);
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Search location...',
-                        suffixIcon: Icon(Icons.search),
+      content: SingleChildScrollView(
+        child: Container(
+          height: 650,
+          width: 600,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: TextFormField(
+                        controller: searchController,
+                        onChanged: (value) {
+                          // Implement search suggestions here if needed
+                        },
+                        onFieldSubmitted: (value) {
+                          _searchLocation(value);
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Search location...',
+                          suffixIcon: Icon(Icons.search),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            Stack(
-              children: [
-                Container(
-                  height: 530,
-                  width: 600,
-                  margin: EdgeInsets.all(0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.main2),
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16.0),
-                    child: GoogleMap(
-                      onMapCreated: _onMapCreated,
-                      markers: markers,
-                      initialCameraPosition: CameraPosition(
-                        target: currentLocation,
-                        zoom: 12.0,
-                      ),
-                      onTap: _onMapTap,
-                      myLocationButtonEnabled: true,
-                      myLocationEnabled: true,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            const Text(
-              'Tap on the map to add a marker',
-              style: TextStyle(
-                color: AppColors.main2,
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
+                ],
               ),
-            ),
-          ],
+              SizedBox(height: 16),
+              Stack(
+                children: [
+                  Container(
+                    height: 530,
+                    width: 600,
+                    margin: EdgeInsets.all(0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.main2),
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: GoogleMap(
+                        onMapCreated: _onMapCreated,
+                        markers: markers,
+                        initialCameraPosition: CameraPosition(
+                          target: currentLocation,
+                          zoom: 12.0,
+                        ),
+                        onTap: _onMapTap,
+                        myLocationButtonEnabled: true,
+                        myLocationEnabled: true,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              const Text(
+                'Tap on the map to add a marker',
+                style: TextStyle(
+                  color: AppColors.main2,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       actions: <Widget>[
+        CustomButton(
+          height: 5,
+          width: 20,
+          padding: 10,
+          fontSize: 12,
+          backgroundColor: AppColors.main2,
+          text: "choose",
+          textColor: Colors.white,
+          onPressed: () => {
+            _appManager.setChosenLocation(markers.first.position),
+            // print("#########################################################################################################################################################################################${_appManager.getChosenLocation()!.item1}"),
+            Navigator.of(context).pop(true),
+          },
+        ),
         CustomButton(
             height: 5,
             width: 20,
@@ -121,27 +160,71 @@ class _MapScreenState extends State<MapScreen> {
   void _onMapCreated(GoogleMapController controller) {
     setState(() {
       mapController = controller;
+      _getCurrentLocation();
+      _zoomToCurrentLocation();
     });
+  }
+
+  void _initMarker() {
+    var chosenLoc = _appManager.getChosenLocation();
+    print("================================================================================================================================================================================================================$chosenLoc");
+    if (chosenLoc != null) {
+      print("=============================================================================================================================================================================================================================$chosenLoc");
+      LatLng chosenLocLatLng = LatLng(
+        chosenLoc!.item1 ?? 0,
+        chosenLoc!.item2 ?? 0,
+      );
+      setState(() {
+        if (!markers.isEmpty) {
+          markers.clear();
+        }
+        markers.add(Marker(
+          markerId: MarkerId(chosenLocLatLng.toString()),
+          position: chosenLocLatLng,
+          infoWindow: const InfoWindow(
+            title: 'Marker',
+            snippet: 'This is a custom marker',
+          ),
+        ));
+      });
+    }
   }
 
   void _onMapTap(LatLng tappedPoint) {
-    setState(() {
-      markers.add(Marker(
-        markerId: MarkerId(tappedPoint.toString()),
-        position: tappedPoint,
-        infoWindow: InfoWindow(
-          title: 'Marker',
-          snippet: 'This is a custom marker',
-        ),
-      ));
-    });
+    if (widget.multipleLoc) {
+      setState(() {
+        markers.add(Marker(
+          markerId: MarkerId(tappedPoint.toString()),
+          position: tappedPoint,
+          infoWindow: const InfoWindow(
+            title: 'Marker',
+            snippet: 'This is a custom marker',
+          ),
+        ));
+      });
+    } else {
+      setState(() {
+        if (!markers.isEmpty) {
+          markers.clear();
+        }
+        markers.add(Marker(
+          markerId: MarkerId(tappedPoint.toString()),
+          position: tappedPoint,
+          infoWindow: const InfoWindow(
+            title: 'Marker',
+            snippet: 'This is a custom marker',
+          ),
+        ));
+      });
+    }
   }
 
   void _zoomToCurrentLocation() {
-    if (currentLocation != null) {
+    if (zoomLocation != null) {
+      print("------------------------$zoomLocation");
       mapController.animateCamera(
         CameraUpdate.newLatLngZoom(
-          currentLocation,
+          zoomLocation!,
           15.0,
         ),
       );
@@ -156,17 +239,30 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _getCurrentLocation() async {
-    var location = loc.Location();
-    try {
-      var currentLocationData = await location.getLocation();
-      setState(() {
-        currentLocation = LatLng(
-          currentLocationData.latitude!,
-          currentLocationData.longitude!,
-        );
-      });
-    } catch (e) {
-      print('Error getting location: $e');
+    if (mounted) {
+      var chosenLoc = _appManager.getChosenLocation();
+      if (chosenLoc == null) {
+        var location = loc.Location();
+        try {
+          var currentLocationData = await location.getLocation();
+          setState(() {
+            currentLocation = LatLng(
+              currentLocationData.latitude!,
+              currentLocationData.longitude!,
+            );
+            zoomLocation = currentLocation;
+          });
+        } catch (e) {
+          print('Error getting location: $e');
+        }
+      } else {
+        setState(() {
+          zoomLocation = LatLng(
+            chosenLoc.item1 ?? 0,
+            chosenLoc.item2 ?? 0,
+          );
+        });
+      }
     }
   }
 

@@ -14,6 +14,7 @@ import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';
 import '../widgets/button.dart';
 import '../widgets/dropdown_button.dart';
+import '../widgets/map.dart';
 import '../widgets/text_field.dart';
 
 class CreateTextPage extends StatefulWidget {
@@ -152,6 +153,12 @@ class _CreateTextPageState extends State<CreateTextPage> {
   @override
   void dispose() {
     super.dispose();
+    _nameController.dispose();
+    _textController.dispose();
+    _colorController.dispose();
+    _backgroundColorController.dispose();
+    // _appManager.dispose();
+
   }
 
   @override
@@ -172,6 +179,13 @@ class _CreateTextPageState extends State<CreateTextPage> {
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       content: buildBody(device),
       actions: <Widget>[
+        CustomButton(
+            height: 5,
+            width: 100,
+            fontSize: 12,
+            text: "Submit",
+            textColor: Colors.white,
+            onPressed: () => _submit()),
         CustomButton(
             height: 5,
             width: 30,
@@ -366,15 +380,32 @@ class _CreateTextPageState extends State<CreateTextPage> {
                 child: Center(
                     child: CustomButton(
                         height: 20,
-                        width: 200,
-                        text: "Submit",
+                        width: 100,
+                        fontSize: 15,
+                        backgroundColor: AppColors.main1,
+                        icon: Icons.location_on,
+                        text: "Location",
                         textColor: Colors.white,
-                        onPressed: () => _submit())),
+                        onPressed: () => _onMapTap())),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _onMapTap() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return MapScreen();
+      },
+    ).then((result) {
+      // Check if the widget is still mounted before calling setState
+      if (mounted) {
+        // Process the result or perform any other setState operations
+      }
+    });
   }
 }

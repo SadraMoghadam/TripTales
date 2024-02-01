@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trip_tales/src/models/card_model.dart';
 
@@ -14,6 +15,7 @@ class AppManager extends GetxController {
   Rx<String> currentUserId = Rx<String>("");
   Rx<String> profileImage = Rx<String>("");
   Rx<List<Tuple<String, Matrix4>>?> cardsTransform = Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
+  Rx<Tuple<double, double>?> chosenLocation = Rx<Tuple<double, double>?>(null);
   Rx<bool> isCardsTransformChanged = Rx<bool>(false);
 
   void reset(){
@@ -23,6 +25,14 @@ class AppManager extends GetxController {
     setIsCardsTransformChanged(false);
     setProfileImage('');
     cardsTransform.value = List.empty();
+  }
+
+  void setChosenLocation(LatLng loc) {
+    if(loc == null){
+      chosenLocation.value = null;
+      return;
+    }
+    chosenLocation.value = Tuple(loc.latitude, loc.longitude);
   }
 
   void setCardTransform(String name, Matrix4 transform) {
@@ -66,6 +76,10 @@ class AppManager extends GetxController {
   // void setCardByName(CardModel? card) {
   //   userCards.value![userCards.value!.indexWhere((element) => element!.name == card!.name)] = card!;
   // }
+  Tuple<double, double>? getChosenLocation() {
+    return chosenLocation.value;
+  }
+
   List<Tuple<String, Matrix4>>? getCardsTransform() {
     return cardsTransform.value;
   }
