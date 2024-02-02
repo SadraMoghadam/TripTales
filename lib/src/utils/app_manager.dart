@@ -54,6 +54,9 @@ class AppManager extends GetxController {
       // "transform1" doesn't exist, add it to the list
       cardsTransform.value!.add(Tuple(name, transform));
     }
+    var card = userCards.value!.firstWhere((element) => element!.name == name);
+    card!.transform = transform;
+    userCards.value![userCards.value!.indexOf(card)] = card;
   }
 
   void setIsCardsTransformChanged(bool isChanged) {

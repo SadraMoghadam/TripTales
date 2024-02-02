@@ -101,9 +101,8 @@ class _ProfilePageState extends State<ProfilePage>
     _appManager.reset();
     DialogPopup(text: "Logging out ...", duration: 2).show(context);
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => route.isFirst);
     });
-
   }
 
   void refreshPage() {
@@ -254,18 +253,18 @@ class _ProfilePageState extends State<ProfilePage>
                               _controller.forward();
                               return AlertDialog(
                                 content: Lottie.asset(
-                                    "assets/animations/loading.json",
-                                    width: 400,
-                                    height: 400,
-                                    controller: _controller,
-                                  ),
+                                  "assets/animations/loading.json",
+                                  width: 400,
+                                  height: 400,
+                                  controller: _controller,
+                                ),
                               );
                             });
-                              Future.delayed(Duration(seconds: 3), () {
-                                print("hiii");
-                                Navigator.of(context).pop();
-                                refreshPage();
-                            });
+                        Future.delayed(Duration(seconds: 3), () {
+                          print("hiii");
+                          Navigator.of(context).pop();
+                          refreshPage();
+                        });
                       }),
                     });
                 //  _changeProfilePicture(); // Invoke method to change profile picture
@@ -414,31 +413,35 @@ class _ProfilePageState extends State<ProfilePage>
                     validator: _validator.phoneNumberValidator,
                   ),
                   const SizedBox(height: 20),
-                CustomTextField(
-                  key: const Key('passwordCustomTextField'),
-                  controller: _passwordController,
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                  prefixIcon: Icons.password,
-                  suffixIcon: Icons.edit,
-                  isEditableOnOtherWindow: true,
-                  isPassword: true,
-                  readOnly: true,
-                  isPasswordVisible: false,
-                  onVisibilityPressed: () => !readOnlyTextField ? showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const ChangePasswordDialog();
-                      }) : null,
-                  onTap: () => !readOnlyTextField ? showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const ChangePasswordDialog();
-                      }) : null,
-                  obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.next,
-                ),
+                  CustomTextField(
+                    key: const Key('passwordCustomTextField'),
+                    controller: _passwordController,
+                    labelText: 'Password',
+                    hintText: 'Enter your password',
+                    prefixIcon: Icons.password,
+                    suffixIcon: Icons.edit,
+                    isEditableOnOtherWindow: true,
+                    isPassword: true,
+                    readOnly: true,
+                    isPasswordVisible: false,
+                    onVisibilityPressed: () => !readOnlyTextField
+                        ? showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const ChangePasswordDialog();
+                            })
+                        : null,
+                    onTap: () => !readOnlyTextField
+                        ? showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const ChangePasswordDialog();
+                            })
+                        : null,
+                    obscureText: true,
+                    keyboardType: TextInputType.visiblePassword,
+                    textInputAction: TextInputAction.next,
+                  ),
                   const SizedBox(height: 20),
                   CustomButton(
                     key: const Key('editSaveCustomButtonKey'),
@@ -492,11 +495,13 @@ class _ProfilePageState extends State<ProfilePage>
                               context: context,
                               builder: (context) {
                                 return const DeleteAccountDialog();
+                              }).then((value) => () {
+                                if (value == true) logout();
                               });
                         },
                       ),
-                  ],),
-
+                    ],
+                  ),
                   const SizedBox(height: 20),
                 ],
               ),

@@ -18,8 +18,9 @@ import '../widgets/text_field.dart';
 
 class DeleteItemDialog extends StatefulWidget {
   final String name;
+  final bool isTale;
 
-  const DeleteItemDialog({super.key, required this.name});
+  const DeleteItemDialog({super.key, required this.name, this.isTale = false});
 
   @override
   _DeleteItemDialogState createState() => _DeleteItemDialogState();
@@ -31,8 +32,14 @@ class _DeleteItemDialogState extends State<DeleteItemDialog> {
   final TaleService _taleService = Get.find<TaleService>();
 
   void _submit() async {
-    int result = await _cardService.deleteCardByName(_appManager.getCurrentTaleId(), widget.name);
-    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations());
+    int result;
+    if(widget.isTale){
+      result = await _taleService.deleteTaleByName(widget.name);
+    }
+    else{
+      result = await _cardService.deleteCardByName(_appManager.getCurrentTaleId(), widget.name);
+      _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations());
+    }
     if (result == 200) {
       Navigator.of(context).pop(true);
     } else {
@@ -55,14 +62,14 @@ class _DeleteItemDialogState extends State<DeleteItemDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       // shadowColor: Colors.red,
-      title: const Text(
-        'Delete Card',
-        style: TextStyle(
+      title: Text(
+        widget.isTale ? 'Delete Tale' : 'Delete Card',
+        style: const TextStyle(
             color: AppColors.main1, fontSize: 25, fontWeight: FontWeight.w700),
       ),
-      content: const Text(
-        'Are you sure you want to delete this card?',
-        style: TextStyle(
+      content: Text(
+        widget.isTale ? 'Are you sure you want to delete this tale?' : 'Are you sure you want to delete this card?',
+        style: const TextStyle(
             color: AppColors.text1, fontSize: 17, fontWeight: FontWeight.normal),
       ),
       actions: [

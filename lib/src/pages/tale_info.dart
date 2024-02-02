@@ -19,6 +19,7 @@ import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 import '../utils/validator.dart';
 import '../widgets/button.dart';
+import '../widgets/delete_item_dialog.dart';
 import '../widgets/text_field.dart';
 import '../widgets/app_bar_tale.dart';
 
@@ -43,13 +44,15 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     super.initState();
     _currentTale = _appManager.getCurrentTale();
     _mapLocations = _appManager.getCurrentTaleLocations();
-    for(int i = 0; i < _mapLocations!.length; i++){
+    print("-_-_-_--_---_--_-_---$_mapLocations");
+    for (int i = 0; i < _mapLocations!.length; i++) {
       _markers.add(Marker(
         markerId: MarkerId(_mapLocations![i]!.toString()),
         position: _mapLocations![i]!.item2,
         infoWindow: InfoWindow(
           title: _mapLocations![i]!.item1,
-          snippet: 'The location where this memory ("${_mapLocations![i]!.item1}") was made',
+          snippet:
+              'The location where this memory ("${_mapLocations![i]!.item1}") was made',
         ),
       ));
     }
@@ -90,91 +93,100 @@ class _TaleInfoPage extends State<TaleInfoPage> {
   }
 
   Widget buildScreen() {
-      return Container(
-        color: AppColors.main1.shade300,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              _currentTale!.name,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold),
+    return Container(
+      color: AppColors.main1.shade300,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            _currentTale!.name,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 50, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Container(
+            height: 200,
+            width: 200,
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.main2, width: 5),
+              borderRadius: BorderRadius.circular(16.0),
             ),
-            const SizedBox(
-              height: 30,
-            ),
-            Container(
-              height: 200,
-              width: 200,
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.main2, width: 5),
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  _currentTale!.imagePath,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                _currentTale!.imagePath,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
               ),
             ),
-
-            const SizedBox(
-              height: 20,
-            ),
-            buildGoogleMap(),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 40,
-                  width: 150,
-                  child: CustomButton(
-                    key: const Key('editTaleCustomButtonKey'),
-                    fontSize: 18,
-                    padding: 2,
-                    backgroundColor: AppColors.main2,
-                    textColor: Colors.white,
-                    text: "Edit",
-                    onPressed: _onEditButtonClick,
-                  ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          buildGoogleMap(),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 40,
+                width: 150,
+                child: CustomButton(
+                  key: const Key('editTaleCustomButtonKey'),
+                  fontSize: 18,
+                  padding: 2,
+                  backgroundColor: AppColors.main2,
+                  textColor: Colors.white,
+                  text: "Edit",
+                  onPressed: _onEditButtonClick,
                 ),
-                const SizedBox(
-                  width: 10,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              SizedBox(
+                height: 40,
+                width: 150,
+                child: CustomButton(
+                  key: const Key('deleteTaleCustomButtonKey'),
+                  fontSize: 18,
+                  padding: 2,
+                  backgroundColor: AppColors.main3,
+                  textColor: Colors.white,
+                  text: "Delete",
+                  onPressed: _onDeleteButtonClick,
                 ),
-                SizedBox(
-                  height: 40,
-                  width: 150,
-                  child: CustomButton(
-                    key: const Key('deleteTaleCustomButtonKey'),
-                    fontSize: 18,
-                    padding: 2,
-                    backgroundColor: AppColors.main3,
-                    textColor: Colors.white,
-                    text: "Delete",
-                    onPressed: _onEditButtonClick,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
     );
   }
 
   Widget _onEditButtonClick() {
     return Container();
+  }
+
+  void _onDeleteButtonClick() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DeleteItemDialog(
+            name: _currentTale!.name,
+            isTale: true,
+          );
+        }).then((value) => setState(() {
+          Navigator.of(context).pushNamedAndRemoveUntil('/customMenu', (route) => route.isFirst);
+    }));
   }
 
   Widget buildGoogleMap() {
@@ -193,15 +205,15 @@ class _TaleInfoPage extends State<TaleInfoPage> {
           child: GoogleMap(
             onMapCreated: _onMapCreated,
             markers: _markers,
-            initialCameraPosition: _mapLocations!.length == 0 ?
-            const CameraPosition(
-              target: LatLng(37.7749, -122.4194),
-              zoom: 12,
-            ) :
-            CameraPosition(
-              target: _markers!.first.position,
-              zoom: 12,
-            ),
+            initialCameraPosition: _mapLocations!.length == 0
+                ? const CameraPosition(
+                    target: LatLng(37.7749, -122.4194),
+                    zoom: 12,
+                  )
+                : CameraPosition(
+                    target: _markers!.first.position,
+                    zoom: 12,
+                  ),
             onTap: _onMapTap,
           ),
         ),
@@ -219,9 +231,11 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return MapScreen(isReadonly: true, markers: _markers,);
+        return MapScreen(
+          isReadonly: true,
+          markers: _markers,
+        );
       },
     );
   }
-
 }

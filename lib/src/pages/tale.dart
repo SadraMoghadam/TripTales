@@ -139,7 +139,7 @@ class _TalePageState extends State<TalePage> {
                             height: 40.0,
                             child: const Center(
                               child: Text(
-                                'Click Me',
+                                'Tale Info',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -292,7 +292,7 @@ class _TalePageState extends State<TalePage> {
     );
   }
 
-  void onSaveButtonClick() async {
+  void onSaveButtonClick() {
     String currentTale = _appManager.getCurrentTaleId();
     // var taleCards = await _cardService.getCards(currentTale);
     var cardsNewTransform = _appManager.getCardsTransform();

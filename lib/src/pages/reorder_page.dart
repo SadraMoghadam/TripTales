@@ -190,6 +190,8 @@ class _ReorderPageState extends State<ReorderPage> {
           transform: cardsOrder[i]!.transform,
           path: cardsOrder[i]!.path,
           name: cardsOrder[i]!.name,
+          locationLatitude: cardsOrder[i]!.locationLatitude,
+          locationLongitude: cardsOrder[i]!.locationLongitude,
           // text: cardsOrder[i]!.text,
           // textColor: cardsOrder[i]!.textColor,
           // textBackgroundColor: cardsOrder[i]!.textBackgroundColor,
@@ -213,6 +215,8 @@ class _ReorderPageState extends State<ReorderPage> {
           fontStyle: cardsOrder[i]!.fontStyle,
           fontWeight: cardsOrder[i]!.fontWeight,
           fontSize: cardsOrder[i]!.fontSize,
+          locationLatitude: cardsOrder[i]!.locationLatitude,
+          locationLongitude: cardsOrder[i]!.locationLongitude,
         ));
       }
 

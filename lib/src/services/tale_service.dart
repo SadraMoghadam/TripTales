@@ -201,20 +201,23 @@ class TaleService extends GetxService {
         await _firestore.collection('tales').doc(taleId).get();
     final taleData = taleDoc.data();
     // print("=+=========${userData}");
-    for (int i = 0; i < taleData?['cardsFK'].length; i++) {
-      final DocumentSnapshot<Map<String, dynamic>> cardDoc = await _firestore
-          .collection('cards')
-          .doc(taleData?['cardsFK'][i])
-          .get();
-      final cardData = cardDoc.data()!;
+    if(taleData?['cardsFK'] != null){
+      for (int i = 0; i < taleData?['cardsFK'].length; i++) {
+        final DocumentSnapshot<Map<String, dynamic>> cardDoc = await _firestore
+            .collection('cards')
+            .doc(taleData?['cardsFK'][i])
+            .get();
+        final cardData = cardDoc.data()!;
 
-      if (cardData != null &&
-          cardData['locationLatitude'] != null &&
-          cardData['locationLongitude'] != null) {
-        cardsloc.add(Tuple(cardData['name'],
-            LatLng(cardData['locationLatitude'], cardData['locationLongitude'])));
+        if (cardData != null &&
+            cardData['locationLatitude'] != null &&
+            cardData['locationLongitude'] != null) {
+          cardsloc.add(Tuple(cardData['name'],
+              LatLng(cardData['locationLatitude'], cardData['locationLongitude'])));
+        }
       }
     }
+
     return cardsloc;
   }
 

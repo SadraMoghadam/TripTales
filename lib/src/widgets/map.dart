@@ -111,7 +111,7 @@ class _MapScreenState extends State<MapScreen> {
                         onMapCreated: _onMapCreated,
                         markers: widget.isReadonly ? widget.markers! : markers,
                         initialCameraPosition: CameraPosition(
-                          target: widget.isReadonly ? widget.markers!.first.position : currentLocation,
+                          target: widget.isReadonly ? (widget.markers!.isNotEmpty ? widget.markers!.first.position : currentLocation) : LatLng(45.46, 9.18),
                           zoom: 12.0,
                         ),
                         onTap: widget.isReadonly ? null : _onMapTap,
