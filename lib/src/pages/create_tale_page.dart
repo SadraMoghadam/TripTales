@@ -58,7 +58,8 @@ class _CreateTalePage extends State<CreateTalePage> {
     if (result == 200) {
       _formKey.currentState?.save();
       String taleId = await _taleService.getTaleId(_taleNameController.text);
-      _appManager.setCurrentTale(taleId);
+      _appManager.setCurrentTaleId(taleId);
+      _appManager.setCurrentTale(taleData);
       Navigator.of(context).pushNamed('/talePage');
     } else {
       ErrorController.showSnackBarError(ErrorController.createTale);

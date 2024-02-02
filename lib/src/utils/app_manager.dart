@@ -6,12 +6,15 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trip_tales/src/models/card_model.dart';
+import 'package:trip_tales/src/models/tale_model.dart';
 
 import 'tuple.dart';
 
 class AppManager extends GetxController {
   Rx<List<CardModel?>?> userCards = Rx<List<CardModel?>?>(null);
   Rx<String> currentTaleId = Rx<String>("");
+  Rx<TaleModel> currentTale = Rx<TaleModel>(TaleModel(name: '', imagePath: '', canvas: '0'));
+  Rx<List<Tuple<String, LatLng>>?> currentTaleLocations = Rx<List<Tuple<String, LatLng>>?>(List.empty(growable: true));
   Rx<String> currentUserId = Rx<String>("");
   Rx<String> profileImage = Rx<String>("");
   Rx<List<Tuple<String, Matrix4>>?> cardsTransform = Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
@@ -21,7 +24,7 @@ class AppManager extends GetxController {
   void reset(){
     setCurrentUser('');
     setCards(List.empty());
-    setCurrentTale('');
+    setCurrentTaleId('');
     setIsCardsTransformChanged(false);
     setProfileImage('');
     cardsTransform.value = List.empty();
@@ -61,8 +64,16 @@ class AppManager extends GetxController {
     profileImage.value = profileImagePath;
   }
 
-  void setCurrentTale(String taleId) {
+  void setCurrentTaleId(String taleId) {
     currentTaleId.value = taleId;
+  }
+
+  void setCurrentTale(TaleModel taleModel) {
+    currentTale.value = taleModel;
+  }
+
+  void setCurrentTaleLocations(List<Tuple<String, LatLng>>? locations) {
+    currentTaleLocations.value = locations;
   }
 
   void setCurrentUser(String userId) {
@@ -92,8 +103,16 @@ class AppManager extends GetxController {
     return profileImage.value;
   }
 
-  String getCurrentTale() {
+  String getCurrentTaleId() {
     return currentTaleId.value;
+  }
+
+  TaleModel getCurrentTale() {
+    return currentTale.value;
+  }
+
+  List<Tuple<String, LatLng>>? getCurrentTaleLocations() {
+    return currentTaleLocations.value;
   }
 
   String getCurrentUser() {

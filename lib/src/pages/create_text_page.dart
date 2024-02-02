@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
+import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/utils/text_utils.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import '../constants/color.dart';
@@ -52,6 +53,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
   String _selectedFontWeight = 'Medium';
 
   final CardService _cardService = Get.find<CardService>();
+  final TaleService _taleService = Get.find<TaleService>();
 
   // late final TextEditingController _passwordController;
 
@@ -87,7 +89,8 @@ class _CreateTextPageState extends State<CreateTextPage> {
       locationLatitude: cardLocation!.item1,
       locationLongitude: cardLocation!.item2,
     );
-    int result = await _cardService.addTextCard(_appManager.getCurrentTale(), textCardData);
+    int result = await _cardService.addTextCard(_appManager.getCurrentTaleId(), textCardData);
+    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations());
     if (result == 200) {
       _formKey.currentState?.save();
       Navigator.of(context).pop(true);
@@ -401,7 +404,7 @@ class _CreateTextPageState extends State<CreateTextPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return const MapScreen();
+        return MapScreen();
       },
     );
   }

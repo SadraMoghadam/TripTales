@@ -11,6 +11,7 @@ import 'package:trip_tales/src/utils/app_manager.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import '../constants/color.dart';
 import '../controllers/media_controller.dart';
+import '../services/tale_service.dart';
 import '../utils/device_info.dart';
 import '../widgets/button.dart';
 import '../widgets/text_field.dart';
@@ -27,9 +28,11 @@ class DeleteItemDialog extends StatefulWidget {
 class _DeleteItemDialogState extends State<DeleteItemDialog> {
   final CardService _cardService = Get.find<CardService>();
   final AppManager _appManager = Get.put(AppManager());
+  final TaleService _taleService = Get.find<TaleService>();
 
   void _submit() async {
-    int result = await _cardService.deleteCardByName(_appManager.getCurrentTale(), widget.name);
+    int result = await _cardService.deleteCardByName(_appManager.getCurrentTaleId(), widget.name);
+    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations());
     if (result == 200) {
       Navigator.of(context).pop(true);
     } else {

@@ -60,7 +60,7 @@ class _TaleBuilderState extends State<TaleBuilder>
     super.initState();
     // print("YYYYYYYYYYYYYYYYYYYYYYYYYYYY HHHHHHHHHHHEEEEEEEEEEEE");
     setState(() {
-      cards = _cardService.getCards(_appManager.getCurrentTale());
+      cards = _cardService.getCards(_appManager.getCurrentTaleId());
     });
     // _controller = AnimationController(vsync: this);
     // _controller_place_here = AnimationController(vsync: this);
@@ -90,7 +90,7 @@ class _TaleBuilderState extends State<TaleBuilder>
   Widget build(BuildContext context) {
     if(widget.reload) {
       setState(() {
-        cards = _cardService.getCards(_appManager.getCurrentTale());
+        cards = _cardService.getCards(_appManager.getCurrentTaleId());
         // print("######################${cards}");
       });
     }
@@ -116,6 +116,7 @@ class _TaleBuilderState extends State<TaleBuilder>
               numOfCards, (index) => GlobalObjectKey<FormState>(index + data[i]!.name.codeUnits.fold<int>(
               0, (previousValue, element) => previousValue * 256 + element)));
           }
+          print("=+=====++++++++++++++++++++++++++$_widgetKeyList");
           return Container(
             height: device.height * 10,
             width: device.width,

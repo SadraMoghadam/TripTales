@@ -11,6 +11,7 @@ import '../constants/memory_card_type.dart';
 import '../controllers/media_controller.dart';
 import '../models/card_model.dart';
 import '../services/card_service.dart';
+import '../services/tale_service.dart';
 import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 import '../utils/password_strength_indicator.dart';
@@ -30,6 +31,7 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
   final MediaController mediaController = Get.put(MediaController());
   final AppManager _appManager = Get.put(AppManager());
   final CardService _cardService = Get.find<CardService>();
+  final TaleService _taleService = Get.find<TaleService>();
 
   // late final TextEditingController _passwordController;
 
@@ -48,8 +50,9 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
       locationLatitude: cardLocation!.item1,
       locationLongitude: cardLocation!.item2,
     );
-    int result = await _cardService.addVideoCard(_appManager.getCurrentTale(),
+    int result = await _cardService.addVideoCard(_appManager.getCurrentTaleId(),
         videoCardData, mediaController.getVideo()!);
+    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations());
     if (result == 200) {
       Timer(Duration(seconds: 2), () {
         _formKey.currentState?.save();
@@ -169,7 +172,7 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return const MapScreen();
+        return MapScreen();
       },
     );
   }

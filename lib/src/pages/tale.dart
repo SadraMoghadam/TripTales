@@ -6,6 +6,7 @@ import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/constants/tale_background.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/pages/reorder_page.dart';
+import 'package:trip_tales/src/pages/tale_info.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
 import 'package:trip_tales/src/widgets/button_slider.dart';
@@ -43,7 +44,7 @@ class _TalePageState extends State<TalePage> {
 
   @override
   void initState() {
-    taleModel = _taleService.getTaleById(_appManager.getCurrentTale());
+    taleModel = _taleService.getTaleById(_appManager.getCurrentTaleId());
     super.initState();
   }
 
@@ -111,11 +112,69 @@ class _TalePageState extends State<TalePage> {
                   isEditMode ? buildReorder() : Container(),
                   isEditMode ? buildSave() : Container(),
                   buildEditModeButton(),
+                  Positioned(
+                      right: 0,
+                      top: (device.height - 100 - 50) / 2,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .push(_customPageRouteBuilder(TaleInfoPage()));
+                        },
+                        child: RotatedBox(
+                          quarterTurns: 3,
+                          // Rotate text 90 degrees counter-clockwise
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              color: AppColors.main1,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black45,
+                                      blurRadius: 3,
+                                      spreadRadius: 3)
+                                ],
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15),
+                                    topLeft: Radius.circular(15))),
+                            width: 100.0,
+                            height: 40.0,
+                            child: const Center(
+                              child: Text(
+                                'Click Me',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )),
                 ],
               ),
             );
           }
         });
+  }
+
+  PageRouteBuilder _customPageRouteBuilder(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
+    );
   }
 
   // Widget buildMemories() {
@@ -234,7 +293,7 @@ class _TalePageState extends State<TalePage> {
   }
 
   void onSaveButtonClick() async {
-    String currentTale = _appManager.getCurrentTale();
+    String currentTale = _appManager.getCurrentTaleId();
     // var taleCards = await _cardService.getCards(currentTale);
     var cardsNewTransform = _appManager.getCardsTransform();
     if (cardsNewTransform != null) {
@@ -250,7 +309,8 @@ class _TalePageState extends State<TalePage> {
 
   void showSaveDialog() {
     if (_appManager.getIsCardsTransformChanged()) {
-      DialogPopup(text: 'Cards positions are saved successfully', duration: 2).show(context);
+      DialogPopup(text: 'Cards positions are saved successfully', duration: 2)
+          .show(context);
     }
   }
 

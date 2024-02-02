@@ -220,7 +220,7 @@ class _ReorderPageState extends State<ReorderPage> {
     }
     for (int i = 0; i < newCardsOrder.length!; i++) {
       _cardService
-          .updateCard(_appManager.getCurrentTale(), newCardsOrder[i]!)
+          .updateCard(_appManager.getCurrentTaleId(), newCardsOrder[i]!)
           .then((value) {
         if (i == newCardsOrder.length! - 1) {
           setState(() {

@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
+import 'package:trip_tales/src/utils/tuple.dart';
 import '../constants/color.dart';
 import '../utils/app_manager.dart';
 
@@ -68,7 +70,11 @@ class _CustomTaleState extends State<CustomTale> {
       child: GestureDetector(
         onTap: () async {
           String taleId = await _taleService.getTaleId(widget.taleName);
-          _appManager.setCurrentTale(taleId);
+          _appManager.setCurrentTaleId(taleId);
+          var taleData = await _taleService.getTaleById(taleId);
+          _appManager.setCurrentTale(taleData!);
+          var taleLocations = await _taleService.getTaleLocations();
+          _appManager.setCurrentTaleLocations(taleLocations);
           Navigator.of(context).pushNamed('/talePage');
 
         },

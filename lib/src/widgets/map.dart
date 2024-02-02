@@ -13,8 +13,14 @@ import 'button.dart';
 
 class MapScreen extends StatefulWidget {
   final bool multipleLoc;
+  final bool isReadonly;
+  Set<Marker>? markers;
 
-  const MapScreen({super.key, this.multipleLoc = false});
+  MapScreen(
+      {super.key,
+      this.multipleLoc = false,
+      this.isReadonly = false,
+      this.markers});
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -103,12 +109,12 @@ class _MapScreenState extends State<MapScreen> {
                       borderRadius: BorderRadius.circular(16.0),
                       child: GoogleMap(
                         onMapCreated: _onMapCreated,
-                        markers: markers,
+                        markers: widget.isReadonly ? widget.markers! : markers,
                         initialCameraPosition: CameraPosition(
-                          target: currentLocation,
+                          target: widget.isReadonly ? widget.markers!.first.position : currentLocation,
                           zoom: 12.0,
                         ),
-                        onTap: _onMapTap,
+                        onTap: widget.isReadonly ? null : _onMapTap,
                         myLocationButtonEnabled: true,
                         myLocationEnabled: true,
                       ),
@@ -116,34 +122,38 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 16),
-              const Text(
-                'Tap on the map to add a marker',
-                style: TextStyle(
-                  color: AppColors.main2,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+              widget.isReadonly ? Container() : SizedBox(height: 16),
+              widget.isReadonly
+                  ? Container()
+                  : const Text(
+                      'Tap on the map to add a marker',
+                      style: TextStyle(
+                        color: AppColors.main2,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
             ],
           ),
         ),
       ),
       actions: <Widget>[
-        CustomButton(
-          height: 5,
-          width: 20,
-          padding: 10,
-          fontSize: 12,
-          backgroundColor: AppColors.main2,
-          text: "choose",
-          textColor: Colors.white,
-          onPressed: () => {
-            _appManager.setChosenLocation(markers.first.position),
-            // print("#########################################################################################################################################################################################${_appManager.getChosenLocation()!.item1}"),
-            Navigator.of(context).pop(true),
-          },
-        ),
+        widget.isReadonly
+            ? Container()
+            : CustomButton(
+                height: 5,
+                width: 20,
+                padding: 10,
+                fontSize: 12,
+                backgroundColor: AppColors.main2,
+                text: "choose",
+                textColor: Colors.white,
+                onPressed: () => {
+                  _appManager.setChosenLocation(markers.first.position),
+                  // print("#########################################################################################################################################################################################${_appManager.getChosenLocation()!.item1}"),
+                  Navigator.of(context).pop(true),
+                },
+              ),
         CustomButton(
             height: 5,
             width: 20,
@@ -167,9 +177,11 @@ class _MapScreenState extends State<MapScreen> {
 
   void _initMarker() {
     var chosenLoc = _appManager.getChosenLocation();
-    print("================================================================================================================================================================================================================$chosenLoc");
+    print(
+        "================================================================================================================================================================================================================$chosenLoc");
     if (chosenLoc != null) {
-      print("=============================================================================================================================================================================================================================$chosenLoc");
+      print(
+          "=============================================================================================================================================================================================================================$chosenLoc");
       LatLng chosenLocLatLng = LatLng(
         chosenLoc!.item1 ?? 0,
         chosenLoc!.item2 ?? 0,

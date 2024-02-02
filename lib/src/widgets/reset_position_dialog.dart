@@ -29,7 +29,7 @@ class _ResetPositionDialog extends State<ResetPositionDialog> {
   final AppManager _appManager = Get.put(AppManager());
 
   void _submit() async {
-    int result = await _cardService.updateCardTransform(_appManager.getCurrentTale(), widget.name, Matrix4.identity());
+    int result = await _cardService.updateCardTransform(_appManager.getCurrentTaleId(), widget.name, Matrix4.identity());
     if (result == 200) {
       Navigator.of(context).pop(true);
     } else {

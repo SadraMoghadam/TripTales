@@ -11,6 +11,7 @@ import 'package:trip_tales/src/utils/app_manager.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import '../constants/color.dart';
 import '../controllers/media_controller.dart';
+import '../services/tale_service.dart';
 import '../utils/device_info.dart';
 import '../widgets/button.dart';
 import '../widgets/map.dart';
@@ -25,6 +26,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
   final MediaController mediaController = Get.put(MediaController());
   final AppManager _appManager = Get.put(AppManager());
   final CardService _cardService = Get.find<CardService>();
+  final TaleService _taleService = Get.find<TaleService>();
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
   final _formKey = GlobalKey<FormState>();
@@ -44,8 +46,9 @@ class _CreateImagePageState extends State<CreateImagePage> {
       locationLatitude: cardLocation!.item1,
       locationLongitude: cardLocation!.item2,
     );
-    int result = await _cardService.addImageCard(_appManager.getCurrentTale(),
+    int result = await _cardService.addImageCard(_appManager.getCurrentTaleId(),
         imageCardData, mediaController.getImage()!);
+    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations());
     if (result == 200) {
       _formKey.currentState?.save();
       Navigator.of(context).pop(true);

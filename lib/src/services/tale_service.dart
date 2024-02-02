@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
+import 'package:trip_tales/src/utils/tuple.dart';
 
 import '../utils/app_manager.dart';
 
@@ -24,7 +26,8 @@ class TaleService extends GetxService {
   Future<int> addTale(TaleModel taleData, File imageFile) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
+      List<TaleModel?> currentTales =
+          await getTales(_appManager.getCurrentUser());
       var contain =
           currentTales.where((element) => element!.name == taleData.name);
       if (!contain.isEmpty) {
@@ -35,7 +38,10 @@ class TaleService extends GetxService {
       DocumentReference taleReference =
           await _talesCollection.add(taleData.toJson());
 
-      await FirebaseFirestore.instance.collection('users').doc(_appManager.getCurrentUser()).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_appManager.getCurrentUser())
+          .update({
         'talesFK': FieldValue.arrayUnion([taleReference.id]),
       });
 
@@ -50,9 +56,12 @@ class TaleService extends GetxService {
   Future<int> updateTale(TaleModel taleData) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
-      final DocumentSnapshot<Map<String, dynamic>> userDoc =
-          await _firestore.collection('users').doc(_appManager.getCurrentUser()).get();
+      List<TaleModel?> currentTales =
+          await getTales(_appManager.getCurrentUser());
+      final DocumentSnapshot<Map<String, dynamic>> userDoc = await _firestore
+          .collection('users')
+          .doc(_appManager.getCurrentUser())
+          .get();
       final userData = userDoc.data();
       print(userData);
       var contain =
@@ -78,9 +87,12 @@ class TaleService extends GetxService {
   Future<int> updateTaleLikeByName(String name, bool liked) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
-      final DocumentSnapshot<Map<String, dynamic>> userDoc =
-          await _firestore.collection('users').doc(_appManager.getCurrentUser()).get();
+      List<TaleModel?> currentTales =
+          await getTales(_appManager.getCurrentUser());
+      final DocumentSnapshot<Map<String, dynamic>> userDoc = await _firestore
+          .collection('users')
+          .doc(_appManager.getCurrentUser())
+          .get();
       final userData = userDoc.data();
       print(userData);
       var contain = currentTales.where((element) => element!.name == name);
@@ -107,9 +119,12 @@ class TaleService extends GetxService {
   Future<int> deleteTaleByName(String name) async {
     try {
       // String? currentUserId = _authService.currentUserId;
-      List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
-      final DocumentSnapshot<Map<String, dynamic>> userDoc =
-          await _firestore.collection('users').doc(_appManager.getCurrentUser()).get();
+      List<TaleModel?> currentTales =
+          await getTales(_appManager.getCurrentUser());
+      final DocumentSnapshot<Map<String, dynamic>> userDoc = await _firestore
+          .collection('users')
+          .doc(_appManager.getCurrentUser())
+          .get();
       final userData = userDoc.data();
       print(userData);
       var contain = currentTales.where((element) => element!.name == name);
@@ -119,7 +134,10 @@ class TaleService extends GetxService {
             .collection('tales')
             .doc(taleId)
             .delete();
-        await FirebaseFirestore.instance.collection('users').doc(_appManager.getCurrentUser()).update({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(_appManager.getCurrentUser())
+            .update({
           'talesFK': FieldValue.arrayRemove([taleId]),
         });
         await _storage.refFromURL(contain.first!.imagePath).delete();
@@ -174,6 +192,30 @@ class TaleService extends GetxService {
       // Get.snackbar('Error', e.toString());
       return List.empty();
     }
+  }
+
+  Future<List<Tuple<String, LatLng>>> getTaleLocations() async {
+    String taleId = _appManager.getCurrentTaleId();
+    List<Tuple<String, LatLng>> cardsloc = [];
+    final DocumentSnapshot<Map<String, dynamic>> taleDoc =
+        await _firestore.collection('tales').doc(taleId).get();
+    final taleData = taleDoc.data();
+    // print("=+=========${userData}");
+    for (int i = 0; i < taleData?['cardsFK'].length; i++) {
+      final DocumentSnapshot<Map<String, dynamic>> cardDoc = await _firestore
+          .collection('cards')
+          .doc(taleData?['cardsFK'][i])
+          .get();
+      final cardData = cardDoc.data()!;
+
+      if (cardData != null &&
+          cardData['locationLatitude'] != null &&
+          cardData['locationLongitude'] != null) {
+        cardsloc.add(Tuple(cardData['name'],
+            LatLng(cardData['locationLatitude'], cardData['locationLongitude'])));
+      }
+    }
+    return cardsloc;
   }
 
   Future<List<TaleModel?>> getFavoriteTales(String uid) async {
@@ -254,9 +296,12 @@ class TaleService extends GetxService {
   }
 
   Future<String> getTaleId(String name) async {
-    List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
-    final DocumentSnapshot<Map<String, dynamic>> userDoc =
-        await _firestore.collection('users').doc(_appManager.getCurrentUser()).get();
+    List<TaleModel?> currentTales =
+        await getTales(_appManager.getCurrentUser());
+    final DocumentSnapshot<Map<String, dynamic>> userDoc = await _firestore
+        .collection('users')
+        .doc(_appManager.getCurrentUser())
+        .get();
     final userData = userDoc.data();
     print(userData);
     for (int i = 0; i < currentTales.length; i++) {

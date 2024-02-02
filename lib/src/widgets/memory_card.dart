@@ -187,7 +187,7 @@ class _MemoryCardState extends State<MemoryCard> {
   }
 
   // void updateTransform(Matrix4 transform, int counter) {
-  //   _cardService.updateCardTransform(_appManager.getCurrentTale(), widget.name, transform).then((value) {
+  //   _cardService.updateCardTransform(_appManager.getCurrentTaleId(), widget.name, transform).then((value) {
   //     if (counter == updateCounter) print("SSSSSSSSSSSSSSSSSSSSSSs");
   //   });
   // }

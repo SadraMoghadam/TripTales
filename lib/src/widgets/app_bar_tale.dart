@@ -56,8 +56,12 @@ class CustomAppBar extends StatelessWidget {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        // Navigator.maybePop(context);
-                        Navigator.of(context).pushNamed(navigationPath!);
+                        if(navigationPath! == '/pop'){
+                          Navigator.maybePop(context);
+                        }
+                        else {
+                          Navigator.of(context).pushNamed(navigationPath!);
+                        }
                       },
                     ),
                   )
