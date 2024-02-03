@@ -41,6 +41,10 @@ class _CustomTaleState extends State<CustomTale> {
     loadImageInfo(widget.talePath);
   }
 
+  void dispose() {
+    super.dispose();
+  }
+
   Future<void> loadImageInfo(String imageUrl) async {
     final ImageStream imageStream =
         Image.network(imageUrl).image.resolve(ImageConfiguration.empty);
@@ -52,11 +56,12 @@ class _CustomTaleState extends State<CustomTale> {
     imageStream.addListener(listener);
   }
 
-  void likeTale() {
+  void likeTale() async {
     setState(() {
       widget.isLiked = !widget.isLiked;
     });
-    _taleService.updateTaleLikeByName(widget.taleName, widget.isLiked);
+    String taleId = await _taleService.getTaleId(widget.taleName);
+    _taleService.updateTaleLikeById(taleId, widget.isLiked);
   }
 
   @override
@@ -73,9 +78,9 @@ class _CustomTaleState extends State<CustomTale> {
           _appManager.setCurrentTaleId(taleId);
           var taleData = await _taleService.getTaleById(taleId);
           _appManager.setCurrentTale(taleData!);
-          var taleLocations = await _taleService.getTaleLocations();
+          var taleLocations = await _taleService.getTaleLocations(taleId);
           _appManager.setCurrentTaleLocations(taleLocations);
-          Navigator.of(context).pushNamed('/talePage');
+          Navigator.of(context).pushReplacementNamed('/talePage');
 
         },
         child: taleCard(),
@@ -95,21 +100,6 @@ class _CustomTaleState extends State<CustomTale> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             final imageInfo = snapshot.data!;
-            // if (imageInfo.image.width > imageInfo.image.height) {
-            //   imageActualSize = Size(
-            //       size.width,
-            //       size.width *
-            //           imageInfo.image.height /
-            //           imageInfo.image.width);
-            // } else if (imageInfo.image.width < imageInfo.image.height) {
-            //   imageActualSize = Size(
-            //       size.height *
-            //           imageInfo.image.width /
-            //           imageInfo.image.height,
-            //       size.height);
-            // } else {
-            //   imageActualSize = Size(size.width, size.height);
-            // }
             return Container(
                 // key: _widgetKeyList[0],
                 width: size.width,

@@ -30,6 +30,11 @@ class _MyTalesPage extends State<MyTalesPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
@@ -78,7 +83,7 @@ class _MyTalesPage extends State<MyTalesPage> {
           numOfTales = data.length;
           for (int i = 0; i < numOfTales; i++) {
             _widgetKeyList = List.generate(
-                numOfTales, (index) => GlobalObjectKey<FormState>(index + data[i]!.name.codeUnits.fold<int>(
+                numOfTales, (index) => GlobalObjectKey<FormState>(index + data[i]!.id!.codeUnits.fold<int>(
                 0, (previousValue, element) => previousValue * 256 + element)));
           }
           return SingleChildScrollView(
@@ -108,7 +113,7 @@ class _MyTalesPage extends State<MyTalesPage> {
   Widget newTaleButton(){
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('/createTalePage');
+        Navigator.of(context).pushReplacementNamed('/createTalePage');
       },
       child: Center(
         child: Container(

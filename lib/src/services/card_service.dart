@@ -221,8 +221,6 @@ class CardService extends GetxService {
 
   Future<int> deleteCardByName(String taleId, String name) async {
     try {
-      // String? currentUserId = _authService.currentUserId;
-      print("############${0}");
       List<CardModel?> currentCards = await getCards(taleId);
       final DocumentSnapshot<Map<String, dynamic>> taleDoc =
       await _firestore.collection('tales').doc(taleId).get();

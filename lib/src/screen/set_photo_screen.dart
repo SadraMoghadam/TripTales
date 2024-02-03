@@ -13,11 +13,15 @@ import 'select_photo_options_screen.dart';
 class SetPhotoScreen extends StatefulWidget {
   final bool isImage;
   final bool contDef;
+  final String? imagePath;
+  final bool hasImage;
 
   SetPhotoScreen({
     super.key,
     this.isImage = true,
     this.contDef = false,
+    this.imagePath,
+    this.hasImage = false,
   });
 
   static const id = 'set_photo_screen';
@@ -39,6 +43,14 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
         'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
       ));
     }
+
+    // _image = widget.hasImage
+    //     ? ((widget.imagePath != null ||
+    //     widget.imagePath != '')
+    //     ? File(widget.imagePath!)!
+    //     : _image!)
+    //     : _image!;
+    // mediaController.setImage(_image);
     super.initState();
   }
 
@@ -134,6 +146,8 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -164,9 +178,11 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                         child: widget.isImage
                             ? Center(
                                 child: _image == null
-                                    ? const Text(
-                                        'No image selected',
-                                        style: TextStyle(fontSize: 20),
+                                    ? Text(
+                                        widget.hasImage ? 'You can change your image here' : 'No image selected',
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            color: AppColors.main1),
                                       )
                                     : Container(
                                         decoration: BoxDecoration(
@@ -190,14 +206,17 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                                           borderRadius:
                                               BorderRadius.circular(15),
                                           child: FittedBox(
-                                              fit: BoxFit.cover,
-                                              alignment: Alignment.center,
-                                              child: SizedBox(
-                                                width: _videoController.value.size!.width,
-                                                height: _videoController.value.size!.height,
-                                                child: VideoPlayer(_videoController),
-                                              ),
+                                            fit: BoxFit.cover,
+                                            alignment: Alignment.center,
+                                            child: SizedBox(
+                                              width: _videoController
+                                                  .value.size!.width,
+                                              height: _videoController
+                                                  .value.size!.height,
+                                              child:
+                                                  VideoPlayer(_videoController),
                                             ),
+                                          ),
                                           // child: VideoPlayer(_videoController),
                                         ),
                                       ),

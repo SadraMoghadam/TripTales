@@ -89,8 +89,9 @@ class _CreateTextPageState extends State<CreateTextPage> {
       locationLatitude: cardLocation!.item1,
       locationLongitude: cardLocation!.item2,
     );
-    int result = await _cardService.addTextCard(_appManager.getCurrentTaleId(), textCardData);
-    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations());
+    String taleId = _appManager.getCurrentTaleId();
+    int result = await _cardService.addTextCard(taleId, textCardData);
+    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations(taleId));
     if (result == 200) {
       _formKey.currentState?.save();
       Navigator.of(context).pop(true);

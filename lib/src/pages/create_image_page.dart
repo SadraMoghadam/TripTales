@@ -46,9 +46,10 @@ class _CreateImagePageState extends State<CreateImagePage> {
       locationLatitude: cardLocation!.item1,
       locationLongitude: cardLocation!.item2,
     );
-    int result = await _cardService.addImageCard(_appManager.getCurrentTaleId(),
+    String taleId = _appManager.getCurrentTaleId();
+    int result = await _cardService.addImageCard(taleId,
         imageCardData, mediaController.getImage()!);
-    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations());
+    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations(taleId));
     if (result == 200) {
       _formKey.currentState?.save();
       Navigator.of(context).pop(true);

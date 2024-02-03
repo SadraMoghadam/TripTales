@@ -1,5 +1,5 @@
 class TaleModel {
-  final String? id;
+  late String? id;
   final String name;
   final String imagePath;
   final String canvas;

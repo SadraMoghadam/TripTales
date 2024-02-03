@@ -22,6 +22,10 @@ import '../widgets/text_field.dart';
 import '../widgets/app_bar_tale.dart';
 
 class CreateTalePage extends StatefulWidget {
+  final bool isEditMode;
+
+  const CreateTalePage({super.key, this.isEditMode = false});
+
   @override
   _CreateTalePage createState() => _CreateTalePage();
 }
@@ -33,11 +37,8 @@ class _CreateTalePage extends State<CreateTalePage> {
   final AppManager _appManager = Get.put(AppManager());
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
-  bool _isScrollingDisabled = false;
   final _formKey = GlobalKey<FormState>();
-  GoogleMapController? _mapController;
-  Set<Marker> _markers = HashSet<Marker>();
-  LatLng? _selectedLocation;
+  late TaleModel taleModel;
   int selectedIndex = 0;
 
   void _submit() async {
@@ -46,21 +47,53 @@ class _CreateTalePage extends State<CreateTalePage> {
       return;
     }
     print(selectedIndex.toString());
-    TaleModel taleData = TaleModel(
-        name: _taleNameController.text,
-        imagePath: '${_taleNameController.text}_TALE.png',
-        canvas: selectedIndex.toString());
+
     File? imageFile = mediaController.getImage();
+    TaleModel taleData = TaleModel(
+      name: _taleNameController.text,
+      imagePath: '${_taleNameController.text}_TALE.png',
+      canvas: selectedIndex.toString(),
+    );
     int result = 400;
     if (imageFile != null) {
-      result = await _taleService.addTale(taleData, imageFile!);
+
+      if (widget.isEditMode) {
+        var currentTale = _appManager.getCurrentTale();
+        taleData = TaleModel(
+          id: currentTale.id,
+          name: _taleNameController.text,
+          imagePath: '${currentTale.id}_TALE.png',
+          canvas: selectedIndex.toString(),
+          cardsFK: currentTale.cardsFK,
+        );
+        result = await _taleService.updateTale(taleData, imageFile!);
+      } else {
+        result = await _taleService.addTale(taleData, imageFile!);
+        var currentTaleId = await _taleService.getTaleId(taleData.name);
+        var currentTale = await _taleService.getTaleById(currentTaleId);
+        taleData = TaleModel(
+          id: currentTale!.id,
+          name: _taleNameController.text,
+          imagePath: '${currentTale!.id}_TALE.png',
+          canvas: selectedIndex.toString(),
+          cardsFK: currentTale!.cardsFK,
+        );
+        result = 200;
+      }
     }
     if (result == 200) {
       _formKey.currentState?.save();
-      String taleId = await _taleService.getTaleId(_taleNameController.text);
-      _appManager.setCurrentTaleId(taleId);
-      _appManager.setCurrentTale(taleData);
-      Navigator.of(context).pushNamed('/talePage');
+      var tale = await _taleService.getTaleById(taleData.id!);
+      // print(")))))))))))))))))))))))))))))))))))))))))${taleData.id}");
+      _appManager.setCurrentTaleId(taleData.id!);
+      _appManager.setCurrentTale(tale!);
+
+      Navigator.of(context).pushReplacementNamed('/talePage', result: 'createTalePage');
+
+      // if (widget.isEditMode) {
+      //   Navigator.of(context).pop();
+      // } else {
+      // }
     } else {
       ErrorController.showSnackBarError(ErrorController.createTale);
       return;
@@ -73,6 +106,13 @@ class _CreateTalePage extends State<CreateTalePage> {
       ..addListener(() {
         setState(() {});
       });
+    if (widget.isEditMode) {
+      taleModel = _appManager.getCurrentTale();
+      _taleNameController.text = taleModel.name;
+      // print(")))))))))))))))))))))))))))))))))))))))))${taleModel.imagePath}");
+      mediaController.setImage(File(taleModel.imagePath));
+      selectedIndex = int.parse(taleModel.canvas);
+    }
     super.initState();
   }
 
@@ -90,7 +130,7 @@ class _CreateTalePage extends State<CreateTalePage> {
       body: CustomAppBar(
         bodyTale: buildBody(),
         showIcon: true,
-        navigationPath: '/customMenu',
+        navigationPath: '/pop',
       ),
     );
   }
@@ -122,7 +162,11 @@ class _CreateTalePage extends State<CreateTalePage> {
             ),
             SizedBox(
               height: 320,
-              child: SetPhotoScreen(isImage: true),
+              child: SetPhotoScreen(
+                isImage: true,
+                imagePath: widget.isEditMode ? taleModel.imagePath : '',
+                hasImage: widget.isEditMode,
+              ),
             ),
             const SizedBox(
               height: 30,
@@ -166,10 +210,6 @@ class _CreateTalePage extends State<CreateTalePage> {
               ),
             ),
             const SizedBox(
-              height: 10,
-            ),
-            buildGoogleMap(),
-            const SizedBox(
               height: 20,
             ),
             SizedBox(
@@ -180,7 +220,7 @@ class _CreateTalePage extends State<CreateTalePage> {
                 padding: 2,
                 backgroundColor: AppColors.main2,
                 textColor: Colors.white,
-                text: "Start Creating",
+                text: widget.isEditMode ? "Finish Editing" : "Start Creating",
                 onPressed: _submit,
               ),
             ),
@@ -191,147 +231,6 @@ class _CreateTalePage extends State<CreateTalePage> {
         ),
       ),
     );
-  }
-
-  // Widget buildGoogleMap() {
-  //   return Container(
-  //     height: 400, // Adjust the height as needed
-  //     width: 400,  // Adjust the width as needed
-  //     child: ClipRRect(
-  //       borderRadius: BorderRadius.circular(16.0),
-  //       child: InteractiveViewer(
-  //         boundaryMargin: EdgeInsets.all(double.infinity),
-  //         child: GoogleMap(
-  //           onMapCreated: _onMapCreated,
-  //           markers: _markers,
-  //           initialCameraPosition: CameraPosition(
-  //             target: LatLng(37.7749, -122.4194),
-  //             zoom: 12,
-  //           ),
-  //           onTap: _onMapTap,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-  //
-  // void _onMapCreated(GoogleMapController controller) {
-  //   setState(() {
-  //     _mapController = controller;
-  //   });
-  // }
-  //
-  // void _onMapTap(LatLng tappedPoint) {
-  //   setState(() {
-  //     _markers.add(
-  //       Marker(
-  //         markerId: MarkerId(tappedPoint.toString()),
-  //         position: tappedPoint,
-  //         infoWindow: InfoWindow(
-  //           title: 'Marker',
-  //           snippet: 'This is a custom marker',
-  //         ),
-  //       ),
-  //     );
-  //   });
-  // }
-
-  Widget buildGoogleMap() {
-    return Container(
-      height: 400,
-      width: 400,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.main2),
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16.0),
-        child: Container(
-          height: 400,
-          child: GoogleMap(
-            onMapCreated: _onMapCreated,
-            markers: _markers,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(37.7749, -122.4194),
-              zoom: 12,
-            ),
-            onTap: _onMapTap,
-          ),
-        ),
-        // GoogleMap(
-        // onMapCreated: (controller) {
-        //   setState(() {
-        //     _mapController = controller;
-        //   });
-        // },
-        // onCameraMove: (CameraPosition position) {
-        //   // Update the selected location based on camera movement
-        //   setState(() {
-        //     _selectedLocation = position.target;
-        //   });
-        // },
-        // onTap: (latLng) {
-        //   // Handle the tapped location
-        //   setState(() {
-        //     _selectedLocation = latLng;
-        //   });
-        // },
-        //
-        //   onTap: (latLng) {
-        //     print("Map tapped at: $latLng");
-        //     showDialog(
-        //       context: context,
-        //       builder: (context) {
-        //         return MapScreen();
-        //       },
-        //     );
-        //   },
-        //   initialCameraPosition: CameraPosition(
-        //     target: LatLng(37.7749, -122.4194),
-        //     zoom: 15,
-        //   ),
-        //   markers: _selectedLocation != null
-        //       ? {
-        //           Marker(
-        //             markerId: MarkerId('selected'),
-        //             position: _selectedLocation!,
-        //             draggable: true,
-        //             onDragEnd: (dragEndPosition) {
-        //               setState(() {
-        //                 _selectedLocation = dragEndPosition;
-        //               });
-        //             },
-        //           ),
-        //         }
-        //       : {},
-        // ),
-      ),
-    );
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
-    setState(() {
-      _mapController = controller;
-    });
-  }
-
-  void _onMapTap(LatLng tappedPoint) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return MapScreen();
-      },
-    );
-    // setState(() {
-    //   _markers.add(Marker(
-    //     markerId: MarkerId(tappedPoint.toString()),
-    //     position: tappedPoint,
-    //     infoWindow: InfoWindow(
-    //       title: 'Marker',
-    //       snippet: 'This is a custom marker',
-    //     ),
-    //   ));
-    // });
   }
 
   Widget buildCanvasList() {

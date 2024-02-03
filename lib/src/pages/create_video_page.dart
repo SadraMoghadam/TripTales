@@ -50,9 +50,10 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
       locationLatitude: cardLocation!.item1,
       locationLongitude: cardLocation!.item2,
     );
-    int result = await _cardService.addVideoCard(_appManager.getCurrentTaleId(),
+    String taleId = _appManager.getCurrentTaleId();
+    int result = await _cardService.addVideoCard(taleId,
         videoCardData, mediaController.getVideo()!);
-    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations());
+    _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations(taleId));
     if (result == 200) {
       Timer(Duration(seconds: 2), () {
         _formKey.currentState?.save();

@@ -34,11 +34,13 @@ class _DeleteItemDialogState extends State<DeleteItemDialog> {
   void _submit() async {
     int result;
     if(widget.isTale){
-      result = await _taleService.deleteTaleByName(widget.name);
+      String taleId = await _taleService.getTaleId(widget.name);
+      result = await _taleService.deleteTaleById(taleId);
     }
     else{
-      result = await _cardService.deleteCardByName(_appManager.getCurrentTaleId(), widget.name);
-      _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations());
+      String taleId = _appManager.getCurrentTaleId();
+      result = await _cardService.deleteCardByName(taleId, widget.name);
+      _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations(taleId));
     }
     if (result == 200) {
       Navigator.of(context).pop(true);

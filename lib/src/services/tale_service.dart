@@ -25,25 +25,30 @@ class TaleService extends GetxService {
 
   Future<int> addTale(TaleModel taleData, File imageFile) async {
     try {
-      // String? currentUserId = _authService.currentUserId;
-      List<TaleModel?> currentTales =
-          await getTales(_appManager.getCurrentUser());
-      var contain =
-          currentTales.where((element) => element!.name == taleData.name);
+      List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
+      var contain = currentTales.where((element) => element!.name == taleData.name);
       if (!contain.isEmpty) {
         return 400;
       }
-      Future<bool> isUploaded = _uploadImage(imageFile, taleData.imagePath);
-      print("___________________________---${await isUploaded}");
-      DocumentReference taleReference =
-          await _talesCollection.add(taleData.toJson());
+      DocumentReference taleReference = await _talesCollection.add(taleData.toJson());
 
-      await FirebaseFirestore.instance
+      await _firestore
           .collection('users')
           .doc(_appManager.getCurrentUser())
           .update({
         'talesFK': FieldValue.arrayUnion([taleReference.id]),
       });
+
+      String imagePath = '${taleReference.id}_TALE.png';
+      await _firestore
+          .collection('tales')
+          .doc(taleReference.id)
+          .update({
+        'id': taleReference.id,
+        'imagePath': imagePath,
+      });
+
+      Future<bool> isUploaded = _uploadImage(imageFile, imagePath);
 
       print('tale added successfully.');
       return 200;
@@ -53,7 +58,7 @@ class TaleService extends GetxService {
     }
   }
 
-  Future<int> updateTale(TaleModel taleData) async {
+  Future<int> updateTale(TaleModel taleData, File imageFile) async {
     try {
       // String? currentUserId = _authService.currentUserId;
       List<TaleModel?> currentTales =
@@ -63,14 +68,19 @@ class TaleService extends GetxService {
           .doc(_appManager.getCurrentUser())
           .get();
       final userData = userDoc.data();
-      print(userData);
+      print("__________________${userData}");
+
+      // print(userData);
+      var currentTale = _appManager.getCurrentTale();
+      print("__________________${currentTale}");
+      // renameStorageObject(currentTale.imagePath, "${currentTale.name}_TALE", taleData.imagePath);
+      Future<bool> isUploaded = _uploadImage(imageFile, taleData.imagePath);
       var contain =
-          currentTales.where((element) => element!.name == taleData.name);
-      if (!contain.isEmpty) {
-        String taleId = await getTaleId(contain.first!.name);
-        await FirebaseFirestore.instance
+          currentTales.where((element) => element!.id == taleData.id);
+      if (!contain.isEmpty || (contain.isEmpty && taleData.name != '')) {
+        await _firestore
             .collection('tales')
-            .doc(taleId)
+            .doc(taleData.id)
             .update(taleData.toJson());
         print('Tale updated successfully.');
         return 200;
@@ -84,7 +94,7 @@ class TaleService extends GetxService {
     }
   }
 
-  Future<int> updateTaleLikeByName(String name, bool liked) async {
+  Future<int> updateTaleLikeById(String id, bool liked) async {
     try {
       // String? currentUserId = _authService.currentUserId;
       List<TaleModel?> currentTales =
@@ -95,12 +105,11 @@ class TaleService extends GetxService {
           .get();
       final userData = userDoc.data();
       print(userData);
-      var contain = currentTales.where((element) => element!.name == name);
+      var contain = currentTales.where((element) => element!.id == id);
       if (!contain.isEmpty) {
-        String taleId = await getTaleId(contain.first!.name);
         await FirebaseFirestore.instance
             .collection('tales')
-            .doc(taleId)
+            .doc(id)
             .update({
           'liked': liked,
         });
@@ -116,9 +125,8 @@ class TaleService extends GetxService {
     }
   }
 
-  Future<int> deleteTaleByName(String name) async {
+  Future<int> deleteTaleById(String id) async {
     try {
-      // String? currentUserId = _authService.currentUserId;
       List<TaleModel?> currentTales =
           await getTales(_appManager.getCurrentUser());
       final DocumentSnapshot<Map<String, dynamic>> userDoc = await _firestore
@@ -127,27 +135,25 @@ class TaleService extends GetxService {
           .get();
       final userData = userDoc.data();
       print(userData);
-      var contain = currentTales.where((element) => element!.name == name);
+      var contain = currentTales.where((element) => element!.id == id);
       if (!contain.isEmpty) {
-        String taleId = await getTaleId(contain.first!.name);
         await FirebaseFirestore.instance
             .collection('tales')
-            .doc(taleId)
+            .doc(id)
             .delete();
         await FirebaseFirestore.instance
             .collection('users')
             .doc(_appManager.getCurrentUser())
             .update({
-          'talesFK': FieldValue.arrayRemove([taleId]),
+          'talesFK': FieldValue.arrayRemove([id]),
         });
-        await _storage.refFromURL(contain.first!.imagePath).delete();
+        await FirebaseStorage.instance.refFromURL(contain.first!.imagePath).delete();
 
         print('Tale deleted successfully.');
         return 200;
       }
       return 401;
     }
-    // print("__________________${taleData.toJsonTextTale()}");
     catch (e) {
       print('Error delete tale: $e');
       return 401;
@@ -160,13 +166,13 @@ class TaleService extends GetxService {
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
           await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
-      // print("=+=========${userData}");
       for (int i = 0; i < userData?['talesFK'].length; i++) {
         final DocumentSnapshot<Map<String, dynamic>> taleDoc = await _firestore
             .collection('tales')
             .doc(userData?['talesFK'][i])
             .get();
         final taleData = taleDoc.data()!;
+        // print("=+=========${userData}");
 
         if (taleData != null) {
           // print("=+=========${taleData['imagePath']}");
@@ -174,8 +180,9 @@ class TaleService extends GetxService {
               .ref()
               .child(taleData['imagePath'])
               .getDownloadURL();
-          // print("video:      ${downloadURL}");
+          print("video:      ${taleData['imagePath']}");
           TaleModel taleModel = TaleModel(
+            id: taleData['id'],
             name: taleData['name'],
             imagePath: downloadURL,
             canvas: taleData['canvas'],
@@ -194,8 +201,27 @@ class TaleService extends GetxService {
     }
   }
 
-  Future<List<Tuple<String, LatLng>>> getTaleLocations() async {
-    String taleId = _appManager.getCurrentTaleId();
+  // Future<void> renameStorageObject(String path, String oldObjectName, String newObjectName) async {
+  //   Reference storageRef = FirebaseStorage.instance.ref().child(path);
+  //
+  //   try {
+  //     print("=+=========+++++++++++++++++++++++++${await storageRef.child(path).getDownloadURL()}");
+  //     String oldObjectDownloadURL = await storageRef.getDownloadURL();
+  //     print("=+=========+++++++++++++++++++++++++${oldObjectDownloadURL}");
+  //     var data = await storageRef.child(oldObjectName).getData();
+  //     print("=+=========+++++++++++++++++++++++++${data}");
+  //     await storageRef.child(newObjectName).putData(data!);
+  //
+  //     await storageRef.child(oldObjectName).delete();
+  //
+  //     print('Object renamed successfully.');
+  //   } catch (e) {
+  //     print('Error renaming the object: $e');
+  //   }
+  // }
+
+  Future<List<Tuple<String, LatLng>>> getTaleLocations(String id) async {
+    String taleId = id;
     List<Tuple<String, LatLng>> cardsloc = [];
     final DocumentSnapshot<Map<String, dynamic>> taleDoc =
         await _firestore.collection('tales').doc(taleId).get();
@@ -227,7 +253,7 @@ class TaleService extends GetxService {
       final DocumentSnapshot<Map<String, dynamic>> userDoc =
           await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
-      print("=+=========${userData}");
+      // print("=+=========${userData}");
       for (int i = 0; i < userData?['talesFK'].length; i++) {
         final DocumentSnapshot<Map<String, dynamic>> taleDoc = await _firestore
             .collection('tales')
@@ -236,13 +262,14 @@ class TaleService extends GetxService {
         final taleData = taleDoc.data()!;
 
         if (taleData != null && taleData['liked'] == true) {
-          print("=+=========${taleData['imagePath']}");
+          // print("=+=========${taleData['imagePath']}");
           String downloadURL = await _storage
               .ref()
               .child(taleData['imagePath'])
               .getDownloadURL();
           // print("video:      ${downloadURL}");
           TaleModel taleModel = TaleModel(
+            id: taleData['id'],
             name: taleData['name'],
             imagePath: downloadURL,
             canvas: taleData['canvas'],
@@ -270,6 +297,7 @@ class TaleService extends GetxService {
         String downloadURL =
             await _storage.ref().child(taleData['imagePath']).getDownloadURL();
         TaleModel taleModel = TaleModel(
+          id: taleData['id'],
           name: taleData['name'],
           imagePath: downloadURL,
           canvas: taleData['canvas'],
@@ -289,7 +317,8 @@ class TaleService extends GetxService {
 
   Future<bool> _uploadImage(File imageFile, String imageName) async {
     try {
-      await _storage.ref().child(imageName).putFile(imageFile);
+      // print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&$imageName,,,,,,,,,$imageFile");
+      await FirebaseStorage.instance.ref().child(imageName).putFile(imageFile);
       print('Image uploaded successfully.');
       return Future.value(true);
     } on FirebaseException catch (e) {

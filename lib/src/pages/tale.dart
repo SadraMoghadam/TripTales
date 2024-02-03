@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/constants/tale_background.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
@@ -23,9 +24,10 @@ class TalePage extends StatefulWidget {
   State<TalePage> createState() => _TalePageState();
 }
 
-class _TalePageState extends State<TalePage> {
+class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
   bool reload = false;
 
+  bool isInit = false;
   bool isEditMode = false;
   Key _contentKey = UniqueKey();
   late Completer<void> flagCompleter;
@@ -34,6 +36,7 @@ class _TalePageState extends State<TalePage> {
   final AppManager _appManager = Get.put(AppManager());
   final String canvas = 'assets/images/background_tale.jpg';
   late Future<TaleModel?> taleModel;
+  late final AnimationController _controller;
 
   callback() {
     setState(() {
@@ -48,6 +51,41 @@ class _TalePageState extends State<TalePage> {
     super.initState();
   }
 
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //
+  //   String? result = ModalRoute.of(context)!.settings.arguments as String?;
+  //   taleModel = _taleService.getTaleById(_appManager.getCurrentTaleId());
+  //
+  //   if (result == 'createTalePage' && !isInit) {
+  //     _controller = AnimationController(vsync: this, duration: Duration(seconds: 4));
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         _controller.reset();
+  //         _controller.forward();
+  //         return AlertDialog(
+  //           content: Lottie.asset(
+  //             "assets/animations/loading.json",
+  //             width: 400,
+  //             height: 400,
+  //             controller: _controller,
+  //           ),
+  //         );
+  //       },
+  //     );
+  //
+  //     Future.delayed(Duration(seconds: 3), () {
+  //       print("hiii");
+  //       Navigator.of(context).pop();
+  //       setState(() {
+  //         this.isInit = true;
+  //       });
+  //     });
+  //   }
+  // }
+
   final MaterialStateProperty<Icon?> thumbIcon =
       MaterialStateProperty.resolveWith<Icon?>(
     (Set<MaterialState> states) {
@@ -57,6 +95,12 @@ class _TalePageState extends State<TalePage> {
       return const Icon(Icons.close);
     },
   );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

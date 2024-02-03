@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:trip_tales/src/constants/tale_background.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
+import 'package:trip_tales/src/pages/create_tale_page.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/utils/tuple.dart';
@@ -38,6 +39,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
   Set<Marker> _markers = HashSet<Marker>();
   GoogleMapController? _mapController;
   int selectedIndex = 0;
+  // late final AnimationController _controller;
 
   @override
   void initState() {
@@ -56,10 +58,13 @@ class _TaleInfoPage extends State<TaleInfoPage> {
         ),
       ));
     }
+    // _controller =
+    //     AnimationController(vsync: this, duration: Duration(seconds: 4));
   }
 
   @override
   void dispose() {
+  // _controller.dispose();
     super.dispose();
   }
 
@@ -172,8 +177,32 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     );
   }
 
-  Widget _onEditButtonClick() {
-    return Container();
+  void _onEditButtonClick() async{
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CreateTalePage(isEditMode: true,)),
+    );
+    // if(result) {
+    //   showDialog(
+    //       context: context,
+    //       builder: (context) {
+    //         _controller.reset();
+    //         _controller.forward();
+    //         return AlertDialog(
+    //           content: Lottie.asset(
+    //             "assets/animations/loading.json",
+    //             width: 400,
+    //             height: 400,
+    //             controller: _controller,
+    //           ),
+    //         );
+    //       });
+    //   Future.delayed(Duration(seconds: 3), () {
+    //     print("hiii");
+    //     Navigator.of(context).pop();
+    //     refreshPage();
+    //   });
+    // }
   }
 
   void _onDeleteButtonClick() {
