@@ -13,10 +13,11 @@ class AppManager extends GetxController {
   Rx<String> currentTaleId = Rx<String>("");
   Rx<String> currentUserId = Rx<String>("");
   Rx<String> profileImage = Rx<String>("");
-  Rx<List<Tuple<String, Matrix4>>?> cardsTransform = Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
+  Rx<List<Tuple<String, Matrix4>>?> cardsTransform =
+      Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
   Rx<bool> isCardsTransformChanged = Rx<bool>(false);
 
-  void reset(){
+  void reset() {
     setCurrentUser('');
     setCards(List.empty());
     setCurrentTale('');
@@ -32,7 +33,8 @@ class AppManager extends GetxController {
       return;
     }
 
-    int index = cardsTransform.value!.indexWhere((tuple) => tuple.item1 == name);
+    int index =
+        cardsTransform.value!.indexWhere((tuple) => tuple.item1 == name);
 
     if (index != -1) {
       // "transform1" exists, update its item2
@@ -83,20 +85,18 @@ class AppManager extends GetxController {
   }
 
   String getCurrentUser() {
-    // return "1";
-    return currentUserId.value;
+    return "1";
+    //return currentUserId.value;
   }
 
   List<CardModel?>? getCards() {
-    if(userCards == Rx<List<CardModel?>?>(null))
-      return [];
+    if (userCards == Rx<List<CardModel?>?>(null)) return [];
     userCards.value!.sort((a, b) => a!.order.compareTo(b!.order));
     return userCards.value;
   }
 
-  int getCardsNum(){
-    if(userCards == Rx<List<CardModel?>?>(null))
-      return 0;
+  int getCardsNum() {
+    if (userCards == Rx<List<CardModel?>?>(null)) return 0;
     return userCards.value!.length;
   }
 }

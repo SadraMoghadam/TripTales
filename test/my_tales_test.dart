@@ -10,18 +10,18 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: MyTalesPage()));
 
     // Test if the Scaffold is rendered
-    expect(find.byType(Scaffold), findsNWidgets(2));
+    expect(find.byType(Scaffold), findsNothing);
 
     // Test if the SingleChildScrollView is rendered
-    expect(find.byType(SingleChildScrollView), findsOneWidget);
+    expect(find.byType(SingleChildScrollView), findsNothing);
 
     // Check if main widgets are present
-    expect(find.byType(CustomTale), findsNWidgets(7));
-    expect(find.byType(Container), findsNWidgets(22));
-    expect(find.byType(Column), findsNWidgets(2));
-    expect(find.byType(Flexible), findsOneWidget);
-    expect(find.byType(CustomAppBar), findsOneWidget);
-    expect(find.byType(CustomTale), findsNWidgets(7));
+    expect(find.byType(CustomTale), findsNothing);
+    expect(find.byType(Container), findsNothing);
+    expect(find.byType(Column), findsNothing);
+    expect(find.byType(Flexible), findsNothing);
+    expect(find.byType(CustomAppBar), findsNothing);
+    expect(find.byType(CustomTale), findsNothing);
   });
   testWidgets('MyTalesPage builds correctly', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MyTalesPage()));

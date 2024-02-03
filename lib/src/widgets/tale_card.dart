@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
+import 'package:trip_tales/src/utils/device_info.dart';
 import '../constants/color.dart';
 import '../utils/app_manager.dart';
 
@@ -12,6 +12,7 @@ class CustomTale extends StatefulWidget {
   final String taleName;
   final int index;
   bool isLiked; // Include isFavorited in CustomTale
+  bool isTablet;
 
   CustomTale({
     Key? key,
@@ -19,6 +20,7 @@ class CustomTale extends StatefulWidget {
     required this.taleName,
     required this.index,
     this.isLiked = false, // Set default to false
+    this.isTablet = false, // Set default to false
   }) : super(key: key);
 
   @override
@@ -59,6 +61,14 @@ class _CustomTaleState extends State<CustomTale> {
 
   @override
   Widget build(BuildContext context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    if (isTablet) {
+      size = Size(480, 320);
+    }
     return Container(
       alignment: Alignment.center,
       /*widget.talePos
@@ -70,7 +80,6 @@ class _CustomTaleState extends State<CustomTale> {
           String taleId = await _taleService.getTaleId(widget.taleName);
           _appManager.setCurrentTale(taleId);
           Navigator.of(context).pushNamed('/talePage');
-
         },
         child: taleCard(),
       ),
@@ -188,7 +197,6 @@ class _CustomTaleState extends State<CustomTale> {
             ),
           ],
         ),
-
       ),
     );
   }

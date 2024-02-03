@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:trip_tales/src/controllers/auth_controller.dart';
 import 'package:trip_tales/src/pages/Login.dart'; // Import your LoginPage widget
 // Import necessary dependencies and widgets used in the LoginPage
 
 void main() {
   testWidgets('LoginPage layout', (WidgetTester tester) async {
     // Build the widget
+    final AuthController authController = Get.find<AuthController>();
     await tester.pumpWidget(MaterialApp(home: LoginPage()));
 
     // Test if the Scaffold is rendered

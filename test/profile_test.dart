@@ -17,15 +17,15 @@ void main() {
     expect(find.byType(SingleChildScrollView), findsOneWidget);
 
     // Check if main widgets are present
-    expect(find.byType(Container), findsNWidgets(3));
-    expect(find.byType(Column), findsNWidgets(2));
-    expect(find.byType(Flexible), findsOneWidget);
-    expect(find.byType(CustomAppBar), findsOneWidget);
-    expect(find.byType(CustomTextField), findsNWidgets(8));
-    expect(find.byType(Stack), findsNWidgets(3));
+    expect(find.byType(Container), findsNWidgets(5));
+    expect(find.byType(Column), findsNWidgets(5));
+    expect(find.byType(Flexible), findsNWidgets(3));
+    expect(find.byType(CustomAppBar), findsNothing);
+    expect(find.byType(CustomTextField), findsNWidgets(28));
+    expect(find.byType(Stack), findsOneWidget);
     expect(find.byType(Positioned), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsOneWidget);
-    expect(find.byType(SizedBox), findsNWidgets(38));
+    expect(find.byType(SizedBox), findsNWidgets(28));
     // expect(find.byType(SetPhotoScreen), findsNWidgets(2));
   });
 

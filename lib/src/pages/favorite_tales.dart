@@ -5,6 +5,7 @@ import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
 import 'package:trip_tales/src/widgets/app_bar_tale.dart';
 import 'package:trip_tales/src/widgets/tale_card.dart';
+import 'package:trip_tales/src/widgets/text_field.dart';
 import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 
@@ -45,10 +46,28 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> {
   }
 
   Widget buildBody() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(isTablet ? 15.0 : 10), // Add this
+              child: Text(
+                'Your favorite Tales',
+                style: TextStyle(
+                    color: AppColors.text2,
+                    fontSize: isTablet ? 30 : 25,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+          ],
+        ),
         Flexible(
           fit: FlexFit.tight,
           flex: 14,
@@ -59,6 +78,72 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> {
   }
 
   Widget buildCards() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    return FutureBuilder<List<TaleModel?>>(
+      future: tales,
+      builder:
+          (BuildContext context, AsyncSnapshot<List<TaleModel?>> snapshot) {
+        if (snapshot.hasData) {
+          List<TaleModel?> data = [];
+          data = snapshot.data!;
+          numOfTales = data.length;
+          for (int i = 0; i < numOfTales; i++) {
+            _widgetKeyList = List.generate(
+                numOfTales, (index) => GlobalObjectKey<FormState>(index));
+          }
+          // If the device is a tablet and in landscape mode, make the SingleChildScrollView scroll horizontally and change the Column to a Row
+          if (isTablet && isLandscape) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (int i = 0; i < numOfTales; i++)
+                    CustomTale(
+                      key: _widgetKeyList[i],
+                      talePath: data[i]!.imagePath,
+                      taleName: data[i]!.name,
+                      index: i,
+                      isLiked: data[i]!.liked,
+                    ),
+                ],
+              ),
+            );
+          } else {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (int i = 0; i < numOfTales; i++)
+                    CustomTale(
+                      key: _widgetKeyList[i],
+                      talePath: data[i]!.imagePath,
+                      taleName: data[i]!.name,
+                      index: i,
+                      isLiked: data[i]!.liked,
+                    ),
+                ],
+              ),
+            );
+          }
+        } else if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
+/*
+  Widget buildCards() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return FutureBuilder<List<TaleModel?>>(
       future: tales,
       builder:
@@ -96,4 +181,5 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> {
       },
     );
   }
+  */
 }

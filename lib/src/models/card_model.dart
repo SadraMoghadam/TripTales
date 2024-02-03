@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trip_tales/src/utils/text_utils.dart';
-
 import '../constants/color.dart';
 import '../constants/memory_card_type.dart';
 import '../utils/matrix_utils.dart';
@@ -30,7 +29,6 @@ class CardModel {
     this.size = const Size(300, 300),
     this.path = "",
     this.name = "image",
-
     this.text = '',
     this.textColor = AppColors.text1,
     this.textBackgroundColor = AppColors.main2,
@@ -40,11 +38,11 @@ class CardModel {
     this.fontSize = 16,
   });
 
-  void setOrder(int order){
+  void setOrder(int order) {
     this.order = order;
   }
 
-  void setTransform(Matrix4 transform){
+  void setTransform(Matrix4 transform) {
     this.transform = transform;
   }
 
@@ -84,12 +82,6 @@ class CardModel {
     };
   }
 }
-
-
-
-
-
-
 
 //
 // class ImageCardModel extends CardModel {

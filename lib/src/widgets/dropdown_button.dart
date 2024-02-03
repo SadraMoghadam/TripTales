@@ -9,6 +9,7 @@ class CustomDropdownButton extends StatefulWidget {
   String? selectedValue;
   final IconData icon;
   final bool readOnly;
+  final bool isTablet; //added for the tablet version
 
   CustomDropdownButton({
     super.key,
@@ -18,6 +19,7 @@ class CustomDropdownButton extends StatefulWidget {
     required this.onValueChanged,
     this.icon = Icons.list,
     this.readOnly = false,
+    this.isTablet = false,
   });
 
   @override
@@ -25,8 +27,6 @@ class CustomDropdownButton extends StatefulWidget {
 }
 
 class _CustomDropdownButtonState extends State<CustomDropdownButton> {
-
-
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
@@ -82,16 +82,17 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         value: widget.selectedValue,
         onChanged: (String? value) {
           setState(() {
-            if(!widget.readOnly){
+            if (!widget.readOnly) {
               widget.selectedValue = value;
               widget.onValueChanged(value);
             }
           });
         },
         buttonStyleData: ButtonStyleData(
-          height: 40,
-          width: 300,
+          height: widget.isTablet ? 70 : 40,
+          width: widget.isTablet ? 450 : 300,
           padding: const EdgeInsets.only(left: 14, right: 14),
+          //padding: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
@@ -109,8 +110,8 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           iconDisabledColor: Colors.grey,
         ),
         dropdownStyleData: DropdownStyleData(
-          maxHeight: 200,
-          width: 300,
+          maxHeight: widget.isTablet ? 450 : 200,
+          width: widget.isTablet ? 450 : 300,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             color: Colors.white,

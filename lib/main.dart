@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -28,7 +29,7 @@ Future<void> main() async {
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );//.then((value) => Get.put(AuthenticationRepository));
+  ); //.then((value) => Get.put(AuthenticationRepository));
   runApp(MyApp());
 }
 
@@ -37,6 +38,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Now we have a context to use
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    // Set preferred orientations to portrait mode
+    if (!isTablet) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
     return GetMaterialApp(
       navigatorKey: GlobalContextService.navigatorKey,
       debugShowCheckedModeBanner: false,
@@ -53,7 +68,7 @@ class MyApp extends StatelessWidget {
         '/favoriteTalesPage': (context) => FavoriteTalesPage(),
         '/profilePage': (context) => ProfilePage(),
       },
-      initialRoute: '/loginPage',
+      initialRoute: '/customMenu',
       initialBinding: BindingsBuilder(() {
         Get.put(AuthService(), permanent: true);
         Get.put(AuthController(), permanent: true);

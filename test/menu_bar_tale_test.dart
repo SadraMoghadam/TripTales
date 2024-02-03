@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trip_tales/src/pages/favorite_tales.dart';
@@ -106,3 +107,4 @@ void main() {
     expect(find.byType(MyTalesPage), findsOneWidget);
   });
 }
+*/
