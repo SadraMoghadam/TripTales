@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -8,14 +7,12 @@ import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/models/card_model.dart';
 import 'package:trip_tales/src/widgets/delete_item_dialog.dart';
 import 'package:video_player/video_player.dart';
-
 import '../constants/memory_card_type.dart';
 import '../services/card_service.dart';
 import '../utils/app_manager.dart';
 import '../utils/device_info.dart';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
-
 import '../utils/tuple.dart';
 
 class MemoryCard extends StatefulWidget {
@@ -192,10 +189,9 @@ class _MemoryCardState extends State<MemoryCard> {
   //   });
   // }
 
-  void updateTransform(Matrix4 transform){
+  void updateTransform(Matrix4 transform) {
     _appManager.setCardTransform(widget.name, transform);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -449,29 +445,31 @@ class _MemoryCardState extends State<MemoryCard> {
         child: FutureBuilder(
             future: checkTextNotEmpty(),
             builder: (context, snapshot) {
-              if(snapshot.hasData) {
+              if (snapshot.hasData) {
                 return Stack(
-                children: [
-                  FittedBox(
-                    fit: BoxFit.fill,
-                    child: Text(
-                      widget.text,
-                      style: TextStyle(
-                        fontSize: widget.fontSize,
-                        fontWeight: widget.fontWeight,
-                        color: widget.textColor,
-                        // backgroundColor: widget.textBackgroundColor,
-                        decoration: widget.textDecoration,
-                        fontStyle: widget.fontStyle,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.fill,
+                      child: Text(
+                        widget.text,
+                        style: TextStyle(
+                          fontSize: widget.fontSize,
+                          fontWeight: widget.fontWeight,
+                          color: widget.textColor,
+                          // backgroundColor: widget.textBackgroundColor,
+                          decoration: widget.textDecoration,
+                          fontStyle: widget.fontStyle,
+                        ),
                       ),
                     ),
-                  ),
-                  deleteButton(deleteCard)
-                ],
-              );
-              }
-              else {
-                return Container(height: 0, width: 0,);
+                    deleteButton(deleteCard)
+                  ],
+                );
+              } else {
+                return Container(
+                  height: 0,
+                  width: 0,
+                );
               }
             }));
   }

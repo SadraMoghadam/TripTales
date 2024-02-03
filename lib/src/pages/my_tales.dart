@@ -72,6 +72,77 @@ class _MyTalesPage extends State<MyTalesPage> {
   }
 
   Widget buildCards() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    return FutureBuilder<List<TaleModel?>>(
+      future: tales,
+      builder:
+          (BuildContext context, AsyncSnapshot<List<TaleModel?>> snapshot) {
+        if (snapshot.hasData) {
+          List<TaleModel?> data = snapshot.data!;
+          numOfTales = data.length;
+          for (int i = 0; i < numOfTales; i++) {
+            _widgetKeyList = List.generate(
+                numOfTales,
+                (index) => GlobalObjectKey<FormState>(index +
+                    data[i]!.name.codeUnits.fold<int>(
+                        0,
+                        (previousValue, element) =>
+                            previousValue * 256 + element)));
+          }
+          // If the device is a tablet and in landscape mode, make the SingleChildScrollView scroll horizontally and change the Column to a Row
+          if (isLandscape && isTablet) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (int i = 0; i < numOfTales; i++)
+                    CustomTale(
+                      key: _widgetKeyList[i],
+                      talePath: data[i]!.imagePath,
+                      taleName: data[i]!.name,
+                      index: i,
+                      isLiked: data[i]!.liked,
+                    ),
+                ],
+              ),
+            );
+          } else {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (int i = 0; i < numOfTales; i++)
+                    CustomTale(
+                      key: _widgetKeyList[i],
+                      talePath: data[i]!.imagePath,
+                      taleName: data[i]!.name,
+                      index: i,
+                      isLiked: data[i]!.liked,
+                    ),
+                ],
+              ),
+            );
+          }
+        } else if (snapshot.hasError) {
+          // print(snapshot.error);
+          return Text("Error: ${snapshot.error}");
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
+/*
+  Widget buildCards() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return FutureBuilder<List<TaleModel?>>(
       future: tales,
       builder:
@@ -82,8 +153,13 @@ class _MyTalesPage extends State<MyTalesPage> {
           // print(snapshot.data!);
           numOfTales = data.length;
           for (int i = 0; i < numOfTales; i++) {
-            _widgetKeyList.add(GlobalObjectKey<FormState>(i + data[i]!.id!.codeUnits.fold<int>(
-                0, (previousValue, element) => previousValue * 256 + element)));
+            _widgetKeyList = List.generate(
+                numOfTales,
+                (index) => GlobalObjectKey<FormState>(index +
+                    data[i]!.name.codeUnits.fold<int>(
+                        0,
+                        (previousValue, element) =>
+                            previousValue * 256 + element)));
           }
           Set<GlobalKey<State<StatefulWidget>>> uniqueSet = Set.from(_widgetKeyList);
           _widgetKeyList = uniqueSet.toList();
@@ -111,8 +187,64 @@ class _MyTalesPage extends State<MyTalesPage> {
       },
     );
   }
+  */
 
-  Widget newTaleButton(){
+  Widget newTaleButton() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed('/createTalePage');
+      },
+      child: Center(
+        child: Container(
+          width: isTablet ? 120 : 100,
+          height: isTablet ? 120 : 100,
+          margin: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.main2,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey, blurRadius: 3, offset: Offset(-5, 5))
+              ],
+              border: Border(
+                top: BorderSide(color: AppColors.main1, width: 5),
+                right: BorderSide(color: AppColors.main1, width: 5),
+                bottom: BorderSide(color: AppColors.main1, width: 5),
+                left: BorderSide(color: AppColors.main1, width: 5),
+              )
+              // image: DecorationImage(
+              //   fit: BoxFit.cover,
+              //   image: AssetImage('assets/images/createTale_background.png'),
+              // ),
+              ),
+          child: const Center(
+            // Add this
+            child: Text(
+              '+',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 60.0,
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(-2.0, 2.0),
+                    blurRadius: 3.0,
+                    color: AppColors.main1,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+/*
+  Widget newTaleButton() {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed('/createTalePage');
@@ -127,9 +259,7 @@ class _MyTalesPage extends State<MyTalesPage> {
               color: AppColors.main2,
               boxShadow: [
                 BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 3,
-                    offset: Offset(-5, 5))
+                    color: Colors.grey, blurRadius: 3, offset: Offset(-5, 5))
               ],
               border: Border(
                 top: BorderSide(color: AppColors.main1, width: 5),
@@ -137,11 +267,11 @@ class _MyTalesPage extends State<MyTalesPage> {
                 bottom: BorderSide(color: AppColors.main1, width: 5),
                 left: BorderSide(color: AppColors.main1, width: 5),
               )
-            // image: DecorationImage(
-            //   fit: BoxFit.cover,
-            //   image: AssetImage('assets/images/createTale_background.png'),
-            // ),
-          ),
+              // image: DecorationImage(
+              //   fit: BoxFit.cover,
+              //   image: AssetImage('assets/images/createTale_background.png'),
+              // ),
+              ),
           child: const Text(
             textAlign: TextAlign.center,
             '+',
@@ -162,4 +292,5 @@ class _MyTalesPage extends State<MyTalesPage> {
       ),
     );
   }
+  */
 }

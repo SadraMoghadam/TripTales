@@ -345,6 +345,123 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+/*
+  Widget buildBody() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+
+    return Column(
+      children: [
+        CustomTextField(
+          isTablet: isTablet,
+          key: const Key('nameCustomTextFieldKey'),
+          controller: _nameController,
+          labelText: 'Name',
+          hintText: 'Enter your name',
+          prefixIcon: Icons.person,
+          obscureText: false,
+          keyboardType: TextInputType.name,
+          textInputAction: TextInputAction.next,
+          validator: _validator.nameValidator,
+        ),
+        CustomTextField(
+          isTablet: isTablet,
+          key: const Key('surnameCustomTextFieldKey'),
+          controller: _surnameController,
+          labelText: 'Surname',
+          hintText: 'Enter your surname',
+          prefixIcon: Icons.person,
+          obscureText: false,
+          keyboardType: TextInputType.name,
+          textInputAction: TextInputAction.next,
+          validator: _validator.nameValidator,
+        ),
+        CustomTextField(
+          isTablet: isTablet,
+          key: const Key('emailCustomTextFieldKey'),
+          controller: _emailController,
+          labelText: 'Email',
+          hintText: 'Enter your email',
+          prefixIcon: Icons.email,
+          obscureText: false,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          validator: _validator.emailValidator,
+        ),
+        CustomTextField(
+          isTablet: isTablet,
+          key: const Key('dateBirthCustomTextFieldKey'),
+          controller: _birthDateController,
+          labelText: 'Date of birth',
+          hintText: _selectedDate != null
+              ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
+              : 'Select date',
+          readOnly: true,
+          onTap: () => _selectDate(context),
+          prefixIcon: Icons.date_range_sharp,
+          obscureText: false,
+          keyboardType: TextInputType.datetime,
+          textInputAction: TextInputAction.next,
+          validator: _validator.dateValidator,
+        ),
+        CustomTextField(
+          isTablet: isTablet,
+          key: const Key('passwordCustomTextFieldKey'),
+          controller: _passwordController,
+          labelText: 'Password',
+          hintText: 'Enter your password',
+          prefixIcon: Icons.password,
+          isPassword: true,
+          isPasswordVisible: _isPasswordVisible,
+          onVisibilityPressed: onPasswordVisibilityPressed,
+          obscureText: !_isPasswordVisible,
+          keyboardType: TextInputType.visiblePassword,
+          textInputAction: TextInputAction.next,
+          validator: _validator.passwordValidator,
+        ),
+        CustomTextField(
+          isTablet: isTablet,
+          key: const Key('confirmPasswordCustomTextFieldKey'),
+          controller: _confirmPasswordController,
+          labelText: 'Confirm Password',
+          hintText: 'Enter your password again',
+          prefixIcon: Icons.password,
+          isPassword: true,
+          isPasswordVisible: _isConfirmPasswordVisible,
+          onVisibilityPressed: onConfirmPasswordVisibilityPressed,
+          obscureText: !_isConfirmPasswordVisible,
+          keyboardType: TextInputType.visiblePassword,
+          textInputAction: TextInputAction.next,
+          validator: (value) => _validator.confirmPasswordValidator(
+              value, _passwordController.text),
+        ),
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          alignment: WrapAlignment.center,
+          children: [
+            Text(
+              'Password Strength',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                color: AppColors.text2,
+                fontSize: isTablet ? 18.0 : 15.0,
+              ),
+            ),
+            PasswordStrengthIndicator(
+              isTablet: isTablet,
+              hasUppercase: hasUppercase,
+              hasLowercase: hasLowercase,
+              hasDigits: hasDigits,
+              hasSpecialCharacters: hasSpecialCharacters,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+*/
+
   Widget buildFooter() {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);

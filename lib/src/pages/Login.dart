@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:trip_tales/src/utils/validator.dart';
@@ -22,7 +23,6 @@ class _LoginPageState extends State<LoginPage> {
   late final TextEditingController _passwordController;
   final AuthController authController = Get.find<AuthController>();
 
-
   bool _isPasswordVisible = false;
   bool hasUppercase = false;
   bool hasLowercase = false;
@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   // Login methods: 1(with email and password), 2(with Gmail), 3(with Facebook)
   void _submit(int loginMethod) async {
     int result = 400;
-    if(loginMethod == 1){
+    if (loginMethod == 1) {
       final isValid = _formKey.currentState?.validate();
       if (isValid == null || !isValid) {
         return;
@@ -41,18 +41,16 @@ class _LoginPageState extends State<LoginPage> {
         _emailController.text,
         _passwordController.text,
       );
-    }
-    else if(loginMethod == 2){
+    } else if (loginMethod == 2) {
       result = await authController.signInWithGoogle();
     }
     // else if(loginMethod == 3){
     //   result = await authController.signInWithFacebook();
     // }
-    if(result == 200) {
+    if (result == 200) {
       Navigator.pushReplacementNamed(context, '/customMenu');
       _formKey.currentState?.save();
-    }
-    else{
+    } else {
       print("Wrong credentials");
       return;
     }
@@ -106,41 +104,195 @@ class _LoginPageState extends State<LoginPage> {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     bool isTablet = device.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-          child: Container(
-        height: device.height,
-        width: device.width,
-        alignment: Alignment.center,
-        child: Form(
+        child: Container(
+            height: device.height,
+            width: device.width,
+            alignment: Alignment.center,
+            child: Form(
               key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Flexible(
-              fit: FlexFit.tight,
-              flex: 4,
-              child: buildHeader(),
-            ),
-            Flexible(
-              fit: FlexFit.tight,
-              flex: 3,
-              child: buildBody(),
-            ),
-            Flexible(
-              fit: FlexFit.tight,
-              flex: 2,
-              child: buildFooter(),
-            ),
-          ],
-        ),
-      )),
-      //   ),
-    ),);
+              child: isTablet && isLandscape
+                  ? Row(
+                      // Use Row for landscape mode on tablet
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 4,
+                          child: buildHeader(context),
+                        ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 6, // Adjust flex values as needed
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              const Flexible(
+                                fit: FlexFit.tight,
+                                flex: 1,
+                                child: SizedBox(height: 50),
+                              ),
+                              Flexible(
+                                fit: FlexFit.tight,
+                                flex: 3,
+                                child: buildBody(context),
+                              ),
+                              Flexible(
+                                fit: FlexFit.tight,
+                                flex: 2,
+                                child: buildFooter(context),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      // Use Column for portrait mode or non-tablet devices
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 4,
+                          child: buildHeader(context),
+                        ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 3,
+                          child: buildBody(context),
+                        ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 2,
+                          child: buildFooter(context),
+                        ),
+                      ],
+                    ),
+            )),
+      ),
+    );
   }
 
-  Widget buildHeader() {
+/*
+  @override
+  Widget build(BuildContext context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+//    if (isTablet && isLandscape) {
+//      return buildLandScape(context);
+//    } else {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Container(
+            height: device.height,
+            width: device.width,
+            alignment: Alignment.center,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 4,
+                    child: buildHeader(context),
+                  ),
+                  //buildHeader(context),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 3,
+                    child: buildBody(context),
+                  ),
+                  //buildBody(context),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 2,
+                    child: buildFooter(context),
+                  )
+                  //buildFooter(context),
+                ],
+              ),
+            )),
+        //   ),
+      ),
+    );
+  }
+
+/*
+  Widget buildLandScape(BuildContext context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: Container(
+            key: const Key('container1Key'),
+            height: device.height,
+            width: device.width,
+            alignment: Alignment.center,
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 10,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        // First Column for Logo and Text
+                        Column(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.asset(
+                                  'assets/images/TripTales_logo.png',
+                                  height: isTablet ? 250 : 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              'Welcome Back',
+                              style: TextStyle(
+                                color: AppColors.text1,
+                                fontSize: isTablet ? 30 : 25,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                            //  mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              buildBody(),
+                              buildFooter(),
+                            ]),
+                      ]),
+                )
+              ],
+            )),
+      ),
+    );
+  }
+  */
+*/
+  Widget buildHeader(context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     bool isTablet = device.isTablet;
@@ -153,7 +305,7 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(8.0),
             child: Image.asset(
               'assets/images/TripTales_logo.png',
-              height: isTablet ? 250 : 200,
+              height: isTablet ? 300 : 200,
               fit: BoxFit.cover,
             ),
           ),
@@ -169,7 +321,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildBody() {
+  Widget buildBody(context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     bool isTablet = device.isTablet;
@@ -246,7 +398,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildAuthOptions(){
+  Widget buildAuthOptions() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -303,7 +455,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildFooter() {
+  Widget buildFooter(context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     bool isTablet = device.isTablet;

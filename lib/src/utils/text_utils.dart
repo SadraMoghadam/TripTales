@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class TextUtils {
-
   static String colorToText(Color color) {
     return color.value.toRadixString(16);
   }
@@ -85,5 +84,4 @@ class TextUtils {
         return '';
     }
   }
-
 }

@@ -9,7 +9,6 @@ import '../models/tale_model.dart';
 import '../services/auth_service.dart';
 import '../models/user_model.dart';
 
-
 class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   // final TaleService _taleService = Get.find<TaleService>();
@@ -34,10 +33,8 @@ class AuthController extends GetxController {
     }
   }
 
-
   Future<int> signInWithFacebook() async {
-    final User? signedInUser =
-    await _authService.signInWithFacebook();
+    final User? signedInUser = await _authService.signInWithFacebook();
     if (signedInUser != null) {
       print("logged in");
       return 200;
@@ -48,8 +45,7 @@ class AuthController extends GetxController {
   }
 
   Future<int> signInWithGoogle() async {
-    final User? signedInUser =
-    await _authService.signInWithGoogle();
+    final User? signedInUser = await _authService.signInWithGoogle();
     if (signedInUser != null) {
       print("logged in");
       return 200;
@@ -71,10 +67,11 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<int> registerWithEmailAndPassword(
-      String email, String password, String name, String surname, String birthDate) async {
+  Future<int> registerWithEmailAndPassword(String email, String password,
+      String name, String surname, String birthDate) async {
     final User? registeredUser =
-        await _authService.registerWithEmailAndPassword(email, password, name, surname, birthDate);
+        await _authService.registerWithEmailAndPassword(
+            email, password, name, surname, birthDate);
     if (registeredUser != null) {
       return 200;
     } else {
@@ -83,7 +80,7 @@ class AuthController extends GetxController {
   }
 
   Future<bool> deleteUser(String uid) async {
-    try{
+    try {
       UserModel? user = await _authService.getUserById(uid);
       // List<TaleModel?> tales = await _taleService.getTales(uid);
       // for(int i = 0; i < tales.length; i++) {
@@ -98,7 +95,7 @@ class AuthController extends GetxController {
       await _firestore.collection('users').doc(user!.id).delete();
       await _storage.refFromURL(user!.profileImage).delete();
       return true;
-    } catch(e) {
+    } catch (e) {
       return false;
     }
   }

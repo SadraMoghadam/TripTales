@@ -111,8 +111,7 @@ class _ReorderPageState extends State<ReorderPage> {
                 title: Text(cardsOrder[i]!.name),
                 leading:
                     const Icon(Icons.drag_handle_rounded, color: Colors.black),
-                trailing:
-                Row(
+                trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     resetPositionButton(cardsOrder[i]!.name),
@@ -148,8 +147,7 @@ class _ReorderPageState extends State<ReorderPage> {
       },
       child: Container(
         padding: EdgeInsets.all(1),
-        child:
-        const Icon(Icons.restart_alt, size: 22, color: AppColors.main1),
+        child: const Icon(Icons.restart_alt, size: 22, color: AppColors.main1),
       ),
     );
   }
@@ -162,9 +160,9 @@ class _ReorderPageState extends State<ReorderPage> {
             builder: (BuildContext context) {
               return DeleteItemDialog(name: name);
             }).then((value) => setState(() {
-              if(value) {
+              if (value) {
                 cardsOrder.removeAt(
-                  cardsOrder.indexWhere((element) => element!.name == name));
+                    cardsOrder.indexWhere((element) => element!.name == name));
               }
             }));
       },

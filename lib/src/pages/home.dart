@@ -36,9 +36,19 @@ class HomePage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return Column(
       children: <Widget>[
-        Flexible(fit: FlexFit.tight, flex: 7, child: buildHome(context)),
+        Flexible(
+            fit: FlexFit.tight,
+            flex: 7,
+            child: isTablet && isLandscape
+                ? buildHomeLandScape(context)
+                : buildHome(context)),
         Flexible(fit: FlexFit.tight, flex: 2, child: buildButtons(context)),
       ],
     );
@@ -63,7 +73,7 @@ class HomePage extends StatelessWidget {
                 child: Image.asset(
                   key: const Key('logoKey'),
                   'assets/images/TripTales_logo.png',
-                  height: isTablet ? 300.0 : 200,
+                  height: isTablet ? 250.0 : 200,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -114,6 +124,61 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  Widget buildHomeLandScape(context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        // Logo
+        Padding(
+            padding: const EdgeInsets.only(
+                right: 16.0), // Adjust the padding as needed
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.asset(
+                'assets/images/TripTales_logo.png',
+                height: isTablet ? 300.0 : 200,
+                fit: BoxFit.cover,
+              ),
+            )),
+        const SizedBox(height: 20),
+        // Texts
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Live',
+              style: TextStyle(
+                fontSize: isTablet ? 50 : 40,
+                color: AppColors.main1,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Text(
+              'Feel',
+              style: TextStyle(
+                fontSize: isTablet ? 50 : 40,
+                color: AppColors.main3,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Text(
+              'Discover',
+              style: TextStyle(
+                fontSize: isTablet ? 50 : 40,
+                color: AppColors.main2,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget buildButtons(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
@@ -141,7 +206,7 @@ class HomePage extends StatelessWidget {
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, '/registerPage'),
             child: Text('Create Account',
-                key: Key('createAccountCustomButtonKey'),
+                key: const Key('createAccountCustomButtonKey'),
                 style: TextStyle(
                     fontSize: isTablet ? 15 : 10,
                     color: Colors.black87,

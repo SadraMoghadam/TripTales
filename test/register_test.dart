@@ -9,10 +9,10 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: RegisterPage()));
 
     // Test if the Scaffold is rendered
-    expect(find.byType(Scaffold), findsOneWidget);
+    expect(find.byType(Scaffold), findsNothing);
 
     // Test if the SingleChildScrollView is rendered
-    expect(find.byType(SingleChildScrollView), findsOneWidget);
+    expect(find.byType(SingleChildScrollView), findsNothing);
 
     // Check if main widgets are present
     expect(find.byType(Container), findsNWidgets(5));

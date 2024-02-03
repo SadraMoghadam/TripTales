@@ -74,8 +74,10 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
   void initState() {
     super.initState();
     // user = _authService.getUserById(_appManager.getCurrentUser());
-    _passwordController = TextEditingController()..addListener(() {
-      checkPasswordStrength(_passwordController.text);});
+    _passwordController = TextEditingController()
+      ..addListener(() {
+        checkPasswordStrength(_passwordController.text);
+      });
     _confirmPasswordController = TextEditingController()..addListener(() {});
   }
 
@@ -104,6 +106,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return AlertDialog(
       key: const Key('changePassAlertDialogKey'),
       title: const Text(
@@ -126,19 +129,19 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
       ),
       actions: [
         CustomButton(
-            height: 5,
-            width: 20,
-            fontSize: 12,
+            height: isTablet ? 8 : 5,
+            width: isTablet ? 25 : 20,
+            fontSize: isTablet ? 15 : 12,
             padding: 10,
             backgroundColor: AppColors.main2,
             text: "Change",
             textColor: Colors.white,
             onPressed: () => _submit()),
         CustomButton(
-            height: 5,
-            width: 20,
+            height: isTablet ? 8 : 5,
+            width: isTablet ? 25 : 20,
             padding: 10,
-            fontSize: 12,
+            fontSize: isTablet ? 15 : 12,
             backgroundColor: AppColors.main3,
             text: "Close",
             textColor: Colors.white,
@@ -159,6 +162,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
             child: Container(
               alignment: Alignment.bottomCenter,
               child: CustomTextField(
+                isTablet: isTablet,
                 key: const Key('passwordCustomTextFieldKey'),
                 controller: _passwordController,
                 labelText: 'Password',
@@ -180,6 +184,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
             child: Container(
               alignment: Alignment.bottomCenter,
               child: CustomTextField(
+                isTablet: isTablet,
                 key: const Key('confirmPasswordCustomTextFieldKey'),
                 controller: _confirmPasswordController,
                 labelText: 'Confirm Password',
@@ -197,30 +202,31 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
             ),
           ),
           Flexible(
-              flex: 1,
-              child: Container(
-                alignment: Alignment.center,
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    const Text(
-                      'Password Strength',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: AppColors.text2,
-                      ),
+            flex: 1,
+            child: Container(
+              alignment: Alignment.center,
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                alignment: WrapAlignment.center,
+                children: [
+                  const Text(
+                    'Password Strength',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: AppColors.text2,
                     ),
-                    PasswordStrengthIndicator(
-                      isTablet: isTablet,
-                      hasUppercase: hasUppercase,
-                      hasLowercase: hasLowercase,
-                      hasDigits: hasDigits,
-                      hasSpecialCharacters: hasSpecialCharacters,
-                    ),
-                  ],
-                ),
-              ),),
+                  ),
+                  PasswordStrengthIndicator(
+                    isTablet: isTablet,
+                    hasUppercase: hasUppercase,
+                    hasLowercase: hasLowercase,
+                    hasDigits: hasDigits,
+                    hasSpecialCharacters: hasSpecialCharacters,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

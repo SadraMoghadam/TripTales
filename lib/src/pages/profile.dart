@@ -182,13 +182,18 @@ class _ProfilePageState extends State<ProfilePage>
   Widget buildBody(context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Flexible(
           fit: FlexFit.tight,
           flex: 25,
-          child: buildScreen(),
+          child: isTablet && isLandscape
+              ? Center(child: buildScreenLandScape())
+              : buildScreen(),
         ),
       ],
     );
@@ -283,7 +288,382 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  Widget buildScreenLandScape() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    return FutureBuilder<UserModel?>(
+        key: _futureBuilderKey,
+        future: user,
+        builder: (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return CircularProgressIndicator();
+          // }
+          if (snapshot.hasData) {
+            UserModel userData = snapshot.data!;
+            print(userData.email);
+            print(userData.gender);
+            _nameController.text = userData.name ?? '';
+            _surnameController.text = userData.surname ?? '';
+            _emailController.text = userData.email ?? '';
+            _birthDateController.text = userData.birthDate ?? '';
+            _selectedGender = userData.gender == ''
+                ? '--Choose Your Gender--'
+                : userData.gender;
+            _bioController.text = userData.bio ?? '';
+            _phoneNumberController.text = userData.phoneNumber ?? '';
+            if (userData.profileImage != '') {
+              print(userData.profileImage);
+              _profileImage = NetworkImage(userData.profileImage);
+            } else {
+              _profileImage = const AssetImage('assets/images/profile_pic.png');
+            }
+
+            return Row(children: [
+              Padding(
+                padding: const EdgeInsets.all(70.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [buildHeader(context)],
+                ),
+              ),
+              Center(
+                  child: SingleChildScrollView(
+                      child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              //crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10.0),
+                                                    child: CustomTextField(
+                                                      isTablet: isTablet,
+                                                      key: const Key(
+                                                          'nameCustomTextFieldKey'),
+                                                      readOnly:
+                                                          readOnlyTextField,
+                                                      controller:
+                                                          _nameController,
+                                                      labelText: 'Name',
+                                                      hintText:
+                                                          'Enter your Name',
+                                                      prefixIcon:
+                                                          Icons.abc_rounded,
+                                                      obscureText: false,
+                                                      keyboardType:
+                                                          TextInputType.name,
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      validator: _validator
+                                                          .nameValidator,
+                                                    )),
+                                                const SizedBox(height: 20),
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10.0),
+                                                    child: CustomTextField(
+                                                      isTablet: isTablet,
+                                                      key: const Key(
+                                                          'surnameCustomTextFieldKey'),
+                                                      readOnly:
+                                                          readOnlyTextField,
+                                                      controller:
+                                                          _surnameController,
+                                                      labelText: 'Surname',
+                                                      hintText:
+                                                          'Enter your Surname',
+                                                      prefixIcon:
+                                                          Icons.abc_rounded,
+                                                      obscureText: false,
+                                                      keyboardType:
+                                                          TextInputType.name,
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      validator: _validator
+                                                          .nameValidator,
+                                                    ))
+                                              ])),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: CustomTextField(
+                                                  isTablet: isTablet,
+                                                  key: const Key(
+                                                      'bioCustomTextFieldKey'),
+                                                  maxLines: 1,
+                                                  readOnly: readOnlyTextField,
+                                                  controller: _bioController,
+                                                  labelText: 'Bio',
+                                                  hintText: 'Enter your Bio',
+                                                  prefixIcon:
+                                                      Icons.textsms_rounded,
+                                                  obscureText: false,
+                                                  keyboardType:
+                                                      TextInputType.text,
+                                                  textInputAction:
+                                                      TextInputAction.newline,
+                                                )),
+                                            const SizedBox(height: 20),
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: CustomTextField(
+                                                  isTablet: isTablet,
+                                                  key: const Key(
+                                                      'birthDateCustomTextFieldKey'),
+                                                  readOnly: readOnlyTextField,
+                                                  controller:
+                                                      _birthDateController,
+                                                  labelText: 'Date of birth',
+                                                  hintText: _selectedDate !=
+                                                          null
+                                                      ? DateFormat('yyyy-MM-dd')
+                                                          .format(
+                                                              _selectedDate!)
+                                                      : 'Select date',
+                                                  onTap: () =>
+                                                      _selectDate(context),
+                                                  prefixIcon:
+                                                      Icons.date_range_rounded,
+                                                  obscureText: false,
+                                                  keyboardType:
+                                                      TextInputType.datetime,
+                                                  textInputAction:
+                                                      TextInputAction.next,
+                                                  validator:
+                                                      _validator.dateValidator,
+                                                ))
+                                          ]),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: CustomTextField(
+                                                  isTablet: isTablet,
+                                                  key: const Key(
+                                                      'emailCustomTextFieldKey'),
+                                                  readOnly: true,
+                                                  textColor: AppColors.text3,
+                                                  controller: _emailController,
+                                                  labelText: 'Email',
+                                                  hintText: 'Enter your Email',
+                                                  prefixIcon: Icons.email,
+                                                  obscureText: false,
+                                                  keyboardType: TextInputType
+                                                      .emailAddress,
+                                                  textInputAction:
+                                                      TextInputAction.next,
+                                                  validator:
+                                                      _validator.emailValidator,
+                                                )),
+                                            const SizedBox(height: 20),
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: CustomDropdownButton(
+                                                  isTablet: isTablet,
+                                                  selectedValue:
+                                                      _selectedGender,
+                                                  readOnly: readOnlyTextField,
+                                                  label: 'Gender',
+                                                  items: genderOptions,
+                                                  icon: Icons.list,
+                                                  onValueChanged:
+                                                      _handleGenderValueChanged,
+                                                ))
+                                          ]),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: CustomTextField(
+                                                  isTablet: isTablet,
+                                                  key: const Key(
+                                                      'phoneNumberCustomTextFieldKey'),
+                                                  readOnly: readOnlyTextField,
+                                                  controller:
+                                                      _phoneNumberController,
+                                                  labelText: 'Phone Number',
+                                                  hintText:
+                                                      'Enter your phone number',
+                                                  prefixIcon:
+                                                      Icons.local_phone_rounded,
+                                                  obscureText: false,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  textInputAction:
+                                                      TextInputAction.next,
+                                                  validator: _validator
+                                                      .phoneNumberValidator,
+                                                )),
+                                            const SizedBox(height: 20),
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: CustomTextField(
+                                                  isTablet: isTablet,
+                                                  key: const Key(
+                                                      'passwordCustomTextField'),
+                                                  controller:
+                                                      _passwordController,
+                                                  labelText: 'Password',
+                                                  hintText:
+                                                      'Enter your password',
+                                                  prefixIcon: Icons.password,
+                                                  suffixIcon: Icons.edit,
+                                                  isEditableOnOtherWindow: true,
+                                                  isPassword: true,
+                                                  readOnly: true,
+                                                  isPasswordVisible: false,
+                                                  onVisibilityPressed: () =>
+                                                      !readOnlyTextField
+                                                          ? showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return const ChangePasswordDialog();
+                                                              })
+                                                          : null,
+                                                  onTap: () =>
+                                                      !readOnlyTextField
+                                                          ? showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return const ChangePasswordDialog();
+                                                              })
+                                                          : null,
+                                                  obscureText: true,
+                                                  keyboardType: TextInputType
+                                                      .visiblePassword,
+                                                  textInputAction:
+                                                      TextInputAction.next,
+                                                ))
+                                          ]),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            CustomButton(
+                                              key: const Key(
+                                                  'editSaveCustomButtonKey'),
+                                              fontSize: isTablet ? 20 : 15,
+                                              height: isTablet ? 15 : 12,
+                                              width: isTablet ? 25 : 20,
+                                              text: readOnlyTextField
+                                                  ? "Edit Profile"
+                                                  : "Save modifications",
+                                              textColor: Colors.white,
+                                              onPressed: () {
+                                                if (!readOnlyTextField) {
+                                                  _submit();
+                                                  DialogPopup(
+                                                          text:
+                                                              "Profile modified correctly",
+                                                          duration: 1)
+                                                      .show(context);
+                                                } else {
+                                                  setState(
+                                                    () {
+                                                      readOnlyTextField =
+                                                          !readOnlyTextField;
+                                                    },
+                                                  );
+                                                  DialogPopup(
+                                                          text:
+                                                              "Modify your profile",
+                                                          duration: 1)
+                                                      .show(context);
+                                                }
+                                              },
+                                            )
+                                          ]),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            CustomButton(
+                                              key: const Key(
+                                                  'LogoutCustomButtonKey'),
+                                              fontSize: isTablet ? 15 : 12,
+                                              height: isTablet ? 15 : 12,
+                                              width: isTablet ? 18 : 15,
+                                              text: "Logout",
+                                              textColor: Colors.white,
+                                              backgroundColor: AppColors.main3,
+                                              onPressed: () {
+                                                logout();
+                                              },
+                                            ),
+                                            const SizedBox(width: 20),
+                                            CustomButton(
+                                              key: const Key(
+                                                  'DeleteAccountCustomButtonKey'),
+                                              fontSize: isTablet ? 15 : 12,
+                                              height: isTablet ? 15 : 12,
+                                              width: isTablet ? 28 : 15,
+                                              text: "Delete",
+                                              textColor: Colors.white,
+                                              backgroundColor: AppColors.main3,
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return const DeleteAccountDialog();
+                                                    });
+                                              },
+                                            ),
+                                          ])
+                                    ])
+                              ]))))
+              //)
+            ]);
+          } else if (snapshot.hasError) {
+            // print(snapshot.error);
+            return Text("Error: ${snapshot.error}");
+          } else {
+            return Container();
+          }
+        });
+  }
+
   Widget buildScreen() {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return FutureBuilder<UserModel?>(
         key: _futureBuilderKey,
         future: user,
@@ -321,8 +701,9 @@ class _ProfilePageState extends State<ProfilePage>
                     key: Key('abc'),
                   ),
                   buildHeader(context),
-                  const SizedBox(height: 20),
+                  SizedBox(height: isTablet ? 40 : 20),
                   CustomTextField(
+                    isTablet: isTablet,
                     key: const Key('nameCustomTextFieldKey'),
                     readOnly: readOnlyTextField,
                     controller: _nameController,
@@ -336,6 +717,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
+                    isTablet: isTablet,
                     key: const Key('surnameCustomTextFieldKey'),
                     readOnly: readOnlyTextField,
                     controller: _surnameController,
@@ -349,6 +731,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
+                    isTablet: isTablet,
                     key: const Key('bioCustomTextFieldKey'),
                     maxLines: 1,
                     readOnly: readOnlyTextField,
@@ -362,6 +745,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
+                    isTablet: isTablet,
                     key: const Key('birthDateCustomTextFieldKey'),
                     readOnly: readOnlyTextField,
                     controller: _birthDateController,
@@ -378,6 +762,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
+                    isTablet: isTablet,
                     key: const Key('emailCustomTextFieldKey'),
                     readOnly: true,
                     textColor: AppColors.text3,
@@ -392,6 +777,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   const SizedBox(height: 20),
                   CustomDropdownButton(
+                    isTablet: isTablet,
                     selectedValue: _selectedGender,
                     readOnly: readOnlyTextField,
                     label: 'Gender',
@@ -401,6 +787,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
+                    isTablet: isTablet,
                     key: const Key('phoneNumberCustomTextFieldKey'),
                     readOnly: readOnlyTextField,
                     controller: _phoneNumberController,
@@ -414,6 +801,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
+                    isTablet: isTablet,
                     key: const Key('passwordCustomTextField'),
                     controller: _passwordController,
                     labelText: 'Password',
@@ -444,10 +832,11 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   const SizedBox(height: 20),
                   CustomButton(
+                    isTablet: isTablet,
                     key: const Key('editSaveCustomButtonKey'),
-                    fontSize: 15,
-                    height: 12,
-                    width: 20,
+                    fontSize: isTablet ? 20 : 15,
+                    height: isTablet ? 15 : 12,
+                    width: isTablet ? 25 : 20,
                     text: readOnlyTextField
                         ? "Edit Profile"
                         : "Save modifications",
@@ -455,12 +844,17 @@ class _ProfilePageState extends State<ProfilePage>
                     onPressed: () {
                       if (!readOnlyTextField) {
                         _submit();
+                        DialogPopup(
+                                text: "Profile modified correctly", duration: 1)
+                            .show(context);
                       } else {
                         setState(
                           () {
                             readOnlyTextField = !readOnlyTextField;
                           },
                         );
+                        DialogPopup(text: "Modify your profile", duration: 1)
+                            .show(context);
                       }
                     },
                   ),
@@ -470,10 +864,11 @@ class _ProfilePageState extends State<ProfilePage>
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CustomButton(
+                        isTablet: isTablet,
                         key: const Key('LogoutCustomButtonKey'),
-                        fontSize: 12,
-                        height: 12,
-                        width: 15,
+                        fontSize: isTablet ? 15 : 12,
+                        height: isTablet ? 15 : 12,
+                        width: isTablet ? 18 : 15,
                         text: "Logout",
                         textColor: Colors.white,
                         backgroundColor: AppColors.main3,
@@ -481,12 +876,13 @@ class _ProfilePageState extends State<ProfilePage>
                           logout();
                         },
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       CustomButton(
+                        isTablet: isTablet,
                         key: const Key('DeleteAccountCustomButtonKey'),
-                        fontSize: 12,
-                        height: 12,
-                        width: 15,
+                        fontSize: isTablet ? 15 : 12,
+                        height: isTablet ? 15 : 12,
+                        width: isTablet ? 18 : 15,
                         text: "Delete",
                         textColor: Colors.white,
                         backgroundColor: AppColors.main3,
@@ -518,6 +914,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget modifyProfileImage() {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return AlertDialog(
       key: const Key('alertDialogKey'),
       elevation: 10,
@@ -529,9 +926,9 @@ class _ProfilePageState extends State<ProfilePage>
       actions: <Widget>[
         CustomButton(
             key: const Key('closeCustomButtonKey'),
-            height: 5,
-            width: 30,
-            fontSize: 12,
+            height: isTablet ? 8 : 5,
+            width: isTablet ? 35 : 30,
+            fontSize: isTablet ? 15 : 12,
             backgroundColor: AppColors.main3,
             text: "close",
             textColor: Colors.white,
@@ -541,9 +938,12 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget buildProfileBody(DeviceInfo device) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return SingleChildScrollView(
       child: Container(
-        height: 200,
+        height: isTablet ? 300 : 200,
         width: device.width,
         child: Form(
           key: _formKey,
@@ -553,7 +953,7 @@ class _ProfilePageState extends State<ProfilePage>
                 flex: 5,
                 fit: FlexFit.tight,
                 child: Container(
-                  height: 310,
+                  height: isTablet ? 410 : 310,
                   child: SetPhotoScreen(
                     isImage: true,
                     contDef: true,
@@ -566,8 +966,8 @@ class _ProfilePageState extends State<ProfilePage>
                 child: Center(
                     child: CustomButton(
                         key: const Key('deleteCustomButtonKey'),
-                        height: 18,
-                        width: 200,
+                        height: isTablet ? 20 : 18,
+                        width: isTablet ? 210 : 200,
                         text: "Delete",
                         textColor: Colors.white,
                         onPressed: () => Navigator.of(context).pop())),

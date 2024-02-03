@@ -21,7 +21,7 @@ class AppManager extends GetxController {
   Rx<Tuple<double, double>?> chosenLocation = Rx<Tuple<double, double>?>(null);
   Rx<bool> isCardsTransformChanged = Rx<bool>(false);
 
-  void reset(){
+  void reset() {
     setCurrentUser('');
     setCards(List.empty());
     setCurrentTaleId('');
@@ -45,7 +45,8 @@ class AppManager extends GetxController {
       return;
     }
 
-    int index = cardsTransform.value!.indexWhere((tuple) => tuple.item1 == name);
+    int index =
+        cardsTransform.value!.indexWhere((tuple) => tuple.item1 == name);
 
     if (index != -1) {
       // "transform1" exists, update its item2
@@ -124,15 +125,13 @@ class AppManager extends GetxController {
   }
 
   List<CardModel?>? getCards() {
-    if(userCards == Rx<List<CardModel?>?>(null))
-      return [];
+    if (userCards == Rx<List<CardModel?>?>(null)) return [];
     userCards.value!.sort((a, b) => a!.order.compareTo(b!.order));
     return userCards.value;
   }
 
-  int getCardsNum(){
-    if(userCards == Rx<List<CardModel?>?>(null))
-      return 0;
+  int getCardsNum() {
+    if (userCards == Rx<List<CardModel?>?>(null)) return 0;
     return userCards.value!.length;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/widgets/text_field.dart'; // Replace with your file path
 
 void main() {

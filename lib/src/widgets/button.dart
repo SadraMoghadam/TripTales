@@ -16,6 +16,7 @@ class CustomButton extends StatelessWidget {
   final bool isLoading;
   final bool isDisabled;
   final Key? key;
+  final bool isTablet; //added for the tablet version;
 
   CustomButton({
     required this.text,
@@ -31,6 +32,7 @@ class CustomButton extends StatelessWidget {
     this.isLoading = false,
     this.isDisabled = false,
     this.key,
+    this.isTablet = false,
   });
 
   @override
