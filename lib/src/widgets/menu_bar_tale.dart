@@ -48,10 +48,6 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
     device.computeDeviceInfo(context);
     bool isTablet = device.isTablet;
     return Scaffold(
-    //   body: CustomAppBar(
-    // bodyTale: screens[widget.index],
-    //   showIcon: false,
-    // ),
       body: _buildScreenContent(),
       bottomNavigationBar: _bottomNavigationBar(),
     );

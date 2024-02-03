@@ -120,8 +120,8 @@ class AppManager extends GetxController {
   }
 
   String getCurrentUser() {
-    return "1";
-    // return currentUserId.value;
+    // return "1";
+    return currentUserId.value;
   }
 
   List<CardModel?>? getCards() {

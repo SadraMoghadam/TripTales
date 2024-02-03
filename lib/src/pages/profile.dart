@@ -138,7 +138,6 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   void initState() {
-    super.initState();
     user = _authService.getUserById(_appManager.getCurrentUser());
     _nameController = TextEditingController()..addListener(() {});
     _surnameController = TextEditingController()..addListener(() {});
@@ -151,6 +150,7 @@ class _ProfilePageState extends State<ProfilePage>
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 4));
     // _profileImage = const AssetImage('assets/images/profile_pic.png');
+    super.initState();
   }
 
   @override
@@ -671,7 +671,8 @@ class _ProfilePageState extends State<ProfilePage>
           // if (snapshot.connectionState == ConnectionState.waiting) {
           //   return CircularProgressIndicator();
           // }
-          if (snapshot.hasData) {
+          print("==================================================");
+          if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
             UserModel userData = snapshot.data!;
             print(userData.email);
             print(userData.gender);
