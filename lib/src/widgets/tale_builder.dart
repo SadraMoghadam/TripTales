@@ -22,7 +22,12 @@ class TaleBuilder extends StatefulWidget {
   final bool reload;
   final Key taleKey;
 
-  const TaleBuilder({super.key, required this.callback, required this.isEditMode, required this.reload, required this.taleKey});
+  const TaleBuilder(
+      {
+      required this.callback,
+      required this.isEditMode,
+      required this.reload,
+      required this.taleKey});
 
   @override
   _TaleBuilderState createState() => _TaleBuilderState();
@@ -32,9 +37,11 @@ class _TaleBuilderState extends State<TaleBuilder>
     with TickerProviderStateMixin {
   final CardService _cardService = Get.find<CardService>();
   final AppManager _appManager = Get.put(AppManager());
-  late List<GlobalKey> _widgetKeyList;
+  late List<GlobalKey> _widgetKeyList = List<GlobalKey>.empty(growable: true);
+  late List<GlobalKey> _widgetSuperKeyList = List<GlobalKey>.empty(growable: true);
   double containerTop = 0.0;
   double containerLeft = 0.0;
+
   // late final AnimationController _controller;
   // late final AnimationController _controller_place_here;
   late Future<List<CardModel?>> cards;
@@ -69,12 +76,11 @@ class _TaleBuilderState extends State<TaleBuilder>
     // }
   }
 
-
   void _getWidgetInfo(int widgetId) {
     // print("------------$widgetId------------");
     GlobalKey widgetKey = _widgetKeyList[widgetId];
     final RenderBox renderBox =
-    widgetKey.currentContext?.findRenderObject() as RenderBox;
+        widgetKey.currentContext?.findRenderObject() as RenderBox;
     widgetKey.currentContext?.size;
 
     final Size size = renderBox.size;
@@ -88,12 +94,13 @@ class _TaleBuilderState extends State<TaleBuilder>
 
   @override
   void dispose() {
+    _widgetKeyList = List.empty();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if(widget.reload) {
+    if (widget.reload) {
       setState(() {
         cards = _cardService.getCards(_appManager.getCurrentTaleId());
         // print("######################${cards}");
@@ -106,7 +113,7 @@ class _TaleBuilderState extends State<TaleBuilder>
       future: cards,
       builder:
           (BuildContext context, AsyncSnapshot<List<CardModel?>> snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
           List<CardModel?> data = [];
           // print("###########");
           data = snapshot.data!;
@@ -114,14 +121,30 @@ class _TaleBuilderState extends State<TaleBuilder>
           _appManager.setCards(data);
           numOfCards = data.length;
           print("###########${numOfCards}");
+          _widgetKeyList = List.empty(growable: true);
           for (int i = 0; i < numOfCards; i++) {
-            // print(')))))))${data[i]!.name} ==== ${data[i]!.order}');
-
-          _widgetKeyList = List.generate(
-              numOfCards, (index) => GlobalObjectKey<FormState>(index + data[i]!.name.codeUnits.fold<int>(
-              0, (previousValue, element) => previousValue * 256 + element)));
+            _widgetKeyList.add(GlobalObjectKey(i +
+                data[i]!.name.codeUnits.fold<int>(
+                    0,
+                    (previousValue, element) =>
+                        previousValue * 256 + element)));
           }
-          // print("=+=====++++++++++++++++++++++++++$_widgetKeyList");
+          Set<GlobalKey<State<StatefulWidget>>> uniqueSet = Set.from(_widgetKeyList);
+          _widgetKeyList = uniqueSet.toList();
+
+          _widgetSuperKeyList = List.empty(growable: true);
+          for (int i = 0; i < numOfCards; i++) {
+            _widgetSuperKeyList.add(GlobalObjectKey(500 + i +
+                data[i]!.name.codeUnits.fold<int>(
+                    0,
+                        (previousValue, element) =>
+                    previousValue * 256 + element)));
+          }
+          uniqueSet = Set.from(_widgetSuperKeyList);
+          _widgetSuperKeyList = uniqueSet.toList();
+
+          print(_widgetKeyList);
+
           return Container(
             height: device.height * 10,
             width: device.width,
@@ -130,6 +153,7 @@ class _TaleBuilderState extends State<TaleBuilder>
                 for (int i = 0; i < numOfCards; i++)
                   if (data[i]!.type == MemoryCardType.image)
                     MemoryCard(
+                        key: _widgetSuperKeyList[i],
                         isEditable: widget.isEditMode,
                         callback: widget.callback,
                         name: data[i]!.name,
@@ -140,6 +164,7 @@ class _TaleBuilderState extends State<TaleBuilder>
                         imagePath: data[i]!.path)
                   else if (data[i]!.type == MemoryCardType.video)
                     MemoryCard(
+                        key: _widgetSuperKeyList[i],
                         isEditable: widget.isEditMode,
                         callback: widget.callback,
                         name: data[i]!.name,
@@ -149,22 +174,23 @@ class _TaleBuilderState extends State<TaleBuilder>
                         initTransform: data[i]!.transform,
                         videoPath: data[i]!.path)
                   else if (data[i]!.type == MemoryCardType.text)
-                      MemoryCard(
-                        isEditable: widget.isEditMode,
-                        callback: widget.callback,
-                        name: data[i]!.name,
-                        cardKey: _widgetKeyList[i],
-                        order: data[i]!.order,
-                        type: MemoryCardType.text,
-                        initTransform: data[i]!.transform,
-                        text: data[i]!.text,
-                        textColor: data[i]!.textColor,
-                        textBackgroundColor: data[i]!.textBackgroundColor,
-                        textDecoration: data[i]!.textDecoration,
-                        fontStyle: data[i]!.fontStyle,
-                        fontWeight: data[i]!.fontWeight,
-                        fontSize: data[i]!.fontSize,
-                      )
+                    MemoryCard(
+                      key: _widgetSuperKeyList[i],
+                      isEditable: widget.isEditMode,
+                      callback: widget.callback,
+                      name: data[i]!.name,
+                      cardKey: _widgetKeyList[i],
+                      order: data[i]!.order,
+                      type: MemoryCardType.text,
+                      initTransform: data[i]!.transform,
+                      text: data[i]!.text,
+                      textColor: data[i]!.textColor,
+                      textBackgroundColor: data[i]!.textBackgroundColor,
+                      textDecoration: data[i]!.textDecoration,
+                      fontStyle: data[i]!.fontStyle,
+                      fontWeight: data[i]!.fontWeight,
+                      fontSize: data[i]!.fontSize,
+                    )
 
                 // MemoryCard(cardKey: _widgetKeyList[0], order: 1, type: MemoryCardType.image, initTransform: Matrix4.identity(), imagePath: "https://picsum.photos/200/300", size: containersSize[0]),
                 // MemoryCard(cardKey: _widgetKeyList[1], order: 3, type: MemoryCardType.image, initTransform: Matrix4.identity(), imagePath: "https://picsum.photos/900/500", size: containersSize[1]),
@@ -177,7 +203,7 @@ class _TaleBuilderState extends State<TaleBuilder>
         } else if (snapshot.hasError) {
           // print(snapshot.error);
           return Text("Error: ${snapshot.error}");
-        } else{
+        } else {
           return Container();
         }
       },

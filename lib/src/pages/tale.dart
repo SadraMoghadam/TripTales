@@ -36,7 +36,6 @@ class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
   final AppManager _appManager = Get.put(AppManager());
   final String canvas = 'assets/images/background_tale.jpg';
   late Future<TaleModel?> taleModel;
-  late final AnimationController _controller;
 
   callback() {
     setState(() {
@@ -49,6 +48,11 @@ class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
   void initState() {
     taleModel = _taleService.getTaleById(_appManager.getCurrentTaleId());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   // @override
@@ -96,11 +100,6 @@ class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
     },
   );
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

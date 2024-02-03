@@ -16,7 +16,7 @@ class MyTalesPage extends StatefulWidget {
 class _MyTalesPage extends State<MyTalesPage> {
   final TaleService _taleService = Get.find<TaleService>();
   late Future<List<TaleModel?>> tales;
-  late List<GlobalKey> _widgetKeyList;
+  late List<GlobalKey> _widgetKeyList = List<GlobalKey>.empty(growable: true);
   final AppManager _appManager = Get.put(AppManager());
 
   static int numOfTales = 0;
@@ -76,22 +76,24 @@ class _MyTalesPage extends State<MyTalesPage> {
       future: tales,
       builder:
           (BuildContext context, AsyncSnapshot<List<TaleModel?>> snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
           // print("###########");
           List<TaleModel?> data = snapshot.data!;
           // print(snapshot.data!);
           numOfTales = data.length;
           for (int i = 0; i < numOfTales; i++) {
-            _widgetKeyList = List.generate(
-                numOfTales, (index) => GlobalObjectKey<FormState>(index + data[i]!.id!.codeUnits.fold<int>(
+            _widgetKeyList.add(GlobalObjectKey<FormState>(i + data[i]!.id!.codeUnits.fold<int>(
                 0, (previousValue, element) => previousValue * 256 + element)));
           }
+          Set<GlobalKey<State<StatefulWidget>>> uniqueSet = Set.from(_widgetKeyList);
+          _widgetKeyList = uniqueSet.toList();
+
           return SingleChildScrollView(
             child: Column(
               children: [
                 for (int i = 0; i < numOfTales; i++)
                   CustomTale(
-                    key: _widgetKeyList[i],
+                    // key: _widgetKeyList[i],
                     talePath: data[i]!.imagePath,
                     taleName: data[i]!.name,
                     index: i,
@@ -113,7 +115,7 @@ class _MyTalesPage extends State<MyTalesPage> {
   Widget newTaleButton(){
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushReplacementNamed('/createTalePage');
+        Navigator.of(context).pushNamed('/createTalePage');
       },
       child: Center(
         child: Container(

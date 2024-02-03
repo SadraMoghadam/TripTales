@@ -35,7 +35,6 @@ class _TaleInfoPage extends State<TaleInfoPage> {
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   TaleModel? _currentTale;
   late List<Tuple<String, LatLng>>? _mapLocations;
-  final _formKey = GlobalKey<FormState>();
   Set<Marker> _markers = HashSet<Marker>();
   GoogleMapController? _mapController;
   int selectedIndex = 0;
