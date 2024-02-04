@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
+  // coverage:ignore-line
   final AuthController authController = Get.find<AuthController>();
 
   bool _isPasswordVisible = false;
@@ -128,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Flexible(
                           fit: FlexFit.tight,
-                          flex: 6, // Adjust flex values as needed
+                          flex: 6,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,

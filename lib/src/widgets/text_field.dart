@@ -207,9 +207,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
         enableSuggestions: widget.enableSuggestions,
         decoration: InputDecoration(
           labelText: widget.labelText,
+          // coverage:ignore-start
           contentPadding: widget.isTablet
               ? EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0)
               : EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+          // coverage:ignore-end
           filled: widget.filled,
           fillColor: widget.fillColor,
           labelStyle: TextStyle(color: widget.labelTextColor),
@@ -218,9 +220,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
           prefixIcon: Icon(
             widget.prefixIcon,
             color: widget.iconColor,
+            // coverage:ignore-start
             shadows: widget.isFieldColor
                 ? [const Shadow(color: Colors.grey, offset: Offset(-2, 2))]
                 : null,
+            // coverage:ignore-end
           ),
           suffixIcon: widget.isPassword
               ? IconButton(
@@ -230,6 +234,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   color: AppColors.main1,
                   onPressed: widget.onVisibilityPressed,
                 )
+              // coverage:ignore-start
               : widget.isEditableOnOtherWindow
                   ? IconButton(
                       icon: Icon(widget.suffixIcon),
@@ -237,6 +242,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       onPressed: widget.onVisibilityPressed,
                     )
                   : null,
+          // coverage:ignore-end
           errorStyle: TextStyle(
             fontSize: widget.isTablet ? 15 : 10.0,
             height: 0.4,

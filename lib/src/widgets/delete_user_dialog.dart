@@ -10,7 +10,6 @@ import '../constants/color.dart';
 import '../widgets/button.dart';
 
 class DeleteAccountDialog extends StatefulWidget {
-
   const DeleteAccountDialog({super.key});
 
   @override
@@ -22,7 +21,8 @@ class _DeleteAccountDialog extends State<DeleteAccountDialog> {
   final AppManager _appManager = Get.put(AppManager());
 
   void _submit() async {
-    bool result = await _authController.deleteUser(_appManager.getCurrentUser());
+    bool result =
+        await _authController.deleteUser(_appManager.getCurrentUser());
     if (result) {
       Navigator.of(context).pop(true);
     } else {
@@ -53,7 +53,9 @@ class _DeleteAccountDialog extends State<DeleteAccountDialog> {
       content: const Text(
         'Are you sure you want to delete this account?',
         style: TextStyle(
-            color: AppColors.text1, fontSize: 17, fontWeight: FontWeight.normal),
+            color: AppColors.text1,
+            fontSize: 17,
+            fontWeight: FontWeight.normal),
       ),
       actions: [
         CustomButton(
@@ -74,7 +76,6 @@ class _DeleteAccountDialog extends State<DeleteAccountDialog> {
             text: "close",
             textColor: Colors.white,
             onPressed: () => Navigator.of(context).pop(false)),
-
       ],
     );
   }

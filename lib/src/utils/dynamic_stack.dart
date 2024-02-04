@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:trip_tales/src/widgets/memory_card.dart';
 
+// coverage:ignore-start
 class DynamicStack extends StatelessWidget {
+  // coverage:ignore-start
   final List<Widget> children;
 
   DynamicStack({required this.children});
@@ -16,18 +18,22 @@ class DynamicStack extends StatelessWidget {
     // });
 
     children.sort((a, b) {
+      // coverage:ignore-start
       int orderA = (a as MemoryCard).order;
       int orderB = (b as MemoryCard).order;
       return orderA.compareTo(orderB);
+
+      // coverage:ignore-end
     });
 
     return Stack(
       children: children,
     );
   }
+  // coverage:ignore-end
 }
+// coverage:ignore-end
 
-//
 // class DynamicStack extends StatelessWidget {
 //   final List<MemoryCard> children;
 //

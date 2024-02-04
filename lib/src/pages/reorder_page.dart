@@ -146,7 +146,7 @@ class _ReorderPageState extends State<ReorderPage> {
             });
       },
       child: Container(
-        padding: EdgeInsets.all(1),
+        padding: const EdgeInsets.all(1),
         child: const Icon(Icons.restart_alt, size: 22, color: AppColors.main1),
       ),
     );
@@ -167,7 +167,7 @@ class _ReorderPageState extends State<ReorderPage> {
             }));
       },
       child: Container(
-        padding: EdgeInsets.all(1),
+        padding: const EdgeInsets.all(1),
         child:
             const Icon(Icons.delete_rounded, size: 22, color: AppColors.main3),
       ),

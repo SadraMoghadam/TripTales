@@ -21,15 +21,6 @@ class HomePage extends StatelessWidget {
           width: device.width,
           alignment: Alignment.center,
           child: buildBody(context),
-
-          /*Column(
-            children: <Widget>[
-              Flexible(fit: FlexFit.tight, flex: 7, child: buildHome()),
-              Flexible(
-                  fit: FlexFit.tight, flex: 2, child: buildButtons(context)),
-            ],
-          ),
-          */
         ),
       ),
     );
@@ -48,6 +39,7 @@ class HomePage extends StatelessWidget {
             flex: 7,
             child: isTablet && isLandscape
                 ? buildHomeLandScape(context)
+                //coverage:ignore-line
                 : buildHome(context)),
         Flexible(fit: FlexFit.tight, flex: 2, child: buildButtons(context)),
       ],

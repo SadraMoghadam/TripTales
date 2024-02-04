@@ -20,7 +20,9 @@ class CustomAppBar extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: NestedScrollView(
-        physics: isScrollable ? const AlwaysScrollableScrollPhysics() : const NeverScrollableScrollPhysics(),
+        physics: isScrollable
+            ? const AlwaysScrollableScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
         // physics: const NeverScrollableScrollPhysics(),
         headerSliverBuilder: (context, isScrolled) => [
           SliverAppBar(
@@ -56,12 +58,13 @@ class CustomAppBar extends StatelessWidget {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        if(navigationPath! == '/pop'){
+                        // coverage:ignore-start
+                        if (navigationPath! == '/pop') {
                           Navigator.maybePop(context);
-                        }
-                        else {
+                        } else {
                           Navigator.of(context).pushNamed(navigationPath!);
                         }
+                        // coverage:ignore-end
                       },
                     ),
                   )

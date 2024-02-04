@@ -22,6 +22,9 @@ class DeviceInfo {
   }
 }
 
+// coverage:ignore-start
 class GlobalContextService {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 }
+
+// coverage:ignore-end

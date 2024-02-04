@@ -146,8 +146,6 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -179,7 +177,9 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                             ? Center(
                                 child: _image == null
                                     ? Text(
-                                        widget.hasImage ? 'You can change your image here' : 'No image selected',
+                                        widget.hasImage
+                                            ? 'You can change your image here'
+                                            : 'No image selected',
                                         style: const TextStyle(
                                             fontSize: 20,
                                             color: AppColors.main1),

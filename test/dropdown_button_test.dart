@@ -11,7 +11,7 @@ void main() {
 
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
-        body: CustomDropdownButton(label: label, items: items),
+        body: CustomDropdownButton(label: label, items: items, selectedValue: '', onValueChanged: (String? ) {  },),
       ),
     ));
 

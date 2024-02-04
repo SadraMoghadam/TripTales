@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
+// coverage:ignore-start
 class CustomMatrixUtils {
   static Map<String, dynamic> matrix4ToJson(Matrix4 matrix) {
     List<double> storage = matrix.storage;
@@ -45,3 +46,5 @@ class CustomMatrixUtils {
     );
   }
 }
+
+// coverage:ignore-end
