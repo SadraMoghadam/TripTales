@@ -135,7 +135,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
                     ),
                   )),
               Flexible(
-                flex: 8,
+                flex: 12,
                 fit: FlexFit.tight,
                 child: Container(
                   height: 310,
@@ -143,7 +143,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
                 ),
               ),
               Flexible(
-                flex: 4,
+                flex: 3,
                 fit: FlexFit.tight,
                 child: Center(
                     child: CustomButton(

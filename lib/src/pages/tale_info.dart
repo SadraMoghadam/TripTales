@@ -39,6 +39,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
   GoogleMapController? _mapController;
   int selectedIndex = 0;
   var imagePath = '';
+
   // late final AnimationController _controller;
 
   @override
@@ -65,7 +66,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
 
   @override
   void dispose() {
-  // _controller.dispose();
+    // _controller.dispose();
     super.dispose();
   }
 
@@ -96,84 +97,99 @@ class _TaleInfoPage extends State<TaleInfoPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            _currentTale!.name,
-            style: const TextStyle(
-                color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          Container(
-            height: 200,
-            width: 350,
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.main2, width: 5),
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                '$imagePath?timestamp=${DateTime.now().millisecondsSinceEpoch}',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-              ),
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 3,
+            child: Text(
+              _currentTale!.name,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold),
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          buildGoogleMap(),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 40,
-                width: 150,
-                child: CustomButton(
-                  // key: const Key('editTaleCustomButtonKey'),
-                  fontSize: 18,
-                  padding: 2,
-                  backgroundColor: AppColors.main2,
-                  textColor: Colors.white,
-                  text: "Edit",
-                  onPressed: _onEditButtonClick,
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 7,
+            child: Container(
+              height: 200,
+              width: 350,
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.main2, width: 5),
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  '$imagePath?timestamp=${DateTime.now().millisecondsSinceEpoch}',
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
-              SizedBox(
-                height: 40,
-                width: 150,
-                child: CustomButton(
-                  // key: const Key('deleteTaleCustomButtonKey'),
-                  fontSize: 18,
-                  padding: 2,
-                  backgroundColor: AppColors.main3,
-                  textColor: Colors.white,
-                  text: "Delete",
-                  onPressed: _onDeleteButtonClick,
-                ),
-              ),
-            ],
+            ),
           ),
-          const SizedBox(
-            height: 10,
+          Flexible(
+              fit: FlexFit.tight,
+              flex: 1,
+              child: SizedBox(
+                height: 10,
+              )),
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 7,
+            child: buildGoogleMap(),
+          ),
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 3,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 40,
+                  width: 150,
+                  child: CustomButton(
+                    // key: const Key('editTaleCustomButtonKey'),
+                    fontSize: 18,
+                    padding: 2,
+                    backgroundColor: AppColors.main2,
+                    textColor: Colors.white,
+                    text: "Edit",
+                    onPressed: _onEditButtonClick,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  height: 40,
+                  width: 150,
+                  child: CustomButton(
+                    // key: const Key('deleteTaleCustomButtonKey'),
+                    fontSize: 18,
+                    padding: 2,
+                    backgroundColor: AppColors.main3,
+                    textColor: Colors.white,
+                    text: "Delete",
+                    onPressed: _onDeleteButtonClick,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  void _onEditButtonClick() async{
+  void _onEditButtonClick() async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CreateTalePage(isEditMode: true,)),
+      MaterialPageRoute(
+          builder: (context) => CreateTalePage(
+                isEditMode: true,
+              )),
     );
     // if(result) {
     //   showDialog(
@@ -207,8 +223,9 @@ class _TaleInfoPage extends State<TaleInfoPage> {
             isTale: true,
           );
         }).then((value) => setState(() {
-          Navigator.of(context).pushNamedAndRemoveUntil('/customMenu', (route) => route.isFirst);
-    }));
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/customMenu', (route) => route.isFirst);
+        }));
   }
 
   Widget buildGoogleMap() {
