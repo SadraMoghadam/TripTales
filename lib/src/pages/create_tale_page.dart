@@ -37,7 +37,7 @@ class _CreateTalePage extends State<CreateTalePage> {
   final AppManager _appManager = Get.put(AppManager());
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
-  final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TaleModel taleModel;
   int selectedIndex = 0;
 
@@ -56,27 +56,29 @@ class _CreateTalePage extends State<CreateTalePage> {
     );
     int result = 400;
     if (imageFile != null) {
-
       if (widget.isEditMode) {
-        var currentTale = _appManager.getCurrentTale();
-        taleData = TaleModel(
-          id: currentTale.id,
-          name: _taleNameController.text,
-          imagePath: '${currentTale.id}_TALE.png',
-          canvas: selectedIndex.toString(),
-          cardsFK: currentTale.cardsFK,
-        );
+        var currentTaleId = await _taleService.getTaleId(taleData.name);
+        var currentTale = await _taleService
+            .getTaleById(currentTaleId)
+            .then((value) => taleData = TaleModel(
+                  id: value!.id,
+                  name: _taleNameController.text,
+                  imagePath: '${value!.id}_TALE.png',
+                  canvas: selectedIndex.toString(),
+                  cardsFK: value!.cardsFK,
+                ));
+
         result = await _taleService.updateTale(taleData, imageFile!);
       } else {
         result = await _taleService.addTale(taleData, imageFile!);
         var currentTaleId = await _taleService.getTaleId(taleData.name);
         var currentTale = await _taleService.getTaleById(currentTaleId);
         taleData = TaleModel(
-          id: currentTale!.id,
+          id: currentTale!.id ?? '',
           name: _taleNameController.text,
           imagePath: '${currentTale!.id}_TALE.png',
-          canvas: selectedIndex.toString(),
-          cardsFK: currentTale!.cardsFK,
+          canvas: selectedIndex.toString() ?? '0',
+          cardsFK: List.empty(),
         );
         result = 200;
       }
@@ -85,10 +87,14 @@ class _CreateTalePage extends State<CreateTalePage> {
       _formKey.currentState?.save();
       var tale = await _taleService.getTaleById(taleData.id!);
       // print(")))))))))))))))))))))))))))))))))))))))))${taleData.id}");
-      _appManager.setCurrentTaleId(taleData.id!);
       _appManager.setCurrentTale(tale!);
-
-      Navigator.of(context).pushReplacementNamed('/talePage', result: 'createTalePage');
+      if (widget.isEditMode) {
+        Navigator.of(context).pushReplacementNamed('/talePage');
+      } else {
+        _appManager.setCurrentTaleId(taleData.id!);
+        Navigator.of(context)
+            .pushReplacementNamed('/talePage', result: 'createTalePage');
+      }
 
       // if (widget.isEditMode) {
       //   Navigator.of(context).pop();
@@ -112,6 +118,9 @@ class _CreateTalePage extends State<CreateTalePage> {
       // print(")))))))))))))))))))))))))))))))))))))))))${taleModel.imagePath}");
       mediaController.setImage(File(taleModel.imagePath));
       selectedIndex = int.parse(taleModel.canvas);
+    } else {
+      _appManager.resetTale();
+      mediaController.setImage(null);
     }
     super.initState();
   }
@@ -136,20 +145,6 @@ class _CreateTalePage extends State<CreateTalePage> {
   }
 
   Widget buildBody() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Flexible(
-          fit: FlexFit.tight,
-          flex: 11,
-          child: buildScreen(),
-        ),
-      ],
-    );
-  }
-
-  Widget buildScreen() {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Form(

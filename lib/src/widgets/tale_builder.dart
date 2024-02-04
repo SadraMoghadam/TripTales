@@ -37,8 +37,8 @@ class _TaleBuilderState extends State<TaleBuilder>
     with TickerProviderStateMixin {
   final CardService _cardService = Get.find<CardService>();
   final AppManager _appManager = Get.put(AppManager());
-  late List<GlobalKey> _widgetKeyList = List<GlobalKey>.empty(growable: true);
-  late List<GlobalKey> _widgetSuperKeyList = List<GlobalKey>.empty(growable: true);
+  List<GlobalKey> _widgetKeyList = List<GlobalKey>.empty(growable: true);
+  List<GlobalKey> _widgetSuperKeyList = List<GlobalKey>.empty(growable: true);
   double containerTop = 0.0;
   double containerLeft = 0.0;
 

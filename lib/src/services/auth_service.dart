@@ -38,18 +38,20 @@ class AuthService extends GetxService {
           await googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount!.authentication;
+      print("++++++++++++++++++++++++++++++++++++++++++++++++0");
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
+      print("++++++++++++++++++++++++++++++++++++++++++++++++1");
 
       final UserCredential authResult =
           await _auth.signInWithCredential(credential);
       final User? googleUser = authResult.user;
 
       print("++++++++++++++++++++++++++++++++++++++++++++++++$googleUser");
-      print("++++++++++++++++++++++++++++++++++++++++++++++++${await getUserByEmail(googleUser!.email!)}");
+      // print("++++++++++++++++++++++++++++++++++++++++++++++++${await getUserByEmail(googleUser!.email!)}");
       if (googleUser != null && await getUserByEmail(googleUser!.email!) == null) {
         print("++++++++++++++++++++++++++++++++++++++++++++++++2");
         await _createUserDocument(
@@ -85,7 +87,7 @@ class AuthService extends GetxService {
         password: password,
       );
       final User? signedInUser = authResult.user;
-      print("----------${signedInUser!.uid}");
+      // print("----------${signedInUser!.uid}");
       setUserDataOnLogin(signedInUser!.uid);
       return signedInUser;
     } catch (e) {
@@ -104,12 +106,12 @@ class AuthService extends GetxService {
         password: password,
       );
       final User? registeredUser = authResult.user;
-      print("aaaaaa");
+      // print("aaaaaa");
       if (registeredUser != null) {
         await _createUserDocument(registeredUser.uid, email, name, surname,
             birthDate: birthDate);
       }
-      print("aaaaaa");
+      // print("aaaaaa");
       return registeredUser;
     } catch (e) {
       ErrorController.showSnackBarError(ErrorController.register);
@@ -189,19 +191,19 @@ class AuthService extends GetxService {
       String id, String email, String name, String surname,
       {String? birthDate}) async {
     CollectionReference users = _firestore.collection('users');
-    print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb${id}");
+    // print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb${id}");
     UserModel newUser = UserModel(
       id: id,
       email: email,
       name: name,
       surname: surname,
-      birthDate: '',
+      birthDate: birthDate ?? '',
       phoneNumber: '',
       bio: '',
       gender: '',
       profileImage: '',
     );
-    print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb${id}");
+    // print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb${id}");
     DocumentReference documentReference = users.doc(id);
     await documentReference.set(newUser.toJson());
     // await users.doc(id).update({
@@ -225,12 +227,10 @@ class AuthService extends GetxService {
           try {
             downloadURL = await ref.getDownloadURL();
             _appManager.setProfileImage(downloadURL);
-            print(downloadURL);
+            // print(downloadURL);
           } catch (error) {
             print('Error retrieving download URL: $error');
           }
-
-          print("==================================================$userData");
         }
 
         // Ensure 'downloadURL' is not null before using it in the UserModel constructor
@@ -265,14 +265,18 @@ class AuthService extends GetxService {
         final userData = usersSnapshot.docs.first.data();
         String downloadURL = '';
 
-        if (userData.containsKey('profileImage')) {
-          downloadURL = await _storage
-              .ref()
-              .child(userData['profileImage'])
-              .getDownloadURL();
-          _appManager.setProfileImage(downloadURL);
+        try {
+          if (userData.containsKey('profileImage')) {
+            downloadURL = await _storage
+                .ref()
+                .child(userData['profileImage'])
+                .getDownloadURL();
+            _appManager.setProfileImage(downloadURL);
+          }
+        } catch (e) {
+          print(e);
+          downloadURL = '';
         }
-
         UserModel user = UserModel.fromJson(userData, downloadURL);
         return user;
       } else {
@@ -311,7 +315,7 @@ class AuthService extends GetxService {
           await _firestore.collection('users').doc(uid).get();
       final userData = userDoc.data();
       if (userData != null) {
-        print("=====================${uid}");
+        // print("=====================${uid}");
         _appManager.setCurrentUser(uid);
         String downloadURL = '';
         if (userData.containsKey('profileImage') &&

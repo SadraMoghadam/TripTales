@@ -16,7 +16,7 @@ class MyTalesPage extends StatefulWidget {
 class _MyTalesPage extends State<MyTalesPage> {
   final TaleService _taleService = Get.find<TaleService>();
   late Future<List<TaleModel?>> tales;
-  late List<GlobalKey> _widgetKeyList = List<GlobalKey>.empty(growable: true);
+  List<GlobalKey> _widgetKeyList = List<GlobalKey>.empty(growable: true);
   final AppManager _appManager = Get.put(AppManager());
 
   static int numOfTales = 0;
@@ -85,13 +85,11 @@ class _MyTalesPage extends State<MyTalesPage> {
           List<TaleModel?> data = snapshot.data!;
           numOfTales = data.length;
           for (int i = 0; i < numOfTales; i++) {
-            _widgetKeyList = List.generate(
-                numOfTales,
-                (index) => GlobalObjectKey<FormState>(index +
-                    data[i]!.name.codeUnits.fold<int>(
-                        0,
+            _widgetKeyList.add(GlobalObjectKey(i +
+                data[i]!.id!.codeUnits.fold<int>(
+                    0,
                         (previousValue, element) =>
-                            previousValue * 256 + element)));
+                    previousValue * 256 + element)));
           }
           // If the device is a tablet and in landscape mode, make the SingleChildScrollView scroll horizontally and change the Column to a Row
           if (isLandscape && isTablet) {
@@ -195,7 +193,7 @@ class _MyTalesPage extends State<MyTalesPage> {
     bool isTablet = device.isTablet;
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('/createTalePage');
+        Navigator.of(context).pushReplacementNamed('/createTalePage');
       },
       child: Center(
         child: Container(

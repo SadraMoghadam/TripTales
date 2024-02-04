@@ -29,7 +29,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
   final TaleService _taleService = Get.find<TaleService>();
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
-  final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
 
   void _submit() async {

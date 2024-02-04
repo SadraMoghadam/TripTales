@@ -26,7 +26,7 @@ class CreateVideoPage extends StatefulWidget {
 
 class _CreateVideoPageState extends State<CreateVideoPage> {
   final Validator _validator = Validator();
-  final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   final MediaController mediaController = Get.put(MediaController());
   final AppManager _appManager = Get.put(AppManager());

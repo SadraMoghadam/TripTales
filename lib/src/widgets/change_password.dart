@@ -31,7 +31,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
   final AppManager _appManager = Get.put(AppManager());
 
   final Validator _validator = Validator();
-  final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
 
@@ -97,7 +97,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
     if (result) {
       Navigator.of(context).pop(true);
     } else {
-      ErrorController.showSnackBarError(ErrorController.deleteCard);
+      ErrorController.showSnackBarError(ErrorController.changePassword);
       return;
     }
   }

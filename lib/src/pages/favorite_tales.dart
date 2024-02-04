@@ -17,7 +17,7 @@ class FavoriteTalesPage extends StatefulWidget {
 class _FavoriteTalesPage extends State<FavoriteTalesPage> {
   final TaleService _taleService = Get.find<TaleService>();
   late Future<List<TaleModel?>> tales;
-  late List<GlobalKey> _widgetKeyList = List<GlobalKey>.empty(growable: true);
+  List<GlobalKey> _widgetKeyList = List<GlobalKey>.empty(growable: true);
   final AppManager _appManager = Get.put(AppManager());
 
   static int numOfTales = 0;
@@ -93,7 +93,7 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> {
           numOfTales = data.length;
           for (int i = 0; i < numOfTales; i++) {
             _widgetKeyList = List.generate(
-                numOfTales, (index) => GlobalObjectKey<FormState>(index));
+                numOfTales, (index) => GlobalObjectKey(index));
           }
           // If the device is a tablet and in landscape mode, make the SingleChildScrollView scroll horizontally and change the Column to a Row
           if (isTablet && isLandscape) {

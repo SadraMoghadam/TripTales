@@ -92,8 +92,15 @@ class AuthController extends GetxController {
       //   }
       //   await _firestore.collection('tales').doc(taleId).delete();
       // }
+      User? userc = FirebaseAuth.instance.currentUser;
+      userc!.delete();
       await _firestore.collection('users').doc(user!.id).delete();
-      await _storage.refFromURL(user!.profileImage).delete();
+      try{
+        String downloadURL = await _storage.ref().child(user!.profileImage).getDownloadURL();
+        await _storage.refFromURL(downloadURL).delete();
+      } catch(e) {
+        print("downloadURL not found");
+      }
       return true;
     } catch (e) {
       return false;

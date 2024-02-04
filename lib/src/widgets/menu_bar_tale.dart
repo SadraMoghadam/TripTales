@@ -130,9 +130,9 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
           icon: CircleAvatar(
             backgroundColor: Colors.transparent,
             radius: 15.0,
-            backgroundImage: profileImageUrl.isNotEmpty
-                ? NetworkImage(profileImageUrl) as ImageProvider<Object>?
-                : AssetImage('assets/images/profile_pic.png') as ImageProvider<Object>?,
+            backgroundImage: (profileImageUrl.isEmpty || profileImageUrl == "")
+                ? AssetImage('assets/images/profile_pic.png') as ImageProvider<Object>?
+                : NetworkImage(profileImageUrl) as ImageProvider<Object>?,
           ),
           label: 'Profile',
           tooltip: "Profile Settings",

@@ -24,10 +24,17 @@ class AppManager extends GetxController {
   void reset() {
     setCurrentUser('');
     setCards(List.empty());
-    setCurrentTaleId('');
     setIsCardsTransformChanged(false);
     setProfileImage('');
+    resetTale();
     cardsTransform.value = List.empty();
+  }
+
+  void resetTale() {
+    chosenLocation = Rx<Tuple<double, double>?>(null);
+    setCurrentTaleId('');
+    setCurrentTaleLocations(List.empty());
+    setCurrentTale(TaleModel(name: '', imagePath: '', canvas: '0'));
   }
 
   void setChosenLocation(LatLng loc) {
@@ -77,6 +84,7 @@ class AppManager extends GetxController {
   }
 
   void setCurrentTaleLocations(List<Tuple<String, LatLng>>? locations) {
+    currentTaleLocations.value = List.empty();
     currentTaleLocations.value = locations;
   }
 

@@ -38,6 +38,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
   Set<Marker> _markers = HashSet<Marker>();
   GoogleMapController? _mapController;
   int selectedIndex = 0;
+  var imagePath = '';
   // late final AnimationController _controller;
 
   @override
@@ -45,6 +46,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     super.initState();
     _currentTale = _appManager.getCurrentTale();
     _mapLocations = _appManager.getCurrentTaleLocations();
+    _loadImageData();
     print("-_-_-_--_---_--_-_---$_mapLocations");
     for (int i = 0; i < _mapLocations!.length; i++) {
       _markers.add(Marker(
@@ -67,6 +69,12 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     super.dispose();
   }
 
+  void _loadImageData() {
+    setState(() {
+      imagePath = _currentTale!.imagePath;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
@@ -83,20 +91,6 @@ class _TaleInfoPage extends State<TaleInfoPage> {
   }
 
   Widget buildBody() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Flexible(
-          fit: FlexFit.tight,
-          flex: 11,
-          child: buildScreen(),
-        ),
-      ],
-    );
-  }
-
-  Widget buildScreen() {
     return Container(
       color: AppColors.main1.shade300,
       child: Column(
@@ -105,14 +99,14 @@ class _TaleInfoPage extends State<TaleInfoPage> {
           Text(
             _currentTale!.name,
             style: const TextStyle(
-                color: Colors.white, fontSize: 50, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),
           ),
           const SizedBox(
             height: 30,
           ),
           Container(
             height: 200,
-            width: 200,
+            width: 350,
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.main2, width: 5),
               borderRadius: BorderRadius.circular(16.0),
@@ -120,7 +114,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                _currentTale!.imagePath,
+                '$imagePath?timestamp=${DateTime.now().millisecondsSinceEpoch}',
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: double.infinity,
@@ -141,7 +135,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
                 height: 40,
                 width: 150,
                 child: CustomButton(
-                  key: const Key('editTaleCustomButtonKey'),
+                  // key: const Key('editTaleCustomButtonKey'),
                   fontSize: 18,
                   padding: 2,
                   backgroundColor: AppColors.main2,
@@ -157,7 +151,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
                 height: 40,
                 width: 150,
                 child: CustomButton(
-                  key: const Key('deleteTaleCustomButtonKey'),
+                  // key: const Key('deleteTaleCustomButtonKey'),
                   fontSize: 18,
                   padding: 2,
                   backgroundColor: AppColors.main3,

@@ -12,7 +12,7 @@ class CustomAppBar extends StatelessWidget {
     required this.bodyTale,
     required this.showIcon,
     this.isScrollable = true,
-    this.navigationPath = '/customMenu',
+    this.navigationPath = '',
   }) : super(key: key);
 
   @override
@@ -59,7 +59,7 @@ class CustomAppBar extends StatelessWidget {
                         if(navigationPath! == '/pop'){
                           Navigator.maybePop(context);
                         }
-                        else {
+                        else if(navigationPath! != ''){
                           Navigator.of(context).pushNamed(navigationPath!);
                         }
                       },

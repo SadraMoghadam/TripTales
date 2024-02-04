@@ -24,9 +24,12 @@ class _DeleteAccountDialog extends State<DeleteAccountDialog> {
   void _submit() async {
     bool result = await _authController.deleteUser(_appManager.getCurrentUser());
     if (result) {
-      Navigator.of(context).pop(true);
+      print("user deleted");
+      // Navigator.of(context).pop(true);
+      _appManager.reset();
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
     } else {
-      ErrorController.showSnackBarError(ErrorController.deleteCard);
+      ErrorController.showSnackBarError(ErrorController.deleteAccount);
       return;
     }
   }

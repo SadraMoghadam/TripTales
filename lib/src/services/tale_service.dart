@@ -180,7 +180,6 @@ class TaleService extends GetxService {
               .ref()
               .child(taleData['imagePath'])
               .getDownloadURL();
-          print("video:      ${taleData['imagePath']}");
           TaleModel taleModel = TaleModel(
             id: taleData['id'],
             name: taleData['name'],
@@ -294,8 +293,13 @@ class TaleService extends GetxService {
           await _firestore.collection('tales').doc(taleId).get();
       final taleData = taleDoc.data();
       if (taleData != null) {
-        String downloadURL =
-            await _storage.ref().child(taleData['imagePath']).getDownloadURL();
+        String downloadURL = '';
+        try {
+          downloadURL = await _storage.ref().child(taleData['imagePath']).getDownloadURL();
+        } catch (e) {
+          print(e);
+          downloadURL = '';
+        }
         TaleModel taleModel = TaleModel(
           id: taleData['id'],
           name: taleData['name'],

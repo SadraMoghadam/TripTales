@@ -36,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage>
   late Future<UserModel?> user;
   final AppManager _appManager = Get.put(AppManager());
   final Validator _validator = Validator();
-  final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Key _futureBuilderKey = UniqueKey();
   late final TextEditingController _nameController;
   late final TextEditingController _surnameController;
@@ -62,6 +62,8 @@ class _ProfilePageState extends State<ProfilePage>
     'Female',
     'Other'
   ];
+  bool isTablet = false;
+  DeviceInfo device = DeviceInfo();
 
   void _submit() async {
     final isValid = _formKey.currentState?.validate();
@@ -100,6 +102,15 @@ class _ProfilePageState extends State<ProfilePage>
     _authService.signOut();
     _appManager.reset();
     DialogPopup(text: "Logging out ...", duration: 2).show(context);
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => route.isFirst);
+    });
+  }
+
+  void deleteAccount() {
+    _authService.signOut();
+    _appManager.reset();
+    DialogPopup(text: "Deleting Account ...", duration: 2).show(context);
     Future.delayed(Duration(seconds: 2), () {
       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => route.isFirst);
     });
@@ -168,8 +179,9 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    DeviceInfo device = DeviceInfo();
+    device = DeviceInfo();
     device.computeDeviceInfo(context);
+    this.isTablet = device.isTablet;
     return buildBody(context);
     //   Scaffold(
     //   body: CustomAppBar(
@@ -180,9 +192,9 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget buildBody(context) {
-    DeviceInfo device = DeviceInfo();
-    device.computeDeviceInfo(context);
-    bool isTablet = device.isTablet;
+    // DeviceInfo device = DeviceInfo();
+    // device.computeDeviceInfo(context);
+    // isTablet = device.isTablet;
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     return Column(
@@ -199,7 +211,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget buildHeader(context) {
+  Widget buildHeader(BuildContext context) {
     return Center(
       child: Stack(
         children: [
@@ -232,14 +244,18 @@ class _ProfilePageState extends State<ProfilePage>
                 showDialog(
                     context: context,
                     builder: (context) {
-                      return modifyProfileImage();
+                      return modifyProfileImage(context);
                     }).then((value) => {
                       setState(() {
-                        File imageFile = mediaController.getImage()!;
-                        _authService
-                            .updateUserImage(imageFile,
-                                _appManager.getCurrentUser() + ".png")
-                            .then((value) => {});
+                        try {
+                          File imageFile = mediaController.getImage()!;
+                          _authService
+                              .updateUserImage(imageFile,
+                              _appManager.getCurrentUser() + ".png")
+                              .then((value) => {});
+                        } catch(e) {
+                          print(e);
+                        }
                         user = Future.value(UserModel(
                           id: _appManager.getCurrentUser(),
                           email: _emailController.text,
@@ -249,7 +265,7 @@ class _ProfilePageState extends State<ProfilePage>
                           phoneNumber: _phoneNumberController.text,
                           bio: _bioController.text,
                           gender: _selectedGender,
-                          profileImage: _appManager.getProfileImage(),
+                          profileImage: _appManager.getProfileImage() ?? '',
                         ));
                         showDialog(
                             context: context,
@@ -289,9 +305,9 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget buildScreenLandScape() {
-    DeviceInfo device = DeviceInfo();
-    device.computeDeviceInfo(context);
-    bool isTablet = device.isTablet;
+    // DeviceInfo device = DeviceInfo();
+    // device.computeDeviceInfo(context);
+    // bool isTablet = device.isTablet;
     return FutureBuilder<UserModel?>(
         key: _futureBuilderKey,
         future: user,
@@ -661,9 +677,9 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget buildScreen() {
-    DeviceInfo device = DeviceInfo();
-    device.computeDeviceInfo(context);
-    bool isTablet = device.isTablet;
+    // DeviceInfo device = DeviceInfo();
+    // device.computeDeviceInfo(context);
+    // bool isTablet = device.isTablet;
     return FutureBuilder<UserModel?>(
         key: _futureBuilderKey,
         future: user,
@@ -671,11 +687,12 @@ class _ProfilePageState extends State<ProfilePage>
           // if (snapshot.connectionState == ConnectionState.waiting) {
           //   return CircularProgressIndicator();
           // }
-          print("==================================================");
-          if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+          // print("==================================================");
+          if (snapshot.hasData &&
+              snapshot.connectionState == ConnectionState.done) {
             UserModel userData = snapshot.data!;
-            print(userData.email);
-            print(userData.gender);
+            // print(userData.email);
+            // print(userData.gender);
             _nameController.text = userData.name ?? '';
             _surnameController.text = userData.surname ?? '';
             _emailController.text = userData.email ?? '';
@@ -892,8 +909,6 @@ class _ProfilePageState extends State<ProfilePage>
                               context: context,
                               builder: (context) {
                                 return const DeleteAccountDialog();
-                              }).then((value) => () {
-                                if (value == true) logout();
                               });
                         },
                       ),
@@ -912,10 +927,10 @@ class _ProfilePageState extends State<ProfilePage>
         });
   }
 
-  Widget modifyProfileImage() {
-    DeviceInfo device = DeviceInfo();
-    device.computeDeviceInfo(context);
-    bool isTablet = device.isTablet;
+  Widget modifyProfileImage(BuildContext context) {
+    // DeviceInfo device = DeviceInfo();
+    // device.computeDeviceInfo(context);
+    // bool isTablet = device.isTablet;
     return AlertDialog(
       key: const Key('alertDialogKey'),
       elevation: 10,
@@ -923,7 +938,7 @@ class _ProfilePageState extends State<ProfilePage>
       insetPadding: const EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0))),
-      content: buildProfileBody(device),
+      content: buildProfileImageBody(device),
       actions: <Widget>[
         CustomButton(
             key: const Key('closeCustomButtonKey'),
@@ -938,10 +953,10 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget buildProfileBody(DeviceInfo device) {
-    DeviceInfo device = DeviceInfo();
-    device.computeDeviceInfo(context);
-    bool isTablet = device.isTablet;
+  Widget buildProfileImageBody(DeviceInfo device) {
+    // DeviceInfo device = DeviceInfo();
+    // device.computeDeviceInfo(context);
+    // bool isTablet = device.isTablet;
     return SingleChildScrollView(
       child: Container(
         height: isTablet ? 300 : 200,
@@ -965,14 +980,16 @@ class _ProfilePageState extends State<ProfilePage>
                 flex: 5,
                 fit: FlexFit.tight,
                 child: Center(
-                    child: CustomButton(
-                        key: const Key('deleteCustomButtonKey'),
-                        height: isTablet ? 20 : 18,
-                        width: isTablet ? 210 : 200,
-                        text: "Delete",
-                        textColor: Colors.white,
-                        onPressed: () => Navigator.of(context).pop())),
-              )
+                  child: CustomButton(
+                    key: const Key('deleteCustomButtonKey'),
+                    height: isTablet ? 20 : 18,
+                    width: isTablet ? 210 : 200,
+                    text: "Delete",
+                    textColor: Colors.white,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

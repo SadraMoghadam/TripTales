@@ -234,8 +234,10 @@ class CardService extends GetxService {
         await _firestore.collection('tales').doc(taleId).update({
           'cardsFK': FieldValue.arrayRemove([cardId]),
         });
-        if(contain.first!.type != MemoryCardType.text)
+        if(contain.first!.type != MemoryCardType.text){
+          print("))))))))))))))))))))${contain.first!.path}");
           await _storage.refFromURL(contain.first!.path).delete();
+        }
 
         print('Card deleted successfully.');
         return 200;

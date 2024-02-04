@@ -26,7 +26,7 @@ class CreateTextPage extends StatefulWidget {
 class _CreateTextPageState extends State<CreateTextPage> {
   final Validator _validator = Validator();
   final AppManager _appManager = Get.put(AppManager());
-  final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final TextEditingController _textController;
   late final TextEditingController _colorController;

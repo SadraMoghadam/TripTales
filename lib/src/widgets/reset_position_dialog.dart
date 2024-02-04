@@ -33,7 +33,7 @@ class _ResetPositionDialog extends State<ResetPositionDialog> {
     if (result == 200) {
       Navigator.of(context).pop(true);
     } else {
-      ErrorController.showSnackBarError(ErrorController.deleteCard);
+      ErrorController.showSnackBarError(ErrorController.resetCardPosition);
       return;
     }
   }

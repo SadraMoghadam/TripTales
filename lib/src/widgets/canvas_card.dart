@@ -9,12 +9,11 @@ class CustomCanvas extends StatefulWidget {
       isSelected; // New parameter to determine if this widget is selected
 
   const CustomCanvas({
-    Key? key,
     required this.talePath,
     required this.taleName,
     required this.onTap,
     this.isSelected = false,
-  }) : super(key: key);
+  });
 
   @override
   _CustomCanvasState createState() => _CustomCanvasState();
