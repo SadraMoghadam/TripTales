@@ -60,7 +60,7 @@ class CustomAppBar extends StatelessWidget {
                           Navigator.maybePop(context);
                         }
                         else if(navigationPath! != ''){
-                          Navigator.of(context).pushNamed(navigationPath!);
+                          Navigator.of(context).pushReplacementNamed(navigationPath!);
                         }
                       },
                     ),

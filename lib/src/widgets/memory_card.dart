@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/models/card_model.dart';
@@ -20,7 +21,7 @@ class MemoryCard extends StatefulWidget {
   final bool isEditable;
   final Function callback;
 
-  final GlobalKey cardKey;
+  // final GlobalKey cardKey;
   final String name;
   final MemoryCardType type;
   final int order;
@@ -47,7 +48,7 @@ class MemoryCard extends StatefulWidget {
     required this.isEditable,
     required this.callback,
     required this.name,
-    required this.cardKey,
+    // required this.cardKey,
     required this.order,
     required this.type,
     // required this.onSizeChanged,
@@ -200,7 +201,7 @@ class _MemoryCardState extends State<MemoryCard> {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return MatrixGestureDetector(
-      key: widget.cardKey,
+      key: widget.key,
       shouldRotate: widget.isEditable,
       shouldScale: widget.isEditable,
       shouldTranslate: widget.isEditable,
@@ -510,9 +511,9 @@ class _MemoryCardState extends State<MemoryCard> {
     );
   }
 
-  Size getContainerSize() {
-    RenderBox renderBox =
-        widget.cardKey.currentContext!.findRenderObject() as RenderBox;
-    return renderBox.size;
-  }
+  // Size getContainerSize() {
+  //   RenderBox renderBox =
+  //       widget.key.val.currentContext!.findRenderObject() as RenderBox;
+  //   return renderBox.size;
+  // }
 }

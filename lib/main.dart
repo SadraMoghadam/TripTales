@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/loginPage': (context) => LoginPage(),
         '/registerPage': (context) => RegisterPage(),
-        '/customMenu': (context) => CustomMenu(),
+        '/customMenu': (context) => CustomMenu(index: 0),
         '/myTalesPage': (context) => MyTalesPage(),
         '/createTalePage': (context) => CreateTalePage(),
         '/talePage': (context) => TalePage(),

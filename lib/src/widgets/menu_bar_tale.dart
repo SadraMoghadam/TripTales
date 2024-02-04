@@ -13,7 +13,7 @@ import 'app_bar_tale.dart';
 class CustomMenu extends StatefulWidget {
   late int index;
 
-  CustomMenu({super.key, this.index = 0});
+  CustomMenu({super.key, required this.index});
   @override
   _CustomMenuState createState() => _CustomMenuState();
 }
@@ -22,6 +22,7 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
   final screens = [MyTalesPage(), FavoriteTalesPage(), ProfilePage()];
   final AppManager _appManager = Get.put(AppManager());
   late final AnimationController _controller;
+  bool isTablet = false;
 
   Future<void> fetchData() async {
     if(widget.index == 0){
@@ -34,6 +35,7 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
     super.initState();
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 4));
+
   }
 
   @override
@@ -46,7 +48,7 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
-    bool isTablet = device.isTablet;
+    isTablet = device.isTablet;
     return Scaffold(
       body: _buildScreenContent(),
       bottomNavigationBar: _bottomNavigationBar(),
@@ -54,6 +56,10 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
   }
 
   Widget _buildScreenContent() {
+    widget.index = _appManager.getMenuIndex();
+    if(widget.index > 3){
+      widget.index = 0;
+    }
     if (widget.index == 0) {
       return FutureBuilder(
         future: fetchData(),
@@ -87,10 +93,7 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
   }
 
   _bottomNavigationBar() {
-    String profileImageUrl = _appManager.getProfileImage();
-    DeviceInfo device = DeviceInfo();
-    device.computeDeviceInfo(context);
-    bool isTablet = device.isTablet;
+    String profileImageUrl = _appManager.getProfileImage() ?? '';
     return isTablet
         ? Column(
             mainAxisSize: MainAxisSize.min,
@@ -100,13 +103,18 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
   }
 
   Widget buildNavigationBar(String profileImageUrl) {
+
+
     return NavigationBar(
       backgroundColor: Colors.white,
       animationDuration: const Duration(seconds: 1),
       labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       height: 48,
       selectedIndex: widget.index,
-      onDestinationSelected: (index) => setState(() => widget.index = index),
+      onDestinationSelected: (index) => setState(() => {
+        widget.index = index,
+        _appManager.setMenuIndex(index),
+      }),
       destinations: [
         const NavigationDestination(
           icon: Icon(Icons.home_outlined),

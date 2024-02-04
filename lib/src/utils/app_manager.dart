@@ -17,6 +17,7 @@ class AppManager extends GetxController {
   Rx<List<Tuple<String, LatLng>>?> currentTaleLocations = Rx<List<Tuple<String, LatLng>>?>(List.empty(growable: true));
   Rx<String> currentUserId = Rx<String>("");
   Rx<String> profileImage = Rx<String>("");
+  Rx<int> menuIndex = Rx<int>(100);
   Rx<List<Tuple<String, Matrix4>>?> cardsTransform = Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
   Rx<Tuple<double, double>?> chosenLocation = Rx<Tuple<double, double>?>(null);
   Rx<bool> isCardsTransformChanged = Rx<bool>(false);
@@ -26,6 +27,7 @@ class AppManager extends GetxController {
     setCards(List.empty());
     setIsCardsTransformChanged(false);
     setProfileImage('');
+    setMenuIndex(100);
     resetTale();
     cardsTransform.value = List.empty();
   }
@@ -96,6 +98,10 @@ class AppManager extends GetxController {
     userCards.value = cards;
   }
 
+  void setMenuIndex(int index) {
+    menuIndex.value = index;
+  }
+
   // void setCardByName(CardModel? card) {
   //   userCards.value![userCards.value!.indexWhere((element) => element!.name == card!.name)] = card!;
   // }
@@ -142,4 +148,9 @@ class AppManager extends GetxController {
     if (userCards == Rx<List<CardModel?>?>(null)) return 0;
     return userCards.value!.length;
   }
+
+  int getMenuIndex() {
+    return menuIndex.value;
+  }
+
 }

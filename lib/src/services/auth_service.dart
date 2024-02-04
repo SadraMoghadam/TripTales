@@ -34,8 +34,10 @@ class AuthService extends GetxService {
   Future<User?> signInWithGoogle() async {
     try {
       signOut();
+      print("++++++++++++++++++++++++++++++++++++++++++++++++0");
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
+      print("++++++++++++++++++++++++++++++++++++++++++++++++0");
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount!.authentication;
       print("++++++++++++++++++++++++++++++++++++++++++++++++0");
@@ -63,6 +65,7 @@ class AuthService extends GetxService {
       setUserDataOnLogin(googleUser!.uid);
       return googleUser;
     } catch (error) {
+      print(error);
       ErrorController.showSnackBarError(ErrorController.loginGmail);
       return null;
     }
@@ -184,7 +187,11 @@ class AuthService extends GetxService {
   }
 
   Future<void> signOut() async {
-    await _auth.signOut();
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _createUserDocument(

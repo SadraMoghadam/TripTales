@@ -37,7 +37,7 @@ class _CreateTalePage extends State<CreateTalePage> {
   final AppManager _appManager = Get.put(AppManager());
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>(debugLabel: 'createTale');
   late TaleModel taleModel;
   int selectedIndex = 0;
 
@@ -57,16 +57,16 @@ class _CreateTalePage extends State<CreateTalePage> {
     int result = 400;
     if (imageFile != null) {
       if (widget.isEditMode) {
-        var currentTaleId = await _taleService.getTaleId(taleData.name);
-        var currentTale = await _taleService
-            .getTaleById(currentTaleId)
-            .then((value) => taleData = TaleModel(
-                  id: value!.id,
-                  name: _taleNameController.text,
-                  imagePath: '${value!.id}_TALE.png',
-                  canvas: selectedIndex.toString(),
-                  cardsFK: value!.cardsFK,
-                ));
+        var currentTaleId = _appManager.getCurrentTaleId();
+        var value = await _taleService.getTaleById(currentTaleId);
+        taleData = TaleModel(
+          id: value?.id,
+          name: _taleNameController.text,
+          imagePath: '${value?.id}_TALE.png',
+          canvas: selectedIndex.toString(),
+          liked: value!.liked,
+          cardsFK: value?.cardsFK,
+        );
 
         result = await _taleService.updateTale(taleData, imageFile!);
       } else {
@@ -139,7 +139,7 @@ class _CreateTalePage extends State<CreateTalePage> {
       body: CustomAppBar(
         bodyTale: buildBody(),
         showIcon: true,
-        navigationPath: '/pop',
+        navigationPath: widget.isEditMode ? '/pop' : '/customMenu',
       ),
     );
   }

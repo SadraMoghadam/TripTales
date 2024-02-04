@@ -86,8 +86,8 @@ class _CreateTextPageState extends State<CreateTextPage> {
       fontStyle: TextUtils.textToFontStyle(_selectedFontStyle),
       fontWeight: TextUtils.textToFontWeight(_selectedFontWeight),
       fontSize: _fontSize,
-      locationLatitude: cardLocation!.item1,
-      locationLongitude: cardLocation!.item2,
+      locationLatitude: cardLocation?.item1,
+      locationLongitude: cardLocation?.item2,
     );
     String taleId = _appManager.getCurrentTaleId();
     int result = await _cardService.addTextCard(taleId, textCardData);

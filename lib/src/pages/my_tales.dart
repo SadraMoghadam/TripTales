@@ -16,7 +16,7 @@ class MyTalesPage extends StatefulWidget {
 class _MyTalesPage extends State<MyTalesPage> {
   final TaleService _taleService = Get.find<TaleService>();
   late Future<List<TaleModel?>> tales;
-  List<GlobalKey> _widgetKeyList = List<GlobalKey>.empty(growable: true);
+  List<ValueKey> _widgetKeyList = List<ValueKey>.empty(growable: true);
   final AppManager _appManager = Get.put(AppManager());
 
   static int numOfTales = 0;
@@ -85,7 +85,7 @@ class _MyTalesPage extends State<MyTalesPage> {
           List<TaleModel?> data = snapshot.data!;
           numOfTales = data.length;
           for (int i = 0; i < numOfTales; i++) {
-            _widgetKeyList.add(GlobalObjectKey(i +
+            _widgetKeyList.add(ValueKey(i +
                 data[i]!.id!.codeUnits.fold<int>(
                     0,
                         (previousValue, element) =>
