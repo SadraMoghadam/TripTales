@@ -208,7 +208,7 @@ class HomePage extends StatelessWidget {
             child: Text('Create Account',
                 key: const Key('createAccountCustomButtonKey'),
                 style: TextStyle(
-                    fontSize: isTablet ? 15 : 10,
+                    fontSize: isTablet ? 15 : 12,
                     color: Colors.black87,
                     decoration: TextDecoration.underline)),
           ),

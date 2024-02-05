@@ -387,13 +387,13 @@ class _ProfilePageState extends State<ProfilePage>
                   CustomTextField(
                     isTablet: isTablet,
                     key: const Key('birthDateCustomTextFieldKey'),
-                    readOnly: readOnlyTextField,
+                    readOnly: true,
                     controller: _birthDateController,
                     labelText: 'Date of birth',
                     hintText: _selectedDate != null
                         ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
                         : 'Select date',
-                    onTap: () => _selectDate(context),
+                    onTap: () => !readOnlyTextField ? _selectDate(context) : null,
                     prefixIcon: Icons.date_range_rounded,
                     obscureText: false,
                     keyboardType: TextInputType.datetime,
@@ -692,7 +692,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                   isTablet: isTablet,
                                                   key: const Key(
                                                       'birthDateCustomTextFieldKey'),
-                                                  readOnly: readOnlyTextField,
+                                                  readOnly: true,
                                                   controller:
                                                       _birthDateController,
                                                   labelText: 'Date of birth',
@@ -702,8 +702,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                           .format(
                                                               _selectedDate!)
                                                       : 'Select date',
-                                                  onTap: () =>
-                                                      _selectDate(context),
+                                                  onTap: () => !readOnlyTextField ? _selectDate(context) : null,
                                                   prefixIcon:
                                                       Icons.date_range_rounded,
                                                   obscureText: false,
@@ -953,7 +952,7 @@ class _ProfilePageState extends State<ProfilePage>
     return SingleChildScrollView(
       child: Container(
         height: isTablet ? 300 : 200,
-        width: device.width,
+        width: 500,
         child: Form(
           key: _formKey,
           child: Column(

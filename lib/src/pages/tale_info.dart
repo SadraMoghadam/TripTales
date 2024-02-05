@@ -48,7 +48,6 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     _currentTale = _appManager.getCurrentTale();
     _mapLocations = _appManager.getCurrentTaleLocations();
     _loadImageData();
-    print("-_-_-_--_---_--_-_---$_mapLocations");
     for (int i = 0; i < _mapLocations!.length; i++) {
       _markers.add(Marker(
         markerId: MarkerId(_mapLocations![i]!.toString()),
@@ -83,7 +82,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     return Scaffold(
       backgroundColor: Colors.blue,
       body: CustomAppBar(
-        bodyTale: buildBody(),
+        bodyTale: buildBody(context),
         showIcon: true,
         isScrollable: false,
         navigationPath: '/pop',
@@ -91,12 +90,20 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     );
   }
 
-  Widget buildBody() {
+  Widget buildBody(context) {
+    DeviceInfo deviceInfo = DeviceInfo();
+    deviceInfo.computeDeviceInfo(context);
     return Container(
       color: AppColors.main1.shade300,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const Flexible(
+              fit: FlexFit.tight,
+              flex: 1,
+              child: SizedBox(
+                height: 5,
+              )),
           Flexible(
             fit: FlexFit.tight,
             flex: 3,
@@ -104,16 +111,16 @@ class _TaleInfoPage extends State<TaleInfoPage> {
               _currentTale!.name,
               style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 40,
+                  fontSize: 27,
                   fontWeight: FontWeight.bold),
             ),
           ),
           Flexible(
             fit: FlexFit.tight,
-            flex: 7,
+            flex: 10,
             child: Container(
               height: 200,
-              width: 350,
+              width: deviceInfo.width - 200,
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.main2, width: 5),
                 borderRadius: BorderRadius.circular(16.0),
@@ -129,7 +136,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
               ),
             ),
           ),
-          Flexible(
+          const Flexible(
               fit: FlexFit.tight,
               flex: 1,
               child: SizedBox(
@@ -137,8 +144,8 @@ class _TaleInfoPage extends State<TaleInfoPage> {
               )),
           Flexible(
             fit: FlexFit.tight,
-            flex: 7,
-            child: buildGoogleMap(),
+            flex: 14,
+            child: buildGoogleMap(deviceInfo),
           ),
           Flexible(
             fit: FlexFit.tight,
@@ -187,7 +194,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => CreateTalePage(
+          builder: (context) => const CreateTalePage(
                 isEditMode: true,
               )),
     );
@@ -228,11 +235,11 @@ class _TaleInfoPage extends State<TaleInfoPage> {
         }));
   }
 
-  Widget buildGoogleMap() {
+  Widget buildGoogleMap(deviceInfo) {
     print(_markers);
     return Container(
       height: 350,
-      width: 350,
+      width: deviceInfo.width - 200,
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.main2, width: 5),
         borderRadius: BorderRadius.circular(16.0),

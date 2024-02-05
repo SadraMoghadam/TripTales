@@ -43,8 +43,8 @@ class _CreateImagePageState extends State<CreateImagePage> {
       type: MemoryCardType.image,
       transform: Matrix4.identity(),
       name: '${_nameController.text}.png',
-      locationLatitude: cardLocation!.item1,
-      locationLongitude: cardLocation!.item2,
+      locationLatitude: cardLocation?.item1,
+      locationLongitude: cardLocation?.item2,
     );
     String taleId = _appManager.getCurrentTaleId();
     int result = await _cardService.addImageCard(taleId,
@@ -113,8 +113,10 @@ class _CreateImagePageState extends State<CreateImagePage> {
   Widget buildBody(DeviceInfo device) {
     return SingleChildScrollView(
       child: Container(
-        height: device.height - 240,
-        width: device.width,
+        // height: device.height - 240,
+        // width: device.width,
+        height: 520,
+        width: 500,
         child: Form(
           key: _formKey,
           child: Column(

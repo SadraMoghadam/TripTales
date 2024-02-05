@@ -14,11 +14,12 @@ class AppManager extends GetxController {
   Rx<List<CardModel?>?> userCards = Rx<List<CardModel?>?>(null);
   Rx<String> currentTaleId = Rx<String>("");
   Rx<TaleModel> currentTale = Rx<TaleModel>(TaleModel(name: '', imagePath: '', canvas: '0'));
-  Rx<List<Tuple<String, LatLng>>?> currentTaleLocations = Rx<List<Tuple<String, LatLng>>?>(List.empty(growable: true));
+  Rx<List<Tuple<String, LatLng>>?> currentTaleLocations = Rx<List<Tuple<String, LatLng>>?>([]);
   Rx<String> currentUserId = Rx<String>("");
   Rx<String> profileImage = Rx<String>("");
   Rx<int> menuIndex = Rx<int>(100);
   Rx<List<Tuple<String, Matrix4>>?> cardsTransform = Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
+  // RxList<Tuple<String, Matrix4>> cardsTransform = RxList<Tuple<String, Matrix4>>();
   Rx<Tuple<double, double>?> chosenLocation = Rx<Tuple<double, double>?>(null);
   Rx<bool> isCardsTransformChanged = Rx<bool>(false);
 
@@ -34,6 +35,7 @@ class AppManager extends GetxController {
 
   void resetTale() {
     chosenLocation = Rx<Tuple<double, double>?>(null);
+    cardsTransform = Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
     setCurrentTaleId('');
     setCurrentTaleLocations(List.empty());
     setCurrentTale(TaleModel(name: '', imagePath: '', canvas: '0'));

@@ -207,8 +207,10 @@ class _CreateTextPageState extends State<CreateTextPage> {
   Widget buildBody(DeviceInfo device) {
     return SingleChildScrollView(
       child: Container(
-        height: device.height - 240,
-        width: device.width,
+        // height: device.height - 240,
+        // width: device.width,
+        height: 520,
+        width: 500,
         child: Form(
           key: _formKey,
           child: Column(

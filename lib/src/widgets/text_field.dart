@@ -83,7 +83,7 @@ class CustomTextField extends StatefulWidget {
   _CustomTextFieldState createState() => _CustomTextFieldState();
 }
 
-
+/*
 class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
@@ -179,96 +179,96 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ));
   }
 }
-
-// class _CustomTextFieldState extends State<CustomTextField> {
-//   @override
-//   Widget build(BuildContext context) {
-//     double width = widget.isTablet ? 450 : 300;
-//     //double height = widget.isTablet ? 100 : 40;
-//     return SizedBox(
-//       width: width,
-//       //height: height,
-//       child: TextFormField(
-//         style: TextStyle(
-//           overflow: TextOverflow.ellipsis,
-//           color: widget.textColor,
-//           fontSize: widget.fontSize,
-//           fontStyle: widget.fontStyle,
-//         ),
-//         controller: widget.controller,
-//         obscureText: widget.obscureText,
-//         enabled: widget.enabled,
-//         keyboardType: widget.keyboardType,
-//         textInputAction: widget.textInputAction,
-//         cursorColor: widget.focusedColor,
-//         autocorrect: widget.autocorrect,
-//         maxLines: widget.maxLines,
-//         readOnly: widget.readOnly,
-//         enableSuggestions: widget.enableSuggestions,
-//         decoration: InputDecoration(
-//           labelText: widget.labelText,
-//           contentPadding: widget.isTablet
-//               ? EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0)
-//               : EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
-//           filled: widget.filled,
-//           fillColor: widget.fillColor,
-//           labelStyle: TextStyle(color: widget.labelTextColor),
-//           hintText: widget.hintText,
-//           hintStyle: TextStyle(color: widget.hintTextColor),
-//           prefixIcon: Icon(
-//             widget.prefixIcon,
-//             color: widget.iconColor,
-//             shadows: widget.isFieldColor
-//                 ? [const Shadow(color: Colors.grey, offset: Offset(-2, 2))]
-//                 : null,
-//           ),
-//           suffixIcon: widget.isPassword
-//               ? IconButton(
-//                   icon: Icon(widget.isPasswordVisible
-//                       ? Icons.visibility
-//                       : Icons.visibility_off),
-//                   color: AppColors.main1,
-//                   onPressed: widget.onVisibilityPressed,
-//                 )
-//               : widget.isEditableOnOtherWindow
-//                   ? IconButton(
-//                       icon: Icon(widget.suffixIcon),
-//                       color: AppColors.main1,
-//                       onPressed: widget.onVisibilityPressed,
-//                     )
-//                   : null,
-//           errorStyle: TextStyle(
-//             fontSize: widget.isTablet ? 15 : 10.0,
-//             height: 0.4,
-//           ),
-//           border: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(15.0),
-//             borderSide: BorderSide(
-//               color: widget.enabledColor,
-//             ),
-//             gapPadding: 5,
-//           ),
-//           focusedBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(20.0),
-//             borderSide: BorderSide(
-//               color: widget.focusedColor,
-//             ),
-//             gapPadding: 5,
-//           ),
-//           enabledBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(15.0),
-//             borderSide: BorderSide(
-//               style: BorderStyle.solid,
-//               color: widget.enabledColor,
-//             ),
-//             gapPadding: 5,
-//           ),
-//         ),
-//         validator: widget.validator,
-//         onChanged: widget.onChanged,
-//         onTap: widget.onTap,
-//         inputFormatters: widget.inputFormatters,
-//       ),
-//     );
-//   }
-// }
+*/
+class _CustomTextFieldState extends State<CustomTextField> {
+  @override
+  Widget build(BuildContext context) {
+    double width = widget.isTablet ? 450 : 300; // Adjust the width accordingly
+    //double height = widget.isTablet ? 100 : 40;
+    return SizedBox(
+      width: width,
+      //height: height,
+      child: TextFormField(
+        style: TextStyle(
+          overflow: TextOverflow.ellipsis,
+          color: widget.textColor,
+          fontSize: widget.fontSize,
+          fontStyle: widget.fontStyle,
+        ),
+        controller: widget.controller,
+        obscureText: widget.obscureText,
+        enabled: widget.enabled,
+        keyboardType: widget.keyboardType,
+        textInputAction: widget.textInputAction,
+        cursorColor: widget.focusedColor,
+        autocorrect: widget.autocorrect,
+        maxLines: widget.maxLines,
+        readOnly: widget.readOnly,
+        enableSuggestions: widget.enableSuggestions,
+        decoration: InputDecoration(
+          labelText: widget.labelText,
+          contentPadding: widget.isTablet
+              ? EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0)
+              : EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+          filled: widget.filled,
+          fillColor: widget.fillColor,
+          labelStyle: TextStyle(color: widget.labelTextColor),
+          hintText: widget.hintText,
+          hintStyle: TextStyle(color: widget.hintTextColor),
+          prefixIcon: Icon(
+            widget.prefixIcon,
+            color: widget.iconColor,
+            shadows: widget.isFieldColor
+                ? [const Shadow(color: Colors.grey, offset: Offset(-2, 2))]
+                : null,
+          ),
+          suffixIcon: widget.isPassword
+              ? IconButton(
+            icon: Icon(widget.isPasswordVisible
+                ? Icons.visibility
+                : Icons.visibility_off),
+            color: AppColors.main1,
+            onPressed: widget.onVisibilityPressed,
+          )
+              : widget.isEditableOnOtherWindow
+              ? IconButton(
+            icon: Icon(widget.suffixIcon),
+            color: AppColors.main1,
+            onPressed: widget.onVisibilityPressed,
+          )
+              : null,
+          errorStyle: TextStyle(
+            fontSize: widget.isTablet ? 15 : 10.0,
+            height: 0.4,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: BorderSide(
+              color: widget.enabledColor,
+            ),
+            gapPadding: 5,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
+            borderSide: BorderSide(
+              color: widget.focusedColor,
+            ),
+            gapPadding: 5,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: BorderSide(
+              style: BorderStyle.solid,
+              color: widget.enabledColor,
+            ),
+            gapPadding: 5,
+          ),
+        ),
+        validator: widget.validator,
+        onChanged: widget.onChanged,
+        onTap: widget.onTap,
+        inputFormatters: widget.inputFormatters,
+      ),
+    );
+  }
+}

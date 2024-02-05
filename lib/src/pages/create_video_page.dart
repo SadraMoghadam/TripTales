@@ -47,8 +47,8 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
       type: MemoryCardType.video,
       transform: Matrix4.identity(),
       name: '${_nameController.text}.mp4',
-      locationLatitude: cardLocation!.item1,
-      locationLongitude: cardLocation!.item2,
+      locationLatitude: cardLocation?.item1,
+      locationLongitude: cardLocation?.item2,
     );
     String taleId = _appManager.getCurrentTaleId();
     int result = await _cardService.addVideoCard(taleId,
@@ -119,8 +119,10 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
   Widget buildBody(DeviceInfo device) {
     return SingleChildScrollView(
       child: Container(
-        height: device.height - 240,
-        width: device.width,
+        // height: device.height - 240,
+        // width: device.width,
+        height: 520,
+        width: 500,
         child: Form(
           key: _formKey,
           child: Column(

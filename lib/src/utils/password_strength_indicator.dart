@@ -8,6 +8,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
   final bool hasLowercase;
   final bool hasDigits;
   final bool hasSpecialCharacters;
+  final bool hasMinLength;
   bool isTablet;
 
   PasswordStrengthIndicator({
@@ -16,6 +17,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
     required this.hasLowercase,
     required this.hasDigits,
     required this.hasSpecialCharacters,
+    required this.hasMinLength,
     required this.isTablet,
   });
 
@@ -30,6 +32,10 @@ class PasswordStrengthIndicator extends StatelessWidget {
     if (hasLowercase) strength++;
     if (hasDigits) strength++;
     if (hasSpecialCharacters) strength++;
+
+    if(strength >= 3 && !hasMinLength){
+      strength = 2;
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -55,7 +61,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
       height: isTablet ? 10 : 5,
       decoration: BoxDecoration(
         color: strength >= indicator && strength >= 3
-            ? Colors.greenAccent
+            ? hasMinLength ? Colors.greenAccent : AppColors.main3
             : strength >= indicator && strength <= 2
                 ? AppColors.main3
                 : AppColors.text3,

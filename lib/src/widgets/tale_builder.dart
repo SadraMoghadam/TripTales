@@ -41,6 +41,8 @@ class _TaleBuilderState extends State<TaleBuilder>
   List<ValueKey> _widgetSuperKeyList = List<ValueKey>.empty(growable: true);
   double containerTop = 0.0;
   double containerLeft = 0.0;
+  final ScrollController _scrollController = ScrollController();
+  bool isDragging = false;
 
   // late final AnimationController _controller;
   // late final AnimationController _controller_place_here;
@@ -68,6 +70,15 @@ class _TaleBuilderState extends State<TaleBuilder>
     // print("YYYYYYYYYYYYYYYYYYYYYYYYYYYY HHHHHHHHHHHEEEEEEEEEEEE");
     setState(() {
       cards = _cardService.getCards(_appManager.getCurrentTaleId());
+    });
+
+    _scrollController.addListener(() {
+      if (isDragging) {
+        _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+      }
+      else {
+
+      }
     });
     // _controller = AnimationController(vsync: this);
     // _controller_place_here = AnimationController(vsync: this);
@@ -97,6 +108,12 @@ class _TaleBuilderState extends State<TaleBuilder>
     _widgetKeyList = List.empty();
     _widgetSuperKeyList = List.empty();
     super.dispose();
+  }
+
+
+  bool isDraggingWithinTaleBuilder(bool isDrag) {
+    isDragging = isDrag;
+    return isDragging;
   }
 
   @override
@@ -157,6 +174,9 @@ class _TaleBuilderState extends State<TaleBuilder>
                         key: _widgetSuperKeyList[i],
                         isEditable: widget.isEditMode,
                         callback: widget.callback,
+                        onDragStateChanged: (isDrag) => {
+                          isDragging = isDrag,
+                        },
                         name: data[i]!.name,
                         // cardKey: _widgetKeyList[i],
                         order: data[i]!.order,
@@ -168,6 +188,9 @@ class _TaleBuilderState extends State<TaleBuilder>
                         key: _widgetSuperKeyList[i],
                         isEditable: widget.isEditMode,
                         callback: widget.callback,
+                        onDragStateChanged: (isDrag) => {
+                          isDragging = isDrag,
+                        },
                         name: data[i]!.name,
                         // cardKey: _widgetKeyList[i],
                         order: data[i]!.order,
@@ -175,23 +198,26 @@ class _TaleBuilderState extends State<TaleBuilder>
                         initTransform: data[i]!.transform,
                         videoPath: data[i]!.path)
                   else if (data[i]!.type == MemoryCardType.text)
-                    MemoryCard(
-                      key: _widgetSuperKeyList[i],
-                      isEditable: widget.isEditMode,
-                      callback: widget.callback,
-                      name: data[i]!.name,
-                      // cardKey: _widgetKeyList[i],
-                      order: data[i]!.order,
-                      type: MemoryCardType.text,
-                      initTransform: data[i]!.transform,
-                      text: data[i]!.text,
-                      textColor: data[i]!.textColor,
-                      textBackgroundColor: data[i]!.textBackgroundColor,
-                      textDecoration: data[i]!.textDecoration,
-                      fontStyle: data[i]!.fontStyle,
-                      fontWeight: data[i]!.fontWeight,
-                      fontSize: data[i]!.fontSize,
-                    )
+                      MemoryCard(
+                        key: _widgetSuperKeyList[i],
+                        isEditable: widget.isEditMode,
+                        callback: widget.callback,
+                        onDragStateChanged: (isDrag) => {
+                          isDragging = isDrag,
+                        },
+                        name: data[i]!.name,
+                        // cardKey: _widgetKeyList[i],
+                        order: data[i]!.order,
+                        type: MemoryCardType.text,
+                        initTransform: data[i]!.transform,
+                        text: data[i]!.text,
+                        textColor: data[i]!.textColor,
+                        textBackgroundColor: data[i]!.textBackgroundColor,
+                        textDecoration: data[i]!.textDecoration,
+                        fontStyle: data[i]!.fontStyle,
+                        fontWeight: data[i]!.fontWeight,
+                        fontSize: data[i]!.fontSize,
+                      )
 
                 // MemoryCard(cardKey: _widgetKeyList[0], order: 1, type: MemoryCardType.image, initTransform: Matrix4.identity(), imagePath: "https://picsum.photos/200/300", size: containersSize[0]),
                 // MemoryCard(cardKey: _widgetKeyList[1], order: 3, type: MemoryCardType.image, initTransform: Matrix4.identity(), imagePath: "https://picsum.photos/900/500", size: containersSize[1]),

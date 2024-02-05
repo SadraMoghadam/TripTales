@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lottie/lottie.dart';
 import 'package:trip_tales/src/constants/tale_background.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
@@ -30,16 +31,20 @@ class CreateTalePage extends StatefulWidget {
   _CreateTalePage createState() => _CreateTalePage();
 }
 
-class _CreateTalePage extends State<CreateTalePage> {
+class _CreateTalePage extends State<CreateTalePage>
+    with TickerProviderStateMixin {
   late final TextEditingController _taleNameController;
   final MediaController mediaController = Get.put(MediaController());
   final TaleService _taleService = Get.find<TaleService>();
   final AppManager _appManager = Get.put(AppManager());
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>(debugLabel: 'createTale');
+  GlobalKey<FormState> _formKey =
+      GlobalKey<FormState>(debugLabel: 'createTale');
   late TaleModel taleModel;
   int selectedIndex = 0;
+  bool _isPressed = false;
+  late final AnimationController _controller;
 
   void _submit() async {
     final isValid = _formKey.currentState?.validate();
@@ -56,6 +61,9 @@ class _CreateTalePage extends State<CreateTalePage> {
     );
     int result = 400;
     if (imageFile != null) {
+      setState(() {
+        _isPressed = true;
+      });
       if (widget.isEditMode) {
         var currentTaleId = _appManager.getCurrentTaleId();
         var value = await _taleService.getTaleById(currentTaleId);
@@ -69,41 +77,121 @@ class _CreateTalePage extends State<CreateTalePage> {
         );
 
         result = await _taleService.updateTale(taleData, imageFile!);
+        showDialog(
+          context: context,
+          builder: (context) {
+            _controller.reset();
+            _controller.forward();
+            return AlertDialog(
+              content: Lottie.asset(
+                "assets/animations/loading.json",
+                width: 400,
+                height: 400,
+                controller: _controller,
+              ),
+            );
+          },
+        );
+        Future.delayed(Duration(seconds: 2), () async {
+          if (result == 200) {
+            _formKey.currentState?.save();
+            var tale = await _taleService.getTaleById(taleData!.id!);
+            _appManager.setCurrentTale(tale!);
+            if (widget.isEditMode) {
+              Navigator.of(context).pushReplacementNamed('/talePage');
+            } else {
+              _appManager.setCurrentTaleId(taleData.id!);
+              Navigator.of(context)
+                  .pushReplacementNamed('/talePage', result: 'createTalePage');
+            }
+
+            // if (widget.isEditMode) {
+            //   Navigator.of(context).pop();
+            // } else {
+            // }
+          } else {
+            ErrorController.showSnackBarError(ErrorController.createTale);
+            return;
+          }
+        });
       } else {
         result = await _taleService.addTale(taleData, imageFile!);
-        var currentTaleId = await _taleService.getTaleId(taleData.name);
-        var currentTale = await _taleService.getTaleById(currentTaleId);
-        taleData = TaleModel(
-          id: currentTale!.id ?? '',
-          name: _taleNameController.text,
-          imagePath: '${currentTale!.id}_TALE.png',
-          canvas: selectedIndex.toString() ?? '0',
-          cardsFK: List.empty(),
+        showDialog(
+          context: context,
+          builder: (context) {
+            _controller.reset();
+            _controller.forward();
+            return AlertDialog(
+              content: Lottie.asset(
+                "assets/animations/loading.json",
+                width: 400,
+                height: 400,
+                controller: _controller,
+              ),
+            );
+          },
         );
-        result = 200;
-      }
-    }
-    if (result == 200) {
-      _formKey.currentState?.save();
-      var tale = await _taleService.getTaleById(taleData.id!);
-      // print(")))))))))))))))))))))))))))))))))))))))))${taleData.id}");
-      _appManager.setCurrentTale(tale!);
-      if (widget.isEditMode) {
-        Navigator.of(context).pushReplacementNamed('/talePage');
-      } else {
-        _appManager.setCurrentTaleId(taleData.id!);
-        Navigator.of(context)
-            .pushReplacementNamed('/talePage', result: 'createTalePage');
-      }
+        Future.delayed(
+          Duration(seconds: 2),
+          () async {
+            print(")))))))))))))))))))))))))))))))))))))))))${result}");
+            var currentTaleId = await _taleService.getTaleId(taleData.name);
+            print(")))))))))))))))))))))))))))))))))))))))))${currentTaleId}");
+            var currentTale = await _taleService.getTaleById(currentTaleId);
+            print(")))))))))))))))))))))))))))))))))))))))))${currentTale}");
+            taleData = TaleModel(
+              id: currentTale?.id ?? '',
+              name: _taleNameController.text,
+              imagePath: '${currentTale?.id}_TALE.png',
+              canvas: selectedIndex.toString() ?? '0',
+              cardsFK: List.empty(),
+            );
+            result = 200;
 
-      // if (widget.isEditMode) {
-      //   Navigator.of(context).pop();
-      // } else {
-      // }
-    } else {
-      ErrorController.showSnackBarError(ErrorController.createTale);
-      return;
+            if (result == 200) {
+              _formKey.currentState?.save();
+              var tale = await _taleService.getTaleById(taleData!.id!);
+              _appManager.setCurrentTale(tale!);
+              if (widget.isEditMode) {
+                Navigator.of(context).pushReplacementNamed('/talePage');
+              } else {
+                _appManager.setCurrentTaleId(taleData.id!);
+                Navigator.of(context).pushReplacementNamed('/talePage',
+                    result: 'createTalePage');
+              }
+
+              // if (widget.isEditMode) {
+              //   Navigator.of(context).pop();
+              // } else {
+              // }
+            } else {
+              ErrorController.showSnackBarError(ErrorController.createTale);
+              return;
+            }
+          },
+        );
+      }
     }
+    // if (result == 200) {
+    //   _formKey.currentState?.save();
+    //   var tale = await _taleService.getTaleById(taleData!.id!);
+    //   _appManager.setCurrentTale(tale!);
+    //   if (widget.isEditMode) {
+    //     Navigator.of(context).pushReplacementNamed('/talePage');
+    //   } else {
+    //     _appManager.setCurrentTaleId(taleData.id!);
+    //     Navigator.of(context)
+    //         .pushReplacementNamed('/talePage', result: 'createTalePage');
+    //   }
+    //
+    //   // if (widget.isEditMode) {
+    //   //   Navigator.of(context).pop();
+    //   // } else {
+    //   // }
+    // } else {
+    //   ErrorController.showSnackBarError(ErrorController.createTale);
+    //   return;
+    // }
   }
 
   @override
@@ -122,12 +210,16 @@ class _CreateTalePage extends State<CreateTalePage> {
       _appManager.resetTale();
       mediaController.setImage(null);
     }
+    _isPressed = false;
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 4));
     super.initState();
   }
 
   @override
   void dispose() {
     _taleNameController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -214,6 +306,7 @@ class _CreateTalePage extends State<CreateTalePage> {
                 fontSize: 18,
                 padding: 2,
                 backgroundColor: AppColors.main2,
+                isDisabled: _isPressed,
                 textColor: Colors.white,
                 text: widget.isEditMode ? "Finish Editing" : "Start Creating",
                 onPressed: _submit,

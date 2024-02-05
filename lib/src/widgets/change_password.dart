@@ -41,6 +41,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
   bool hasLowercase = false;
   bool hasDigits = false;
   bool hasSpecialCharacters = false;
+  bool hasMinLength = false;
 
   void checkPasswordStrength(String value) {
     setState(() {
@@ -49,12 +50,14 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
       hasLowercase = false;
       hasDigits = false;
       hasSpecialCharacters = false;
+      hasMinLength = false;
 
       // Check criteria for password strength
       hasUppercase = value.contains(RegExp(r'[A-Z]'));
       hasLowercase = value.contains(RegExp(r'[a-z]'));
       hasDigits = value.contains(RegExp(r'[0-9]'));
       hasSpecialCharacters = value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+      hasMinLength = value.length >= 6;
     });
   }
 
@@ -122,7 +125,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
       content: SingleChildScrollView(
         child: Container(
           height: 300,
-          width: device.width,
+          width: 500,
           alignment: Alignment.center,
           child: buildChangePassBody(device),
         ),
@@ -222,6 +225,7 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
                     hasLowercase: hasLowercase,
                     hasDigits: hasDigits,
                     hasSpecialCharacters: hasSpecialCharacters,
+                    hasMinLength: hasMinLength,
                   ),
                 ],
               ),

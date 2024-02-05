@@ -28,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   bool hasLowercase = false;
   bool hasDigits = false;
   bool hasSpecialCharacters = false;
+  bool hasMinLength = false;
 
   // Login methods: 1(with email and password), 2(with Gmail), 3(with Facebook)
   void _submit(int loginMethod) async {
@@ -63,12 +64,14 @@ class _LoginPageState extends State<LoginPage> {
       hasLowercase = false;
       hasDigits = false;
       hasSpecialCharacters = false;
+      hasMinLength = false;
 
       // Check criteria for password strength
       hasUppercase = value.contains(RegExp(r'[A-Z]'));
       hasLowercase = value.contains(RegExp(r'[a-z]'));
       hasDigits = value.contains(RegExp(r'[0-9]'));
       hasSpecialCharacters = value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+      hasMinLength = value.length >= 6;
     });
   }
 
@@ -380,17 +383,18 @@ class _LoginPageState extends State<LoginPage> {
                 hasLowercase: hasLowercase,
                 hasDigits: hasDigits,
                 hasSpecialCharacters: hasSpecialCharacters,
+                hasMinLength: hasMinLength,
                 isTablet: isTablet,
               ),
-              TextButton(
-                onPressed: () {},
-                child: Text('Forgot Password',
-                    key: const Key('forgotPasswordKey'),
-                    style: TextStyle(
-                        fontSize: isTablet ? 15 : 10,
-                        color: AppColors.text2,
-                        decoration: TextDecoration.underline)),
-              ),
+              // TextButton(
+              //   onPressed: () {},
+              //   child: Text('Forgot Password',
+              //       key: const Key('forgotPasswordKey'),
+              //       style: TextStyle(
+              //           fontSize: isTablet ? 15 : 12,
+              //           color: AppColors.text2,
+              //           decoration: TextDecoration.underline)),
+              // ),
             ],
           ),
         ),

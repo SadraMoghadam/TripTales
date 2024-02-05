@@ -32,6 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool hasLowercase = false;
   bool hasDigits = false;
   bool hasSpecialCharacters = false;
+  bool hasMinLength = false;
   DateTime? _selectedDate;
 
   void _submit() async {
@@ -64,12 +65,14 @@ class _RegisterPageState extends State<RegisterPage> {
       hasLowercase = false;
       hasDigits = false;
       hasSpecialCharacters = false;
+      hasMinLength = false;
 
       // Check criteria for password strength
       hasUppercase = value.contains(RegExp(r'[A-Z]'));
       hasLowercase = value.contains(RegExp(r'[a-z]'));
       hasDigits = value.contains(RegExp(r'[0-9]'));
       hasSpecialCharacters = value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+      hasMinLength = value.length >= 6;
     });
   }
 
@@ -338,6 +341,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   hasLowercase: hasLowercase,
                   hasDigits: hasDigits,
                   hasSpecialCharacters: hasSpecialCharacters,
+                  hasMinLength: hasMinLength,
                 ),
               ],
             ))

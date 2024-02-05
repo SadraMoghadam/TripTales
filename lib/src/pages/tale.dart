@@ -120,16 +120,13 @@ class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
         future: taleModel,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // Display a loading indicator while waiting for data
-            return CircularProgressIndicator();
+            // return CircularProgressIndicator();
+            return Container();
           } else if (snapshot.hasError) {
-            // Handle errors when fetching data
             return Center(child: Text('Error fetching data'));
           } else if (!snapshot.hasData) {
-            // Handle the case where data is not available
             return Center(child: Text('No data available'));
           } else {
-            // Data is available, build the widget tree
             final decorationImage = DecorationImage(
               image: AssetImage(
                   TaleBackground.paths[int.parse(snapshot.data!.canvas)]),
@@ -140,63 +137,78 @@ class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
               decoration: BoxDecoration(image: decorationImage),
               child: Stack(
                 children: [
-                  SingleChildScrollView(
-                    // physics: isEditMode ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
-                    // physics: isEditMode ? const FixedExtentScrollPhysics() : const AlwaysScrollableScrollPhysics(),
-                    physics: NeverScrollableScrollPhysics(),
-                    child: TaleBuilder(
-                        callback: callback,
-                        isEditMode: isEditMode,
-                        reload: reload,
-                        taleKey: _contentKey),
-                  ),
+                  // SingleChildScrollView(
+                  //   // physics: isEditMode ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
+                  //   // physics: isEditMode ? const FixedExtentScrollPhysics() : const AlwaysScrollableScrollPhysics(),
+                  //   // physics: NeverScrollableScrollPhysics(),
+                  //   child: TaleBuilder(
+                  //       callback: callback,
+                  //       isEditMode: isEditMode,
+                  //       reload: reload,
+                  //       taleKey: _contentKey),
+                  // ),
                   // TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
-                  buildAddMemory(),
+                  ListView.builder(
+                    itemCount: 20,
+                    itemBuilder: (context, index) {
+                      return TaleBuilder(
+                                callback: callback,
+                                isEditMode: isEditMode,
+                                reload: reload,
+                                taleKey: _contentKey
+                          );
+                    },
+                  ),
+                  isEditMode ? buildAddMemory() : Container(),
                   isEditMode ? buildReorder() : Container(),
                   isEditMode ? buildSave() : Container(),
                   buildEditModeButton(),
-                  Positioned(
-                      right: 0,
-                      top: (device.height - 100 - 50) / 2,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .push(_customPageRouteBuilder(TaleInfoPage()));
-                        },
-                        child: RotatedBox(
-                          quarterTurns: 3,
-                          // Rotate text 90 degrees counter-clockwise
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              color: AppColors.main1,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black45,
-                                      blurRadius: 3,
-                                      spreadRadius: 3)
-                                ],
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(15),
-                                    topLeft: Radius.circular(15))),
-                            width: 100.0,
-                            height: 40.0,
-                            child: const Center(
-                              child: Text(
-                                'Tale Info',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )),
+                  buildTaleInfo(device)
                 ],
               ),
             );
           }
         });
+  }
+
+  Widget buildTaleInfo(device) {
+    return Positioned(
+        right: 0,
+        top: (device.height - 100 - 70) / 2,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context)
+                .push(_customPageRouteBuilder(TaleInfoPage()));
+          },
+          child: RotatedBox(
+            quarterTurns: 3,
+            // Rotate text 90 degrees counter-clockwise
+            child: Container(
+              decoration: const BoxDecoration(
+                  color: AppColors.main1,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black45,
+                        blurRadius: 3,
+                        spreadRadius: 3)
+                  ],
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15),
+                      topLeft: Radius.circular(15))),
+              width: 100.0,
+              height: 40.0,
+              child: const Center(
+                child: Text(
+                  'Tale Info',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 
   PageRouteBuilder _customPageRouteBuilder(Widget page) {

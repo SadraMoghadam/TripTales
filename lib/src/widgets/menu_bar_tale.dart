@@ -35,7 +35,7 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
     super.initState();
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 4));
-
+    _appManager.resetTale();
   }
 
   @override

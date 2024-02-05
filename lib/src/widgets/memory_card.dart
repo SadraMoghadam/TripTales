@@ -15,11 +15,13 @@ import '../utils/device_info.dart';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 import '../utils/tuple.dart';
+import 'MGD.dart';
 
 class MemoryCard extends StatefulWidget {
   // final Function(Size) onSizeChanged;
   final bool isEditable;
   final Function callback;
+  final Function(bool) onDragStateChanged;
 
   // final GlobalKey cardKey;
   final String name;
@@ -41,12 +43,13 @@ class MemoryCard extends StatefulWidget {
   // var currentSize;
 
   var lockLocations = [0, 90];
-  double maxRotation = math.pi / 2.0;
+  // double maxRotation = math.pi / 2.0;
 
   MemoryCard({
     super.key,
     required this.isEditable,
     required this.callback,
+    required this.onDragStateChanged,
     required this.name,
     // required this.cardKey,
     required this.order,
@@ -86,6 +89,7 @@ class _MemoryCardState extends State<MemoryCard> {
   var rotation;
   late Size imageActualSize;
   late Size videoActualSize;
+  bool isDragging = false;
 
   // late List<GlobalKey> _widgetKeyList;
 
@@ -194,88 +198,85 @@ class _MemoryCardState extends State<MemoryCard> {
     _appManager.setCardTransform(widget.name, transform);
   }
 
+  void onPressDown() {
+    // setState(() {
+    //   isDragging = true;
+    // });
+    isDragging = true;
+    widget.onDragStateChanged(isDragging);
+  }
+
+  void onPressUp() {
+    // setState(() {
+    //   isDragging = false;
+    // });
+    isDragging = false;
+    widget.onDragStateChanged(isDragging);
+  }
+
   @override
   Widget build(BuildContext context) {
     final ValueNotifier<Matrix4> notifier =
         ValueNotifier<Matrix4>(Matrix4.identity());
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
-    return MatrixGestureDetector(
-      key: widget.key,
-      shouldRotate: widget.isEditable,
-      shouldScale: widget.isEditable,
-      shouldTranslate: widget.isEditable,
-      onMatrixUpdate: (m, tm, sm, rm) {
-        notifier.value = m;
-        // double scale = m.getMaxScaleOnAxis();
-        // updateContainerSize(sm);
-        // onSizeChanged(currentSize);
-        // position = notifier.value.getTranslation();
-        // if (position[0] < 0) {
-        //   notifier.value.setTranslationRaw(0, position[1], position[2]);
-        // }
+    return
+    //   GestureDetector(
+    //     onLongPressDown: (details) => {onPressDown()},
+    // onLongPressMoveUpdate: (details) => {onPressUp(), print(details.localPosition)},
+    //
+    // child:
+      CustomMatrixGestureDetector(
+       key: widget.key,
+       // onLongPressDown: (details) => {onPressDown()},
+       // onLongPressEnd: (details) => {onPressUp(), print(details)},
+       //  onVerticalDragDown: (details) => {onPressDown()},
+       //  onVerticalDragUpdate: (details) => {onPressDown(), print(details)},
+       shouldRotate: widget.isEditable,
+       shouldScale: widget.isEditable,
+       shouldTranslate: widget.isEditable,
+       onMatrixUpdate: (m, tm, sm, rm) {
+         notifier.value = m;
 
-        if (notifier.value.entry(0, 0) > maxScale) {
-          notifier.value.setEntry(0, 0, maxScale);
-          notifier.value.setEntry(1, 1, maxScale);
-        } else if (notifier.value.entry(0, 0) < minScale) {
-          notifier.value.setEntry(0, 0, minScale);
-          notifier.value.setEntry(1, 1, minScale);
-        }
-        // if (notifier.value.entry(3, 0) < 0) {
-        //     notifier.value.setEntry(3, 0, 0);
-        //   }
-        // if (notifier.value.entry(3, 0) > 200) {
-        //   notifier.value.setEntry(3, 0, 0);
-        // }
-        counter++;
-        setState(() {
-          widget.initTransform = notifier.value * transform;
-        });
-        if (counter % maxThreshold == 0) {
-          // print("====================\n====================\n====================\n====================\n");
-          updateTransform(notifier.value * transform);
-          updateCounter++;
-          counter = 1;
-        }
-
-        // if (position[0] < 0) {
-        //   m.setTranslationRaw(0, position[1], position[2]);
-        // } else if (position[0] > device.width - size.width) {
-        //   m.setTranslationRaw(device.width - size.width, position[1], position[2]);
-        // } else if (position[1] < 0) {
-        //   m.setTranslationRaw(position[0], 0, position[2]);
-        // }
-
-        // print(m.getMaxScaleOnAxis());
-        // print("---------");
-        // print(m.getTranslation());
-        // print("+++++++++");
-        // print(widget.rotation);
-        // print("%%%%%%%%%");
-      },
-      child: AnimatedBuilder(
-        animation: notifier,
-        builder: (ctx, child) {
-          return Container(
-            height: device.height * 10,
-            width: device.width,
-            child: Transform(
-              transform: notifier.value * widget.initTransform,
-              child: Stack(
-                children: <Widget>[
-                  if (widget.type == MemoryCardType.image)
-                    imageMemory()
-                  else if (widget.type == MemoryCardType.video)
-                    videoMemory()
-                  else if (widget.type == MemoryCardType.text)
-                    textMemory()
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+         // if (notifier.value.entry(0, 0) > maxScale) {
+         //   notifier.value.setEntry(0, 0, maxScale);
+         //   notifier.value.setEntry(1, 1, maxScale);
+         // } else if (notifier.value.entry(0, 0) < minScale) {
+         //   notifier.value.setEntry(0, 0, minScale);
+         //   notifier.value.setEntry(1, 1, minScale);
+         // }
+         counter++;
+         setState(() {
+           widget.initTransform = notifier.value * transform;
+         });
+         if (counter % maxThreshold == 0) {
+           updateTransform(notifier.value * transform);
+           updateCounter++;
+           counter = 1;
+         }
+       },
+       child: AnimatedBuilder(
+         animation: notifier,
+         builder: (ctx, child) {
+           return Container(
+             height: device.height * 10,
+             width: device.width,
+             child: Transform(
+               transform: notifier.value * widget.initTransform,
+               child: Stack(
+                 children: <Widget>[
+                   if (widget.type == MemoryCardType.image)
+                     imageMemory()
+                   else if (widget.type == MemoryCardType.video)
+                     videoMemory()
+                   else if (widget.type == MemoryCardType.text)
+                       textMemory()
+                 ],
+               ),
+             ),
+           );
+         },
+       ),
     );
   }
 

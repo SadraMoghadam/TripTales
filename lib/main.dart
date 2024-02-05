@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,8 @@ import 'package:trip_tales/src/pages/home.dart';
 import 'package:trip_tales/src/widgets/menu_bar_tale.dart';
 import 'firebase_options.dart';
 
+
+
 Future<void> main() async {
   // final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +33,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ); //.then((value) => Get.put(AuthenticationRepository));
+  User? user = FirebaseAuth.instance.currentUser;
+  await GetStorage.init();
   runApp(MyApp());
 }
 
@@ -44,6 +49,8 @@ class MyApp extends StatelessWidget {
     bool isTablet = device.isTablet;
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
+    bool isLoggedIn = GetStorage().read<bool>('isLoggedIn') ?? false;
+
 
     // Set preferred orientations to portrait mode
     if (!isTablet) {
@@ -68,7 +75,7 @@ class MyApp extends StatelessWidget {
         '/favoriteTalesPage': (context) => FavoriteTalesPage(),
         '/profilePage': (context) => ProfilePage(),
       },
-      initialRoute: '/',
+      initialRoute: isLoggedIn ? '/customApp' : '/',
       initialBinding: BindingsBuilder(() {
         Get.put(AuthService(), permanent: true);
         Get.put(AuthController(), permanent: true);
