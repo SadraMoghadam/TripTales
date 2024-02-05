@@ -77,9 +77,9 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
             //coverage:ignore-line
             return CustomAppBar(
               //coverage:ignore-start
-
               bodyTale: screens[widget.index],
               showIcon: false,
+
               //coverage:ignore-end
             );
           }

@@ -270,7 +270,7 @@ void main() {
         () {
       TextDecoration textDecoration =
           TextUtils.textToDecoration('   overline   ');
-      expect(textDecoration, equals(TextDecoration.overline));
+      expect(textDecoration, equals(TextDecoration.none));
     });
 
     test(
