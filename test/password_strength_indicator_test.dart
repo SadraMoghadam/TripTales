@@ -10,6 +10,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PasswordStrengthIndicator(
+          hasMinLength: true,
           isTablet: false, //to be modified
           hasUppercase: true,
           hasLowercase: true,
@@ -54,6 +55,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PasswordStrengthIndicator(
+          hasMinLength: true,
           isTablet: false, //to be modified
           hasUppercase: false,
           hasLowercase: false,
@@ -98,6 +100,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PasswordStrengthIndicator(
+          hasMinLength: true,
           isTablet: false, //to be modified
           hasUppercase: false,
           hasLowercase: false,
@@ -144,6 +147,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PasswordStrengthIndicator(
+          hasMinLength: true,
           isTablet: false, //to be modified
           hasUppercase: true,
           hasLowercase: false,
@@ -191,6 +195,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PasswordStrengthIndicator(
+          hasMinLength: true,
           isTablet: false, //to be modified
           hasUppercase: true,
           hasLowercase: true,
@@ -237,6 +242,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PasswordStrengthIndicator(
+          hasMinLength: true,
           isTablet: false, //to be modified
           hasUppercase: true,
           hasLowercase: false,
@@ -283,6 +289,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PasswordStrengthIndicator(
+          hasMinLength: true,
           isTablet: false, //to be modified
           hasUppercase: false,
           hasLowercase: false,
@@ -329,6 +336,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PasswordStrengthIndicator(
+          hasMinLength: true,
           isTablet: false, //to be modified
           hasUppercase: true,
           hasLowercase: false,
@@ -375,6 +383,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PasswordStrengthIndicator(
+          hasMinLength: true,
           isTablet: false, //to be modified
           hasUppercase: true,
           hasLowercase: true,
@@ -418,6 +427,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PasswordStrengthIndicator(
+          hasMinLength: true,
           isTablet: false, //to be modified
           hasUppercase: false,
           hasLowercase: false,

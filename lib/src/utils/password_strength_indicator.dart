@@ -33,7 +33,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
     if (hasDigits) strength++;
     if (hasSpecialCharacters) strength++;
 
-    if(strength >= 3 && !hasMinLength){
+    if (strength >= 3 && !hasMinLength) {
       strength = 2;
     }
 
@@ -61,7 +61,9 @@ class PasswordStrengthIndicator extends StatelessWidget {
       height: isTablet ? 10 : 5,
       decoration: BoxDecoration(
         color: strength >= indicator && strength >= 3
-            ? hasMinLength ? Colors.greenAccent : AppColors.main3
+            ? hasMinLength
+                ? Colors.greenAccent
+                : AppColors.main3
             : strength >= indicator && strength <= 2
                 ? AppColors.main3
                 : AppColors.text3,
