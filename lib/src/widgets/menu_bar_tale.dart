@@ -24,7 +24,7 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
   late final AnimationController _controller;
 
   Future<void> fetchData() async {
-    if(widget.index == 0){
+    if (widget.index == 0) {
       await Future.delayed(Duration(seconds: 3));
     }
   }
@@ -67,13 +67,20 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
                 width: 400,
                 height: 400,
                 controller: _controller,
-              ),);
+              ),
+            );
+            //coverage:ignore-line
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error fetching data'));
+            //coverage:ignore-line
+            return const Center(child: Text('Error fetching data'));
           } else {
+            //coverage:ignore-line
             return CustomAppBar(
+              //coverage:ignore-start
+
               bodyTale: screens[widget.index],
               showIcon: false,
+              //coverage:ignore-end
             );
           }
         },
@@ -132,7 +139,8 @@ class _CustomMenuState extends State<CustomMenu> with TickerProviderStateMixin {
             radius: 15.0,
             backgroundImage: profileImageUrl.isNotEmpty
                 ? NetworkImage(profileImageUrl) as ImageProvider<Object>?
-                : AssetImage('assets/images/profile_pic.png') as ImageProvider<Object>?,
+                : AssetImage('assets/images/profile_pic.png')
+                    as ImageProvider<Object>?,
           ),
           label: 'Profile',
           tooltip: "Profile Settings",

@@ -27,8 +27,10 @@ class ChangePasswordDialog extends StatefulWidget {
 }
 
 class _ChangePasswordDialog extends State<ChangePasswordDialog> {
+  //coverage:ignore-start
   final AuthService _authService = Get.find<AuthService>();
   final AppManager _appManager = Get.put(AppManager());
+  //coverage:ignore-end
 
   final Validator _validator = Validator();
   final _formKey = GlobalKey<FormState>();

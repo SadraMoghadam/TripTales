@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,8 +9,8 @@ import 'package:trip_tales/src/screen/set_photo_screen.dart';
 void main() {
   testWidgets('SetPhotoScreen shows no image selected initially',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
-      home: SetPhotoScreen(isImage: true),
+    await tester.pumpWidget(MaterialApp(
+      home: SetPhotoScreen(),
     ));
 
     expect(find.text('No image selected'), findsOneWidget);
@@ -53,7 +52,7 @@ void main() {
 
   testWidgets('SetPhotoScreen displays no video selected',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: false),
     ));
 
@@ -62,7 +61,7 @@ void main() {
 
   testWidgets('SetPhotoScreen shows add image button',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: true),
     ));
 
@@ -72,7 +71,7 @@ void main() {
   testWidgets(
       'SetPhotoScreen invokes select photo options when tapping add image button',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: true),
     ));
 
@@ -118,7 +117,7 @@ void main() {
 
   testWidgets('SetPhotoScreen displays no image selected',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: true),
     ));
 
@@ -127,7 +126,7 @@ void main() {
 
   testWidgets('SetPhotoScreen shows add video button',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: false),
     ));
 
@@ -138,7 +137,7 @@ void main() {
   testWidgets(
       'SetPhotoScreen invokes select video options when tapping add video button',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: false),
     ));
 
@@ -184,7 +183,7 @@ void main() {
 
   testWidgets('SetPhotoScreen displays no video selected',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: false),
     ));
 
@@ -193,7 +192,7 @@ void main() {
 
   testWidgets('SetPhotoScreen adds image correctly',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: true),
     ));
 
@@ -222,7 +221,7 @@ void main() {
             if (source == ImageSource.camera) {
               // Navigate to SetPhotoScreen upon tapping the "Use Camera" option
               navigatorKey.currentState!.push(MaterialPageRoute(
-                builder: (context) => const SetPhotoScreen(isImage: true),
+                builder: (context) => SetPhotoScreen(isImage: true),
               ));
             }
           },
@@ -241,7 +240,7 @@ void main() {
 
   testWidgets('SetPhotoScreen displays no image selected initially',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: true),
     ));
 
@@ -250,7 +249,7 @@ void main() {
 
   testWidgets('SetPhotoScreen adds image from camera',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: true),
     ));
 
@@ -277,7 +276,7 @@ void main() {
 
   testWidgets('SetPhotoScreen adds video from camera',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: false),
     ));
 
@@ -303,7 +302,7 @@ void main() {
   });
   testWidgets('SetPhotoScreen initializes with image',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(),
     ));
 
@@ -313,7 +312,7 @@ void main() {
 
   testWidgets('SetPhotoScreen adds image from gallery',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(),
     ));
 
@@ -339,7 +338,7 @@ void main() {
 
   testWidgets('SetPhotoScreen displays "Add Image" button',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(),
     ));
 
@@ -349,7 +348,7 @@ void main() {
 
   testWidgets('SetPhotoScreen adds video correctly',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
+    await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: false),
     ));
 
@@ -357,5 +356,65 @@ void main() {
     // Validate that the video is added and displayed
     // Confirm that the video can be played
   });
+
+  testWidgets('SelectPhotoOptionsScreen Layout Test 1 ',
+      (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SelectPhotoOptionsScreen(
+            onTap: (ImageSource source) {},
+          ),
+        ),
+      ),
+    );
+
+    // Verify padding of the main container.
+    final containerFinder =
+        find.byKey(const Key('set_photo_options_screen_ContainerKey'));
+    expect(containerFinder, findsOneWidget);
+    final containerPadding =
+        tester.widget<Container>(containerFinder).padding as EdgeInsets;
+    expect(containerPadding, EdgeInsets.all(20));
+
+    // Verify the presence and styling of the separator bar.
+    final separatorBarFinder = find.descendant(
+      of: containerFinder,
+      matching: find.byType(Container),
+    );
+    expect(separatorBarFinder, findsOneWidget);
+    final separatorBarDecoration = tester
+        .widget<Container>(separatorBarFinder)
+        .decoration as BoxDecoration;
+    expect(separatorBarDecoration.borderRadius, BorderRadius.circular(2.5));
+    expect(separatorBarDecoration.color, Colors.white);
+
+    // Verify the presence and alignment of the Column widget.
+    final columnFinder = find.descendant(
+      of: containerFinder,
+      matching: find.byType(Column),
+    );
+    expect(columnFinder, findsOneWidget);
+    final columnChildren = tester.widget<Column>(columnFinder).children;
+    expect(columnChildren.length, 5); // Two buttons, 'OR' text, and spacers.
+    expect(columnChildren[1], isA<SizedBox>());
+    expect(columnChildren[3], isA<SizedBox>());
+
+    // Verify the presence of the 'Browse Gallery' button and its styling.
+    final browseGalleryFinder = find.descendant(
+      of: containerFinder,
+      matching: find.text('Browse Gallery'),
+    );
+    expect(browseGalleryFinder, findsOneWidget);
+    expect(find.byIcon(Icons.image), findsOneWidget);
+
+    // Verify the presence of the 'Use Camera' button and its styling.
+    final useCameraFinder = find.descendant(
+      of: containerFinder,
+      matching: find.text('Use Camera'),
+    );
+    expect(useCameraFinder, findsOneWidget);
+    expect(find.byIcon(Icons.camera_alt_outlined), findsOneWidget);
+  });
 }
-*/
