@@ -18,12 +18,15 @@ import 'package:trip_tales/src/pages/tale.dart';
 import 'package:trip_tales/src/services/auth_service.dart';
 import 'package:trip_tales/src/services/card_service.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
+import 'package:trip_tales/src/utils/app_manager.dart';
 import 'package:trip_tales/src/utils/device_info.dart';
 import 'package:trip_tales/src/pages/home.dart';
 import 'package:trip_tales/src/widgets/menu_bar_tale.dart';
 import 'firebase_options.dart';
 
 
+
+final AppManager _appManager = Get.put(AppManager());
 
 Future<void> main() async {
   // final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +50,7 @@ class MyApp extends StatelessWidget {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     bool isTablet = device.isTablet;
+    _appManager.setIsTablet(isTablet);
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     bool isLoggedIn = GetStorage().read<bool>('isLoggedIn') ?? false;

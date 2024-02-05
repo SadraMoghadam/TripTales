@@ -141,6 +141,8 @@ class _TaleBuilderState extends State<TaleBuilder>
           print("###########${numOfCards}");
           _widgetKeyList = List.empty(growable: true);
           for (int i = 0; i < numOfCards; i++) {
+            var translation = data[i]!.transform.getTranslation();
+            data[i]!.transform.setTranslationRaw(translation.x * device.width, translation.y, translation.z);
             _widgetKeyList.add(ValueKey(i +
                 data[i]!.name.codeUnits.fold<int>(
                     0,
@@ -160,7 +162,6 @@ class _TaleBuilderState extends State<TaleBuilder>
           //     .whereType<ValueKey<State<StatefulWidget>>>()
           //     .toSet();
           // _widgetSuperKeyList = uniqueSet.toList();
-
           print(_widgetKeyList);
 
           return Container(

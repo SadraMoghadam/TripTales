@@ -43,6 +43,7 @@ class MemoryCard extends StatefulWidget {
   // var currentSize;
 
   var lockLocations = [0, 90];
+
   // double maxRotation = math.pi / 2.0;
 
   MemoryCard({
@@ -74,6 +75,7 @@ class MemoryCard extends StatefulWidget {
 
 class _MemoryCardState extends State<MemoryCard> {
   late VideoPlayerController _videoController;
+  DeviceInfo device = DeviceInfo();
   final CardService _cardService = Get.find<CardService>();
   final AppManager _appManager = Get.put(AppManager());
   late Future<void> _initializeVideoPlayerFuture;
@@ -115,7 +117,9 @@ class _MemoryCardState extends State<MemoryCard> {
     //   loadImageInfo(widget.videoPath);
     // }
     super.initState();
-    currentSize = widget.size;
+    widget.size = _appManager.getIsTablet() ? widget.size * 1.5 : widget.size;
+    // widget.initTransform.setEntry(0, 0, widget.initTransform.entry(0, 0) * 2);
+    // widget.initTransform.setEntry(1, 1, widget.initTransform.entry(1, 1) * 2);
     transform = widget.initTransform;
   }
 
@@ -195,6 +199,11 @@ class _MemoryCardState extends State<MemoryCard> {
   // }
 
   void updateTransform(Matrix4 transform) {
+    var translation = transform.getTranslation();
+    transform.setTranslationRaw(
+        translation.x / device.width > 1 ? 1 : translation.x / device.width,
+        translation.y,
+        translation.z);
     _appManager.setCardTransform(widget.name, transform);
   }
 
@@ -216,67 +225,60 @@ class _MemoryCardState extends State<MemoryCard> {
 
   @override
   Widget build(BuildContext context) {
+    device.computeDeviceInfo(context);
     final ValueNotifier<Matrix4> notifier =
         ValueNotifier<Matrix4>(Matrix4.identity());
-    DeviceInfo device = DeviceInfo();
-    device.computeDeviceInfo(context);
-    return
-    //   GestureDetector(
-    //     onLongPressDown: (details) => {onPressDown()},
-    // onLongPressMoveUpdate: (details) => {onPressUp(), print(details.localPosition)},
-    //
-    // child:
-      CustomMatrixGestureDetector(
-       key: widget.key,
-       // onLongPressDown: (details) => {onPressDown()},
-       // onLongPressEnd: (details) => {onPressUp(), print(details)},
-       //  onVerticalDragDown: (details) => {onPressDown()},
-       //  onVerticalDragUpdate: (details) => {onPressDown(), print(details)},
-       shouldRotate: widget.isEditable,
-       shouldScale: widget.isEditable,
-       shouldTranslate: widget.isEditable,
-       onMatrixUpdate: (m, tm, sm, rm) {
-         notifier.value = m;
+    return CustomMatrixGestureDetector(
+      key: widget.key,
+      // onLongPressDown: (details) => {onPressDown()},
+      // onLongPressEnd: (details) => {onPressUp(), print(details)},
+      //  onVerticalDragDown: (details) => {onPressDown()},
+      //  onVerticalDragUpdate: (details) => {onPressDown(), print(details)},
+      shouldRotate: widget.isEditable,
+      shouldScale: widget.isEditable,
+      shouldTranslate: widget.isEditable,
+      onMatrixUpdate: (m, tm, sm, rm) {
+        notifier.value = m;
 
-         // if (notifier.value.entry(0, 0) > maxScale) {
-         //   notifier.value.setEntry(0, 0, maxScale);
-         //   notifier.value.setEntry(1, 1, maxScale);
-         // } else if (notifier.value.entry(0, 0) < minScale) {
-         //   notifier.value.setEntry(0, 0, minScale);
-         //   notifier.value.setEntry(1, 1, minScale);
-         // }
-         counter++;
-         setState(() {
-           widget.initTransform = notifier.value * transform;
-         });
-         if (counter % maxThreshold == 0) {
-           updateTransform(notifier.value * transform);
-           updateCounter++;
-           counter = 1;
-         }
-       },
-       child: AnimatedBuilder(
-         animation: notifier,
-         builder: (ctx, child) {
-           return Container(
-             height: device.height * 10,
-             width: device.width,
-             child: Transform(
-               transform: notifier.value * widget.initTransform,
-               child: Stack(
-                 children: <Widget>[
-                   if (widget.type == MemoryCardType.image)
-                     imageMemory()
-                   else if (widget.type == MemoryCardType.video)
-                     videoMemory()
-                   else if (widget.type == MemoryCardType.text)
-                       textMemory()
-                 ],
-               ),
-             ),
-           );
-         },
-       ),
+        // if (notifier.value.entry(0, 0) > maxScale) {
+        //   notifier.value.setEntry(0, 0, maxScale);
+        //   notifier.value.setEntry(1, 1, maxScale);
+        // } else if (notifier.value.entry(0, 0) < minScale) {
+        //   notifier.value.setEntry(0, 0, minScale);
+        //   notifier.value.setEntry(1, 1, minScale);
+        // }
+        counter++;
+        setState(() {
+          widget.initTransform = notifier.value * transform;
+        });
+        if (counter % maxThreshold == 0) {
+          updateTransform(notifier.value * transform);
+          updateCounter++;
+          counter = 1;
+        }
+      },
+      child: AnimatedBuilder(
+        animation: notifier,
+        builder: (ctx, child) {
+          return Container(
+            height: device.height * 10,
+            width: device.width,
+            child: Transform(
+              transform: notifier.value * widget.initTransform,
+              child: Stack(
+                children: <Widget>[
+                  if (widget.type == MemoryCardType.image)
+                    imageMemory()
+                  else if (widget.type == MemoryCardType.video)
+                    videoMemory()
+                  else if (widget.type == MemoryCardType.text)
+                    textMemory()
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -512,9 +514,9 @@ class _MemoryCardState extends State<MemoryCard> {
     );
   }
 
-  // Size getContainerSize() {
-  //   RenderBox renderBox =
-  //       widget.key.val.currentContext!.findRenderObject() as RenderBox;
-  //   return renderBox.size;
-  // }
+// Size getContainerSize() {
+//   RenderBox renderBox =
+//       widget.key.val.currentContext!.findRenderObject() as RenderBox;
+//   return renderBox.size;
+// }
 }

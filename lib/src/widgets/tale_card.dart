@@ -148,7 +148,7 @@ class _CustomTaleState extends State<CustomTale> {
               child: Container(
                 margin: EdgeInsets.all(100),
                 height: size.height / 3,
-                width: size.width / 3,
+                width: size.height / 3,
                 child: const CircularProgressIndicator(
                   color: AppColors.main2,
                 ),

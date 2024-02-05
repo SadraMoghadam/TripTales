@@ -36,6 +36,7 @@ class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
   final AppManager _appManager = Get.put(AppManager());
   final String canvas = 'assets/images/background_tale.jpg';
   late Future<TaleModel?> taleModel;
+  DeviceInfo device = DeviceInfo();
 
   callback() {
     setState(() {
@@ -103,19 +104,18 @@ class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: CustomAppBar(
-          bodyTale: buildBody(device),
+          bodyTale: buildBody(),
           showIcon: true,
           isScrollable: !isEditMode,
           navigationPath: '/customMenu',
         ));
   }
 
-  Widget buildBody(DeviceInfo device) {
+  Widget buildBody() {
     return FutureBuilder(
         future: taleModel,
         builder: (context, snapshot) {
@@ -137,33 +137,33 @@ class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
               decoration: BoxDecoration(image: decorationImage),
               child: Stack(
                 children: [
-                  // SingleChildScrollView(
-                  //   // physics: isEditMode ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
-                  //   // physics: isEditMode ? const FixedExtentScrollPhysics() : const AlwaysScrollableScrollPhysics(),
-                  //   // physics: NeverScrollableScrollPhysics(),
-                  //   child: TaleBuilder(
-                  //       callback: callback,
-                  //       isEditMode: isEditMode,
-                  //       reload: reload,
-                  //       taleKey: _contentKey),
-                  // ),
-                  // TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
-                  ListView.builder(
-                    itemCount: 20,
-                    itemBuilder: (context, index) {
-                      return TaleBuilder(
-                                callback: callback,
-                                isEditMode: isEditMode,
-                                reload: reload,
-                                taleKey: _contentKey
-                          );
-                    },
+                  SingleChildScrollView(
+                    // physics: isEditMode ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
+                    // physics: isEditMode ? const FixedExtentScrollPhysics() : const AlwaysScrollableScrollPhysics(),
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: TaleBuilder(
+                        callback: callback,
+                        isEditMode: isEditMode,
+                        reload: reload,
+                        taleKey: _contentKey),
                   ),
+                  // TaleBuilder(callback: callback, isEditMode: isEditMode, reload: reload, taleKey: _contentKey),
+                  // ListView.builder(
+                  //   itemCount: 20,
+                  //   itemBuilder: (context, index) {
+                  //     return TaleBuilder(
+                  //               callback: callback,
+                  //               isEditMode: isEditMode,
+                  //               reload: reload,
+                  //               taleKey: _contentKey
+                  //         );
+                  //   },
+                  // ),
                   isEditMode ? buildAddMemory() : Container(),
                   isEditMode ? buildReorder() : Container(),
                   isEditMode ? buildSave() : Container(),
                   buildEditModeButton(),
-                  buildTaleInfo(device)
+                  buildTaleInfo()
                 ],
               ),
             );
@@ -171,7 +171,7 @@ class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
         });
   }
 
-  Widget buildTaleInfo(device) {
+  Widget buildTaleInfo() {
     return Positioned(
         right: 0,
         top: (device.height - 100 - 70) / 2,

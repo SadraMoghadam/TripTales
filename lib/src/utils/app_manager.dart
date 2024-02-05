@@ -24,6 +24,7 @@ class AppManager extends GetxController {
 
   Rx<Tuple<double, double>?> chosenLocation = Rx<Tuple<double, double>?>(null);
   Rx<bool> isCardsTransformChanged = Rx<bool>(false);
+  Rx<bool> isTablet = Rx<bool>(false);
 
   void reset() {
     setCurrentUser('');
@@ -77,6 +78,10 @@ class AppManager extends GetxController {
     isCardsTransformChanged.value = isChanged;
   }
 
+  void setIsTablet(bool isTablet) {
+    this.isTablet.value = isTablet;
+  }
+
   void setProfileImage(String profileImagePath) {
     profileImage.value = profileImagePath;
   }
@@ -119,6 +124,10 @@ class AppManager extends GetxController {
 
   bool getIsCardsTransformChanged() {
     return isCardsTransformChanged.value;
+  }
+
+  bool getIsTablet() {
+    return isTablet.value;
   }
 
   String getProfileImage() {
