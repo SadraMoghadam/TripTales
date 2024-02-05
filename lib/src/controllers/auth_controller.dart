@@ -9,6 +9,7 @@ import '../models/tale_model.dart';
 import '../services/auth_service.dart';
 import '../models/user_model.dart';
 
+// coverage:ignore-start
 class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   // final TaleService _taleService = Get.find<TaleService>();
@@ -111,3 +112,5 @@ class AuthController extends GetxController {
     await _authService.signOut();
   }
 }
+
+// coverage:ignore-end

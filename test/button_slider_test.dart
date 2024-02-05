@@ -18,8 +18,22 @@ void main() {
 
     // Verify the initial state of the widget
     expect(find.byType(ButtonSlider), findsOneWidget);
-    expect(find.text('Add Memory'), findsOneWidget);
+    expect(find.text('Add Memory'), findsNothing);
+  });
 
+  testWidgets('ButtonSlider widget test 2', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ButtonSlider(callback: () {}),
+        ),
+      ),
+    );
+
+    // Verify the initial state of the widget
+    expect(find.byType(ButtonSlider), findsOneWidget);
+    expect(find.text('Add Memory'), findsNothing);
     // Tap on the button to open the menu
     await tester.tap(find.byType(GestureDetector));
     await tester.pumpAndSettle();

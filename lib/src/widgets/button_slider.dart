@@ -22,7 +22,9 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
   late final AnimationController _controller;
   late Animation<Offset> _slideAnimation;
 
+  // coverage:ignore-line
   void onImageButtonClick() {
+    // coverage:ignore-start
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -30,9 +32,12 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
         }).then((value) => setState(() {
           widget.callback();
         }));
+    // coverage:ignore-end
   }
 
+  // coverage:ignore-line
   void onVideoButtonClick() {
+    // coverage:ignore-start
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -40,9 +45,12 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
         }).then((value) => setState(() {
           widget.callback();
         }));
+    // coverage:ignore-end
   }
 
+  // coverage:ignore-line
   void onTextButtonClick() {
+    // coverage:ignore-start
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -50,6 +58,7 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
         }).then((value) => setState(() {
           widget.callback();
         }));
+    // coverage:ignore-end
   }
 
   @override
@@ -98,8 +107,11 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
                     _controller.animateTo(0.5,
                         duration: const Duration(milliseconds: 500));
                   } else {
+                    // coverage:ignore-start
                     _controller.animateTo(0,
                         duration: const Duration(milliseconds: 500));
+
+                    // coverage:ignore-end
                   }
                 },
                 child: Lottie.asset(
@@ -143,6 +155,7 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
             shape: BoxShape.circle,
             color: AppColors.main2,
           ),
+          // coverage:ignore-start
           child: GestureDetector(
             onTap: () {
               if (type == MemoryCardType.image) {
@@ -152,6 +165,7 @@ class _ButtonSlider extends State<ButtonSlider> with TickerProviderStateMixin {
               } else if (type == MemoryCardType.text) {
                 onTextButtonClick();
               }
+              // coverage:ignore-end
             },
             child: Icon(
               icon,

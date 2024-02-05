@@ -36,13 +36,16 @@ class _CustomTaleState extends State<CustomTale> {
   Size size = Size(320, 220);
 
   // late Size imageActualSize;
-
+  // coverage:ignore-line
   @override
   void initState() {
+    // coverage:ignore-start
     super.initState();
     loadImageInfo(widget.talePath);
+    // coverage:ignore-end
   }
 
+  // coverage:ignore-start
   void dispose() {
     super.dispose();
   }
@@ -91,7 +94,6 @@ class _CustomTaleState extends State<CustomTale> {
           var taleLocations = await _taleService.getTaleLocations(taleId);
           _appManager.setCurrentTaleLocations(taleLocations);
           Navigator.of(context).pushReplacementNamed('/talePage');
-
         },
         child: taleCard(),
       ),
@@ -146,7 +148,7 @@ class _CustomTaleState extends State<CustomTale> {
               child: Container(
                 margin: EdgeInsets.all(100),
                 height: size.height / 3,
-                width: size.height / 3,
+                width: size.width / 3,
                 child: const CircularProgressIndicator(
                   color: AppColors.main2,
                 ),

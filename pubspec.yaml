@@ -33,7 +33,7 @@ dependencies:
   lottie: ^2.7.0
   flutter:
     sdk: flutter
-  scroll_snap_list: ^0.9.1
+# scroll_snap_list: ^0.9.1
   image_picker: ^1.0.4
   image_cropper: ^5.0.1
   firebase_core: ^2.24.2
@@ -57,7 +57,7 @@ dependencies:
   location: ^5.0.3
   permission_handler: ^11.2.0
   geocoding: ^2.1.1
-  google_api_headers: ^3.7.2
+  google_api_headers: ^3.7.3
   awesome_snackbar_content: ^0.1.1
 #  flutter_google_places: ^0.3.0
 

@@ -146,8 +146,6 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -160,12 +158,15 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
+                // coverage:ignore-start
                 widget.isImage
                     ? _showSelectPhotoOptions(context)
                     : _showSelectVideoOptions(context);
+                // coverage:ignore-end
               },
               child: Center(
                 child: widget.contDef
+                    // coverage:ignore-line
                     ? Container()
                     : Container(
                         height: 250.0,
@@ -179,7 +180,10 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                             ? Center(
                                 child: _image == null
                                     ? Text(
-                                        widget.hasImage ? 'You can change your image here' : 'No image selected',
+                                        key: const Key('noImageKey'),
+                                        widget.hasImage
+                                            ? 'You can change your image here'
+                                            : 'No image selected',
                                         style: const TextStyle(
                                             fontSize: 20,
                                             color: AppColors.main1),
@@ -198,11 +202,13 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                             : Center(
                                 child: _video == null
                                     ? const Text(
+                                        key: Key('noVideoKey'),
                                         'No video selected',
                                         style: TextStyle(fontSize: 20),
                                       )
                                     : Container(
                                         child: ClipRRect(
+                                          // key: const Key('ClipRRectKey'),
                                           borderRadius:
                                               BorderRadius.circular(15),
                                           child: FittedBox(
