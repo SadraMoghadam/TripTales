@@ -26,6 +26,7 @@ class CustomAppBar extends StatelessWidget {
           SliverAppBar(
             // toolbarHeight: isScrollable ? 50.0 : 0,
             pinned: false,
+            toolbarHeight: 60,
             backgroundColor: AppColors.main1,
             shadowColor: Colors.grey,
             centerTitle: true,
@@ -39,14 +40,24 @@ class CustomAppBar extends StatelessWidget {
             //     ),
             //   ),
             // ),
-            title: const Text(
+            title:const Text(
               'Trip Tales',
               textAlign: TextAlign.center,
               style: TextStyle(
+                // letterSpacing: 5,
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 43,
+                fontWeight: FontWeight.w100,
+                fontFamily: "Playball",
               ),
             ),
+
+            // Container(
+            //   alignment: Alignment.center,
+            //   height: 60,
+            //   margin: EdgeInsets.all(10),
+            //   child:
+            // ),
 
             leading: showIcon
                 ? Builder(

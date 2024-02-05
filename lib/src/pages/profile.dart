@@ -104,7 +104,8 @@ class _ProfilePageState extends State<ProfilePage>
     _appManager.reset();
     DialogPopup(text: "Logging out ...", duration: 2).show(context);
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => route.isFirst);
+      _authService.signOut();
+      Navigator.pushReplacementNamed(context, '/');
     });
   }
 

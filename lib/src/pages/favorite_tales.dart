@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/models/tale_model.dart';
 import 'package:trip_tales/src/services/tale_service.dart';
@@ -14,11 +15,12 @@ class FavoriteTalesPage extends StatefulWidget {
   _FavoriteTalesPage createState() => _FavoriteTalesPage();
 }
 
-class _FavoriteTalesPage extends State<FavoriteTalesPage> {
+class _FavoriteTalesPage extends State<FavoriteTalesPage> with TickerProviderStateMixin {
   final TaleService _taleService = Get.find<TaleService>();
   late Future<List<TaleModel?>> tales;
   List<ValueKey> _widgetKeyList = List<ValueKey>.empty(growable: true);
   final AppManager _appManager = Get.put(AppManager());
+  late final AnimationController _controller;
 
   static int numOfTales = 0;
 
@@ -28,6 +30,8 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> {
     setState(() {
       tales = _taleService.getFavoriteTales(_appManager.getCurrentUser());
     });
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 4));
   }
 
   @override
@@ -61,9 +65,10 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> {
               child: Text(
                 'Your favorite Tales',
                 style: TextStyle(
-                    color: AppColors.text2,
+                    color: AppColors.main2,
+                    letterSpacing: -2,
                     fontSize: isTablet ? 30 : 25,
-                    fontWeight: FontWeight.w500),
+                    fontWeight: FontWeight.w700,),
               ),
             ),
           ],
@@ -91,43 +96,62 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> {
           List<TaleModel?> data = [];
           data = snapshot.data!;
           numOfTales = data.length;
-          for (int i = 0; i < numOfTales; i++) {
-            _widgetKeyList = List.generate(
-                numOfTales, (index) => ValueKey(index));
-          }
-          // If the device is a tablet and in landscape mode, make the SingleChildScrollView scroll horizontally and change the Column to a Row
-          if (isTablet && isLandscape) {
-            return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  for (int i = 0; i < numOfTales; i++)
-                    CustomTale(
-                      key: _widgetKeyList[i],
-                      talePath: data[i]!.imagePath,
-                      taleName: data[i]!.name,
-                      index: i,
-                      isLiked: data[i]!.liked,
-                    ),
-                ],
-              ),
-            );
+          if(numOfTales > 0) {
+            for (int i = 0; i < numOfTales; i++) {
+              _widgetKeyList = List.generate(
+                  numOfTales, (index) => ValueKey(index));
+            }
+            // If the device is a tablet and in landscape mode, make the SingleChildScrollView scroll horizontally and change the Column to a Row
+            if (isTablet && isLandscape) {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (int i = 0; i < numOfTales; i++)
+                      CustomTale(
+                        key: _widgetKeyList[i],
+                        talePath: data[i]!.imagePath,
+                        taleName: data[i]!.name,
+                        index: i,
+                        isLiked: data[i]!.liked,
+                      ),
+                  ],
+                ),
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (int i = 0; i < numOfTales; i++)
+                      CustomTale(
+                        key: _widgetKeyList[i],
+                        talePath: data[i]!.imagePath,
+                        taleName: data[i]!.name,
+                        index: i,
+                        isLiked: data[i]!.liked,
+                      ),
+                  ],
+                ),
+              );
+            }
           } else {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (int i = 0; i < numOfTales; i++)
-                    CustomTale(
-                      key: _widgetKeyList[i],
-                      talePath: data[i]!.imagePath,
-                      taleName: data[i]!.name,
-                      index: i,
-                      isLiked: data[i]!.liked,
-                    ),
-                ],
-              ),
+            _controller.reset();
+            _controller.forward();
+            _controller.repeat();
+            return Center(
+              child: Container(
+              alignment: Alignment.center,
+              height: 400,
+              width: 400,
+              child: Lottie.asset(
+                  "assets/animations/loading2.json",
+                  width: 400,
+                  height: 400,
+                  controller: _controller,
+                ),),
             );
           }
+
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
         } else {
