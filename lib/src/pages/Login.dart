@@ -503,43 +503,45 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Column(children: [
-          OverflowBar(
-            overflowAlignment: OverflowBarAlignment.start,
-            alignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              CustomButton(
-                  key: const Key('loginButtonKey'),
-                  height: isTablet ? 30 : 20,
-                  width: isTablet ? 300 : 200,
-                  fontSize: isTablet ? 20 : 18,
-                  text: "Login",
-                  textColor: Colors.white,
-                  onPressed: () => _submit(1))
-            ],
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'or',
-            style: TextStyle(
-              color: Colors.black, // Adjust the text color as needed
-              fontSize: 15, // Adjust the font size as needed
-            ),
-          ),
-          buildAuthOptions(context),
-          TextButton(
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, '/registerPage'),
-            child: Text(
-              'Create Account',
-              key: const Key('createAccountButtonKey'),
-              style: TextStyle(
-                  fontSize: isTablet ? 16 : 12,
-                  color: AppColors.text2,
-                  decoration: TextDecoration.underline),
-            ),
-          ),
-        ]),
+        Expanded(
+            child: Column(children: [
+              OverflowBar(
+                overflowAlignment: OverflowBarAlignment.start,
+                alignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  CustomButton(
+                      key: const Key('loginButtonKey'),
+                      height: isTablet ? 30 : 20,
+                      width: isTablet ? 300 : 200,
+                      fontSize: isTablet ? 20 : 18,
+                      text: "Login",
+                      textColor: Colors.white,
+                      onPressed: () => _submit(1))
+                ],
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                'or',
+                style: TextStyle(
+                  color: Colors.black, // Adjust the text color as needed
+                  fontSize: 15, // Adjust the font size as needed
+                ),
+              ),
+              Expanded(child: buildAuthOptions(context)),
+              TextButton(
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, '/registerPage'),
+                child: Text(
+                  'Create Account',
+                  key: const Key('createAccountButtonKey'),
+                  style: TextStyle(
+                      fontSize: isTablet ? 16 : 12,
+                      color: AppColors.text2,
+                      decoration: TextDecoration.underline),
+                ),
+              ),
+            ]),
+        ),
       ],
     );
   }
