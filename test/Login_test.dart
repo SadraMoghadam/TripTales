@@ -67,10 +67,10 @@ void main() {
     expect(find.byType(SingleChildScrollView), findsOneWidget);
 
     // Check if main widgets are present
-    expect(find.byType(Container), findsNWidgets(6));
+    expect(find.byType(Container), findsNWidgets(7));
     expect(find.byType(Column), findsNWidgets(6));
     expect(find.byType(Flexible), findsNWidgets(8));
-    expect(find.byType(TextButton), findsNWidgets(1));
+    expect(find.byType(TextButton), findsNWidgets(2));
   });
 
   testWidgets('LoginPage email', (WidgetTester tester) async {

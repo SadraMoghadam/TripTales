@@ -120,7 +120,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
             flex: 10,
             child: Container(
               height: 200,
-              width: deviceInfo.width - 200,
+              width: deviceInfo.isTablet ? deviceInfo.width - 200 : deviceInfo.width - 70,
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.main2, width: 5),
                 borderRadius: BorderRadius.circular(16.0),
@@ -239,7 +239,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     print(_markers);
     return Container(
       height: 350,
-      width: deviceInfo.width - 200,
+      width: deviceInfo.isTablet ? deviceInfo.width - 200 : deviceInfo.width - 70,
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.main2, width: 5),
         borderRadius: BorderRadius.circular(16.0),

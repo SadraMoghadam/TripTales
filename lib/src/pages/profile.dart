@@ -139,10 +139,10 @@ class _ProfilePageState extends State<ProfilePage>
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+        _birthDateController.text =
+            DateFormat('yyyy-MM-dd').format(_selectedDate!).toString();
       });
     }
-    _birthDateController.text =
-        DateFormat('yyyy-MM-dd').format(_selectedDate!).toString();
   }
 
   void _handleGenderValueChanged(String? newValue) {
@@ -418,6 +418,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                   const SizedBox(height: 20),
                   CustomDropdownButton(
+                    key: const Key('genderCustomTextFieldKey'),
                     isTablet: isTablet,
                     selectedValue: _selectedGender,
                     readOnly: readOnlyTextField,
@@ -476,11 +477,9 @@ class _ProfilePageState extends State<ProfilePage>
                     isTablet: isTablet,
                     key: const Key('editSaveCustomButtonKey'),
                     fontSize: isTablet ? 20 : 15,
-                    height: isTablet ? 15 : 12,
-                    width: isTablet ? 25 : 20,
-                    text: readOnlyTextField
-                        ? "Edit Profile"
-                        : "Save modifications",
+                    height: isTablet ? 60 : 50,
+                    width: isTablet ? 300 : 200,
+                    text: readOnlyTextField ? "Edit Profile" : "Save Changes",
                     textColor: Colors.white,
                     onPressed: () {
                       if (!readOnlyTextField) {
@@ -508,8 +507,8 @@ class _ProfilePageState extends State<ProfilePage>
                         isTablet: isTablet,
                         key: const Key('LogoutCustomButtonKey'),
                         fontSize: isTablet ? 15 : 12,
-                        height: isTablet ? 15 : 12,
-                        width: isTablet ? 18 : 15,
+                        height: isTablet ? 55 : 45,
+                        width: isTablet ? 200 : 100,
                         text: "Logout",
                         textColor: Colors.white,
                         backgroundColor: AppColors.main3,
@@ -522,8 +521,8 @@ class _ProfilePageState extends State<ProfilePage>
                         isTablet: isTablet,
                         key: const Key('DeleteAccountCustomButtonKey'),
                         fontSize: isTablet ? 15 : 12,
-                        height: isTablet ? 15 : 12,
-                        width: isTablet ? 18 : 15,
+                        height: isTablet ? 55 : 45,
+                        width: isTablet ? 200 : 100,
                         text: "Delete",
                         textColor: Colors.white,
                         backgroundColor: AppColors.main3,
@@ -581,7 +580,8 @@ class _ProfilePageState extends State<ProfilePage>
             }
 
             return Row(children: [
-              Expanded(
+              Flexible(
+                flex: 3,
                 child: Padding(
                   padding: const EdgeInsets.all(70.0),
                   child: Column(
@@ -591,7 +591,8 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
               ),
-              Expanded(
+              Flexible(
+                flex: 10,
                 child: Center(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -622,55 +623,52 @@ class _ProfilePageState extends State<ProfilePage>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: CustomTextField(
-                            isTablet: isTablet,
-                            key: const Key('nameCustomTextFieldKey'),
-                            readOnly: readOnlyTextField,
-                            controller: _nameController,
-                            labelText: 'Name',
-                            hintText: 'Enter your Name',
-                            prefixIcon: Icons.abc_rounded,
-                            obscureText: false,
-                            keyboardType: TextInputType.name,
-                            textInputAction: TextInputAction.next,
-                            validator: _validator.nameValidator,
-                          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: CustomTextField(
+                          isTablet: isTablet,
+                          key: const Key('nameCustomTextFieldKey'),
+                          readOnly: readOnlyTextField,
+                          controller: _nameController,
+                          labelText: 'Name',
+                          hintText: 'Enter your Name',
+                          prefixIcon: Icons.abc_rounded,
+                          obscureText: false,
+                          keyboardType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                          validator: _validator.nameValidator,
                         ),
                       ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: CustomTextField(
-                            isTablet: isTablet,
-                            key: const Key('surnameCustomTextFieldKey'),
-                            readOnly: readOnlyTextField,
-                            controller: _surnameController,
-                            labelText: 'Surname',
-                            hintText: 'Enter your Surname',
-                            prefixIcon: Icons.abc_rounded,
-                            obscureText: false,
-                            keyboardType: TextInputType.name,
-                            textInputAction: TextInputAction.next,
-                            validator: _validator.nameValidator,
-                          ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: CustomTextField(
+                          isTablet: isTablet,
+                          key: const Key('surnameCustomTextFieldKey'),
+                          readOnly: readOnlyTextField,
+                          controller: _surnameController,
+                          labelText: 'Surname',
+                          hintText: 'Enter your Surname',
+                          prefixIcon: Icons.abc_rounded,
+                          obscureText: false,
+                          keyboardType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                          validator: _validator.nameValidator,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 20),
@@ -708,7 +706,8 @@ class _ProfilePageState extends State<ProfilePage>
                     hintText: _selectedDate != null
                         ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
                         : 'Select date',
-                    onTap: () => !readOnlyTextField ? _selectDate(context) : null,
+                    onTap: () =>
+                        !readOnlyTextField ? _selectDate(context) : null,
                     prefixIcon: Icons.date_range_rounded,
                     obscureText: false,
                     keyboardType: TextInputType.datetime,
@@ -719,7 +718,6 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ],
           ),
-
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -761,7 +759,6 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ],
           ),
-
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -802,17 +799,17 @@ class _ProfilePageState extends State<ProfilePage>
                     isPasswordVisible: false,
                     onVisibilityPressed: () => !readOnlyTextField
                         ? showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const ChangePasswordDialog();
-                        })
+                            context: context,
+                            builder: (context) {
+                              return const ChangePasswordDialog();
+                            })
                         : null,
                     onTap: () => !readOnlyTextField
                         ? showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const ChangePasswordDialog();
-                        })
+                            context: context,
+                            builder: (context) {
+                              return const ChangePasswordDialog();
+                            })
                         : null,
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
@@ -822,7 +819,6 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ],
           ),
-
           const SizedBox(height: 20),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -831,33 +827,36 @@ class _ProfilePageState extends State<ProfilePage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: CustomButton(
-                      key: const Key('editSaveCustomButtonKey'),
-                      fontSize: isTablet ? 20 : 15,
-                      height: isTablet ? 15 : 12,
-                      width: isTablet ? 25 : 20,
-                      text: readOnlyTextField ? "Edit Profile" : "Save modifications",
-                      textColor: Colors.white,
-                      onPressed: () {
-                        if (!readOnlyTextField) {
-                          _submit();
-                          DialogPopup(
-                            text: "Profile modified correctly",
-                            duration: 1,
-                          ).show(context);
-                        } else {
-                          setState(() {
-                            readOnlyTextField = !readOnlyTextField;
-                          });
-                          DialogPopup(
-                            text: "Modify your profile",
-                            duration: 1,
-                          ).show(context);
-                        }
-                      },
-                    ),
+                  // Expanded(
+                  //   child:
+                  CustomButton(
+                    key: const Key('editSaveCustomButtonKey'),
+                    fontSize: isTablet ? 20 : 15,
+                    height: isTablet ? 60 : 50,
+                    width: isTablet ? 300 : 200,
+                    text: readOnlyTextField
+                        ? "Edit Profile"
+                        : "Save Changes",
+                    textColor: Colors.white,
+                    onPressed: () {
+                      if (!readOnlyTextField) {
+                        _submit();
+                        DialogPopup(
+                          text: "Profile modified correctly",
+                          duration: 1,
+                        ).show(context);
+                      } else {
+                        setState(() {
+                          readOnlyTextField = !readOnlyTextField;
+                        });
+                        DialogPopup(
+                          text: "Modify your profile",
+                          duration: 1,
+                        ).show(context);
+                      }
+                    },
                   ),
+                  // ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -866,44 +865,49 @@ class _ProfilePageState extends State<ProfilePage>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: CustomButton(
-                      key: const Key('LogoutCustomButtonKey'),
-                      fontSize: isTablet ? 15 : 12,
-                      height: isTablet ? 15 : 12,
-                      width: isTablet ? 18 : 15,
-                      text: "Logout",
-                      textColor: Colors.white,
-                      backgroundColor: AppColors.main3,
-                      onPressed: () {
-                        logout();
-                      },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 250),
+                      child: CustomButton(
+                        key: const Key('LogoutCustomButtonKey'),
+                        fontSize: isTablet ? 15 : 12,
+                        height: isTablet ? 55 : 45,
+                        width: isTablet ? 120 : 100,
+                        text: "Logout",
+                        textColor: Colors.white,
+                        backgroundColor: AppColors.main3,
+                        onPressed: () {
+                          logout();
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
-                    child: CustomButton(
-                      key: const Key('DeleteAccountCustomButtonKey'),
-                      fontSize: isTablet ? 15 : 12,
-                      height: isTablet ? 15 : 12,
-                      width: isTablet ? 28 : 15,
-                      text: "Delete",
-                      textColor: Colors.white,
-                      backgroundColor: AppColors.main3,
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const DeleteAccountDialog();
-                          },
-                        );
-                      },
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 250),
+                      child: CustomButton(
+                        key: const Key('DeleteAccountCustomButtonKey'),
+                        fontSize: isTablet ? 15 : 12,
+                        height: isTablet ? 55 : 45,
+                        width: isTablet ? 120 : 100,
+                        text: "Delete",
+                        textColor: Colors.white,
+                        backgroundColor: AppColors.main3,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const DeleteAccountDialog();
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
               ),
             ],
           ),
-
         ]);
   }
 
@@ -922,8 +926,8 @@ class _ProfilePageState extends State<ProfilePage>
       actions: <Widget>[
         CustomButton(
             key: const Key('closeCustomButtonKey'),
-            height: isTablet ? 8 : 5,
-            width: isTablet ? 35 : 30,
+            height: isTablet ? 50 : 40,
+            width: isTablet ? 120 : 100,
             fontSize: isTablet ? 15 : 12,
             backgroundColor: AppColors.main3,
             text: "close",
@@ -962,8 +966,6 @@ class _ProfilePageState extends State<ProfilePage>
                 child: Center(
                   child: CustomButton(
                     key: const Key('deleteCustomButtonKey'),
-                    height: isTablet ? 20 : 18,
-                    width: isTablet ? 210 : 200,
                     text: "Delete",
                     textColor: Colors.white,
                     onPressed: () => Navigator.of(context).pop(),

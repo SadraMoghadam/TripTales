@@ -17,16 +17,16 @@ class MockAuthService extends GetxController with Mock implements AuthService {
   @override
   Future<UserModel?> getUserById(String uid) async {
     return Future.value( UserModel(
-    id: '1',
-    email: 'angelotulbure@gmail.com',
-    name: 'Shery',
-    surname: 'Rossi',
-    birthDate: '2024-01-03',
-    phoneNumber: '+39 320329811',
-    bio: ' - Live a Life you will remember - ',
-    gender: 'Female',
-    profileImage: '',
-    talesFK: ['Mac4HHwqeUYjR2Wuj0Hy', 'ZsXQf0snPxnhsTyo4kRL', '88LtYoZRB2UQrg7C3yz0', 'A7hgy1WW43NhPOXB0Xdn'],
+      id: '1',
+      email: 'angelotulbure@gmail.com',
+      name: 'Shery',
+      surname: 'Rossi',
+      birthDate: '2024-01-03',
+      phoneNumber: '+39 320329811',
+      bio: ' - Live a Life you will remember - ',
+      gender: 'Female',
+      profileImage: '',
+      talesFK: ['Mac4HHwqeUYjR2Wuj0Hy', 'ZsXQf0snPxnhsTyo4kRL', '88LtYoZRB2UQrg7C3yz0', 'A7hgy1WW43NhPOXB0Xdn'],
     ));
   }
 }
@@ -77,6 +77,9 @@ void main() {
     //   mockAppManager.setCurrentUser("1");
     // });
     // Build the widget
+
+    tester.binding.window.physicalSizeTestValue = Size(600, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: CustomMenu(index: 2,)));
 
     await tester.pumpAndSettle();
@@ -88,22 +91,25 @@ void main() {
     expect(find.byType(Scaffold), findsNWidgets(2));
 
     // Test if the SingleChildScrollView is rendered
-    expect(find.byType(SingleChildScrollView), findsNWidgets(2));
+    expect(find.byType(SingleChildScrollView), findsNWidgets(1));
 
     // Check if main widgets are present
     expect(find.byType(Container), findsNWidgets(9));
-    expect(find.byType(Column), findsNWidgets(5));
-    expect(find.byType(Flexible), findsNWidgets(2));
+    expect(find.byType(Column), findsNWidgets(1));
+    expect(find.byType(Flexible), findsNothing);
     expect(find.byType(CustomAppBar), findsNWidgets(1));
     expect(find.byType(CustomTextField), findsNWidgets(7));
     expect(find.byType(Stack), findsNWidgets(9));
     expect(find.byType(Positioned), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsOneWidget);
-    expect(find.byType(SizedBox), findsNWidgets(44));
+    expect(find.byType(SizedBox), findsNWidgets(47));
     // expect(find.byType(SetPhotoScreen), findsNWidgets(2));
   });
 
   testWidgets('Profile AlertDialog', (WidgetTester tester) async {
+
+    tester.binding.window.physicalSizeTestValue = Size(600, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: CustomMenu(index: 2,)));
     final alertDialogFinder = find.byKey(const Key('alertDialogKey'));
     expect(alertDialogFinder, findsNothing);
@@ -111,6 +117,8 @@ void main() {
 
 
   testWidgets('Profile Page name', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(600, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: CustomMenu(index: 2,)));
     // Wait for the UI to settle/render completely
     await tester.pumpAndSettle();
@@ -125,7 +133,7 @@ void main() {
 
     // Tap the edit button
     await tester.tap(editButtonFinder);
-    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+    await tester.pumpAndSettle(const Duration(seconds: 2)); // Wait for animations/transitions to complete
 
     final nameTextFieldFinder = find.byKey(const Key('nameCustomTextFieldKey'));
     expect(nameTextFieldFinder, findsOneWidget);
@@ -160,6 +168,8 @@ void main() {
   });
 
   testWidgets('Profile Page surname', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(600, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: CustomMenu(index: 2,)));
 
     // Wait for the UI to settle/render completely
@@ -174,10 +184,10 @@ void main() {
 
     // Tap the edit button
     await tester.tap(editButtonFinder);
-    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+    await tester.pumpAndSettle(const Duration(seconds: 2)); // Wait for animations/transitions to complete
 
     final surnameTextFieldFinder =
-        find.byKey(const Key('surnameCustomTextFieldKey'));
+    find.byKey(const Key('surnameCustomTextFieldKey'));
     expect(surnameTextFieldFinder, findsOneWidget);
 
     // Enter text into the surname form field
@@ -210,6 +220,8 @@ void main() {
   });
 
   testWidgets('Profile Page birth date', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(600, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: CustomMenu(index: 2,)));
 
     // Wait for the UI to settle/render completely
@@ -226,12 +238,14 @@ void main() {
     await tester.tap(editButtonFinder);
     await tester.pumpAndSettle(const Duration(seconds: 2)); // Wait for animations/transitions to complete
     final dateBirthTextFieldFinder =
-        find.byKey(const Key('birthDateCustomTextFieldKey'));
+    find.byKey(const Key('birthDateCustomTextFieldKey'));
     expect(dateBirthTextFieldFinder, findsOne);
     await tester.pump();
   });
 
   testWidgets('Profile Page email', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(600, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: CustomMenu(index: 2,)));
 
     // Wait for the UI to settle/render completely
@@ -246,10 +260,10 @@ void main() {
 
     // Tap the edit button
     await tester.tap(editButtonFinder);
-    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+    await tester.pumpAndSettle(const Duration(seconds: 2)); // Wait for animations/transitions to complete
 
     final emailTextFieldFinder =
-        find.byKey(const Key('emailCustomTextFieldKey'));
+    find.byKey(const Key('emailCustomTextFieldKey'));
     expect(emailTextFieldFinder, findsOneWidget);
 
     // Enter text into the email form field
@@ -282,6 +296,8 @@ void main() {
   });
 
   testWidgets('Profile Page password', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(600, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: CustomMenu(index: 2,)));
 
     // Wait for the UI to settle/render completely
@@ -342,6 +358,8 @@ void main() {
   });
 
   testWidgets('Profile Page phone number', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(600, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: CustomMenu(index: 2,)));
 
     // Wait for the UI to settle/render completely
@@ -356,10 +374,10 @@ void main() {
 
     // Tap the edit button
     await tester.tap(editButtonFinder);
-    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+    await tester.pumpAndSettle(const Duration(seconds: 2)); // Wait for animations/transitions to complete
 
     final phoneTextFieldFinder =
-        find.byKey(const Key('phoneNumberCustomTextFieldKey'));
+    find.byKey(const Key('phoneNumberCustomTextFieldKey'));
     expect(phoneTextFieldFinder, findsOneWidget);
 
     // Enter text into the phone number form field
@@ -392,6 +410,8 @@ void main() {
   });
 
   testWidgets('Profile Page gender', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(600, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: CustomMenu(index: 2,)));
 
     // Wait for the UI to settle/render completely
@@ -402,7 +422,7 @@ void main() {
 
     // Scroll to the button if it's not visible
     await tester.ensureVisible(editButtonFinder);
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 2));
 
     // Tap the edit button
     await tester.tap(editButtonFinder);
@@ -428,6 +448,8 @@ void main() {
   });
 
   testWidgets('Profile Page bio', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(600, 800);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(home: CustomMenu(index: 2,)));
 
     // Wait for the UI to settle/render completely
@@ -442,7 +464,7 @@ void main() {
 
     // Tap the edit button
     await tester.tap(editButtonFinder);
-    await tester.pumpAndSettle(); // Wait for animations/transitions to complete
+    await tester.pumpAndSettle(const Duration(seconds: 2)); // Wait for animations/transitions to complete
 
     final bioTextFieldFinder = find.byKey(const Key('bioCustomTextFieldKey'));
     expect(bioTextFieldFinder, findsOneWidget);

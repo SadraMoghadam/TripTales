@@ -134,18 +134,16 @@ class _ChangePasswordDialog extends State<ChangePasswordDialog> {
       ),
       actions: [
         CustomButton(
-            height: isTablet ? 8 : 5,
-            width: isTablet ? 25 : 20,
+            height: isTablet ? 45 : 40,
+            width: isTablet ? 120 : 100,
             fontSize: isTablet ? 15 : 12,
-            padding: 10,
             backgroundColor: AppColors.main2,
             text: "Change",
             textColor: Colors.white,
             onPressed: () => _submit()),
         CustomButton(
-            height: isTablet ? 8 : 5,
-            width: isTablet ? 25 : 20,
-            padding: 10,
+            height: isTablet ? 45 : 40,
+            width: isTablet ? 120 : 100,
             fontSize: isTablet ? 15 : 12,
             backgroundColor: AppColors.main3,
             text: "Close",

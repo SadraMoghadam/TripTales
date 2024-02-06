@@ -64,8 +64,8 @@ class _ResetPositionDialog extends State<ResetPositionDialog> {
       ),
       actions: [
         CustomButton(
-            height: 5,
-            width: 20,
+            height: 40,
+            width: 100,
             fontSize: 12,
             padding: 10,
             backgroundColor: AppColors.main2,
@@ -73,8 +73,8 @@ class _ResetPositionDialog extends State<ResetPositionDialog> {
             textColor: Colors.white,
             onPressed: () => _submit()),
         CustomButton(
-            height: 5,
-            width: 20,
+            height: 40,
+            width: 100,
             padding: 10,
             fontSize: 12,
             backgroundColor: AppColors.main3,

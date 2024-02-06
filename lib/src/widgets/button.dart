@@ -21,13 +21,13 @@ class CustomButton extends StatelessWidget {
   CustomButton({
     required this.text,
     required this.onPressed,
-    this.height = 20,
+    this.height = 45,
     this.width = 200,
     this.fontSize = 18.0,
     this.backgroundColor = AppColors.main2,
     this.textColor = AppColors.text1,
-    this.borderRadius = 8.0,
-    this.padding = 12.0,
+    this.borderRadius = 20.0,
+    this.padding = 3.0,
     this.icon,
     this.isLoading = false,
     this.isDisabled = false,
@@ -52,19 +52,23 @@ class CustomButton extends StatelessWidget {
         child: buildButtonChild(),
       );
     } else {
-      return ElevatedButton(
-        onPressed: isDisabled || isLoading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-          primary: backgroundColor,
-          onPrimary: textColor,
-          shadowColor: Colors.grey,
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
+      return SizedBox(
+        height: height,
+        width: width,
+        child: ElevatedButton(
+          onPressed: isDisabled || isLoading ? null : onPressed,
+          style: ElevatedButton.styleFrom(
+            primary: backgroundColor,
+            onPrimary: textColor,
+            shadowColor: Colors.grey,
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+            ),
+            minimumSize: Size(width, height),
           ),
-          minimumSize: Size(width, height),
+          child: buildButtonChild(),
         ),
-        child: buildButtonChild(),
       );
     }
   }
@@ -85,23 +89,25 @@ class CustomButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (icon != null) Icon(
-              icon,
-              size: 24.0,
-            ),
+            if (icon != null)
+              Icon(
+                icon,
+                size: 24.0,
+              ),
             if (icon != null) SizedBox(width: 8.0),
             Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: this.fontSize,
-                  fontWeight: FontWeight.bold,
+              child: Center(
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: this.fontSize,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
           ],
         ),
-
       );
     }
   }
