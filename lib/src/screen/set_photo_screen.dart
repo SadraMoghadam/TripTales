@@ -102,7 +102,7 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
 
   Future<File?> _cropImage({required File imageFile}) async {
     CroppedFile? croppedImage =
-        await ImageCropper().cropImage(sourcePath: imageFile.path);
+    await ImageCropper().cropImage(sourcePath: imageFile.path);
     if (croppedImage == null) return null;
     return File(croppedImage.path);
   }
@@ -170,68 +170,68 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
               },
               child: Center(
                 child: widget.contDef
-                    // coverage:ignore-line
+                // coverage:ignore-line
                     ? Container()
                     : Container(
-                        height: isTablet ? 320 : 250.0,
-                        width: isTablet ? 450 : 370.0,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.grey.shade200,
+                  height: isTablet ? 320 : 250.0,
+                  width: isTablet ? 450 : 370.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.grey.shade200,
+                  ),
+                  child: widget.isImage
+                      ? Center(
+                    child: _image == null
+                        ? Text(
+                      key: const Key('noImageKey'),
+                      widget.hasImage
+                          ? 'You can change your image here'
+                          : 'No image selected',
+                      style: const TextStyle(
+                          fontSize: 20,
+                          color: AppColors.main1),
+                    )
+                        : Container(
+                      decoration: BoxDecoration(
+                        borderRadius:
+                        BorderRadius.circular(15),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: FileImage(_image!),
                         ),
-                        child: widget.isImage
-                            ? Center(
-                                child: _image == null
-                                    ? Text(
-                                        key: const Key('noImageKey'),
-                                        widget.hasImage
-                                            ? 'You can change your image here'
-                                            : 'No image selected',
-                                        style: const TextStyle(
-                                            fontSize: 20,
-                                            color: AppColors.main1),
-                                      )
-                                    : Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: FileImage(_image!),
-                                          ),
-                                        ),
-                                      ),
-                              )
-                            : Center(
-                                child: _video == null
-                                    ? const Text(
-                                        key: Key('noVideoKey'),
-                                        'No video selected',
-                                        style: TextStyle(fontSize: 20),
-                                      )
-                                    : Container(
-                                        child: ClipRRect(
-                                          // key: const Key('ClipRRectKey'),
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          child: FittedBox(
-                                            fit: BoxFit.cover,
-                                            alignment: Alignment.center,
-                                            child: SizedBox(
-                                              width: _videoController
-                                                  .value.size!.width,
-                                              height: _videoController
-                                                  .value.size!.height,
-                                              child:
-                                                  VideoPlayer(_videoController),
-                                            ),
-                                          ),
-                                          // child: VideoPlayer(_videoController),
-                                        ),
-                                      ),
-                              ),
                       ),
+                    ),
+                  )
+                      : Center(
+                    child: _video == null
+                        ? const Text(
+                      key: Key('noVideoKey'),
+                      'No video selected',
+                      style: TextStyle(fontSize: 20),
+                    )
+                        : Container(
+                      child: ClipRRect(
+                        // key: const Key('ClipRRectKey'),
+                        borderRadius:
+                        BorderRadius.circular(15),
+                        child: FittedBox(
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: _videoController
+                                .value.size!.width,
+                            height: _videoController
+                                .value.size!.height,
+                            child:
+                            VideoPlayer(_videoController),
+                          ),
+                        ),
+                        // child: VideoPlayer(_videoController),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -244,7 +244,7 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
             children: [
               CustomButton(
                 isTablet: isTablet,
-                height: isTablet ? 30 : 20,
+                height: isTablet ? 60 : 50,
                 width: isTablet ? 300 : 200,
                 fontSize: isTablet ? 20 : 18,
                 padding: 10,

@@ -10,7 +10,7 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: CustomMenu(),
+        home: CustomMenu(index: 0,),
       ),
     );
 

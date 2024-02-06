@@ -96,7 +96,7 @@ void main() {
         fontSize: 20,
       );
 
-      final json = card.toJson();
+      final json = card.toJsonTextCard();
 
       expect(json['name'], 'image');
       expect(json['order'], 1);
@@ -105,12 +105,12 @@ void main() {
           CustomMatrixUtils.matrix4ToJson(Matrix4.identity()));
       expect(json['text'], 'Hello');
       expect(json['textColor'],
-          Colors.red.value); // Verify numeric representation for color
+          Colors.red.value.toRadixString(16)); // Verify numeric representation for color
       expect(json['textBackgroundColor'],
-          Colors.blue.value); // Verify numeric representation for color
+          Colors.blue.value.toRadixString(16)); // Verify numeric representation for color
       expect(json['textDecoration'], 'underline');
       expect(json['fontStyle'], 'italic');
-      expect(json['fontWeight'], 'bold');
+      expect(json['fontWeight'], 'Large');
       expect(json['fontSize'], 20);
     });
 
@@ -148,7 +148,7 @@ void main() {
         fontSize: 20,
       );
 
-      final json = card.toJson();
+      final json = card.toJsonTextCard();
 
       expect(json['name'], 'image');
       expect(json['order'], 1);
@@ -157,12 +157,12 @@ void main() {
           CustomMatrixUtils.matrix4ToJson(Matrix4.identity()));
       expect(json['text'], 'Hello');
       expect(json['textColor'],
-          Colors.red.value); // Verify numeric representation for color
+          Colors.red.value.toRadixString(16));
       expect(json['textBackgroundColor'],
-          Colors.blue.value); // Verify numeric representation for color
+          Colors.blue.value.toRadixString(16)); // Verify numeric representation for color
       expect(json['textDecoration'], 'underline');
       expect(json['fontStyle'], 'italic');
-      expect(json['fontWeight'], 'bold');
+      expect(json['fontWeight'], 'Large');
       expect(json['fontSize'], 20);
     });
   });

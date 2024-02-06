@@ -62,18 +62,16 @@ class _DeleteAccountDialog extends State<DeleteAccountDialog> {
       ),
       actions: [
         CustomButton(
-            height: 5,
-            width: 20,
+            height: 40,
+            width: 100,
             fontSize: 12,
-            padding: 10,
             backgroundColor: AppColors.main2,
             text: "Delete",
             textColor: Colors.white,
             onPressed: () => _submit()),
         CustomButton(
-            height: 5,
-            width: 20,
-            padding: 10,
+            height: 40,
+            width: 100,
             fontSize: 12,
             backgroundColor: AppColors.main3,
             text: "close",

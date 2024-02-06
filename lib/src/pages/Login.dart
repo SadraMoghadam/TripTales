@@ -121,90 +121,7 @@ class _LoginPageState extends State<LoginPage> {
               key: _formKey,
               child: isTablet && isLandscape
                   ? Row(
-                      // Use Row for landscape mode on tablet
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Flexible(
-                          fit: FlexFit.tight,
-                          flex: 4,
-                          child: buildHeader(context),
-                        ),
-                        Flexible(
-                          fit: FlexFit.tight,
-                          flex: 4,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              const Flexible(
-                                fit: FlexFit.tight,
-                                flex: 1,
-                                child: SizedBox(height: 50),
-                              ),
-                              Flexible(
-                                fit: FlexFit.tight,
-                                flex: 3,
-                                child: buildBody(context),
-                              ),
-                              Flexible(
-                                fit: FlexFit.tight,
-                                flex: 3,
-                                child: buildFooter(context),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      // Use Column for portrait mode or non-tablet devices
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Flexible(
-                          fit: FlexFit.tight,
-                          flex: 4,
-                          child: buildHeader(context),
-                        ),
-                        Flexible(
-                          fit: FlexFit.tight,
-                          flex: 3,
-                          child: buildBody(context),
-                        ),
-                        Flexible(
-                          fit: FlexFit.tight,
-                          flex: 2,
-                          child: buildFooter(context),
-                        ),
-                      ],
-                    ),
-            )),
-      ),
-    );
-  }
-
-/*
-  @override
-  Widget build(BuildContext context) {
-    DeviceInfo device = DeviceInfo();
-    device.computeDeviceInfo(context);
-    bool isTablet = device.isTablet;
-    bool isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-//    if (isTablet && isLandscape) {
-//      return buildLandScape(context);
-//    } else {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: Container(
-            height: device.height,
-            width: device.width,
-            alignment: Alignment.center,
-            child: Form(
-              key: _formKey,
-              child: Column(
+                // Use Row for landscape mode on tablet
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -213,89 +130,59 @@ class _LoginPageState extends State<LoginPage> {
                     flex: 4,
                     child: buildHeader(context),
                   ),
-                  //buildHeader(context),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        const Flexible(
+                          fit: FlexFit.tight,
+                          flex: 1,
+                          child: SizedBox(height: 50),
+                        ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 3,
+                          child: buildBody(context),
+                        ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 3,
+                          child: buildFooter(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+                  : Column(
+                // Use Column for portrait mode or non-tablet devices
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 4,
+                    child: buildHeader(context),
+                  ),
                   Flexible(
                     fit: FlexFit.tight,
                     flex: 3,
                     child: buildBody(context),
                   ),
-                  //buildBody(context),
                   Flexible(
                     fit: FlexFit.tight,
-                    flex: 2,
+                    flex: 3,
                     child: buildFooter(context),
-                  )
-                  //buildFooter(context),
+                  ),
                 ],
               ),
             )),
-        //   ),
       ),
     );
   }
-
-/*
-  Widget buildLandScape(BuildContext context) {
-    DeviceInfo device = DeviceInfo();
-    device.computeDeviceInfo(context);
-    bool isTablet = device.isTablet;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: Container(
-            key: const Key('container1Key'),
-            height: device.height,
-            width: device.width,
-            alignment: Alignment.center,
-            child: Column(
-              children: <Widget>[
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex: 10,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        // First Column for Logo and Text
-                        Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.asset(
-                                  'assets/images/TripTales_logo.png',
-                                  height: isTablet ? 250 : 200,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              'Welcome Back',
-                              style: TextStyle(
-                                color: AppColors.text1,
-                                fontSize: isTablet ? 30 : 25,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                            //  mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              buildBody(),
-                              buildFooter(),
-                            ]),
-                      ]),
-                )
-              ],
-            )),
-      ),
-    );
-  }
-  */
-*/
   Widget buildHeader(context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
@@ -304,6 +191,8 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
+          // height: 300,
+          // width: 40,
           padding: const EdgeInsets.all(10),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
@@ -407,127 +296,78 @@ class _LoginPageState extends State<LoginPage> {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     bool isTablet = device.isTablet;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        //const SizedBox(height: 10),
-        TextButton(
+    return Container(
+        alignment: Alignment.center,
+        height: 55, // Adjust height as needed
+        width: isTablet ? 230 : 225, // Adjust width as needed
+        child: TextButton(
           onPressed: () => _submit(2),
           style: ButtonStyle(
             side:
-                MaterialStateProperty.all(const BorderSide(color: Colors.grey)),
+            MaterialStateProperty.all(const BorderSide(color: Colors.grey)),
           ),
           child: Row(
             children: [
-              Image.asset(
-                'assets/images/google_icon.png', // Replace with the path to your image
-                height: 40,
-                width: 40,
+              Expanded(
+                flex: 1,
+                child: Image.asset(
+                  'assets/images/google_icon.png', // Replace with the path to your image
+                  height: isTablet ? 40 : 30,
+                  width: isTablet ? 40 : 30,
+                ),
               ),
               const SizedBox(width: 8),
-              Text(
-                'Sign up with Google',
-                style: TextStyle(
-                  color: AppColors.text2, // Adjust the text color as needed
-                  fontSize:
-                      isTablet ? 18 : 16, // Adjust the font size as needed
+              Expanded(
+                flex: 5,
+                child: Text(
+                  'Sign up with Google',
+                  style: TextStyle(
+                    color: AppColors.text2, // Adjust the text color as needed
+                    fontSize:
+                    isTablet ? 15 : 13, // Adjust the font size as needed
+                  ),
                 ),
               ),
             ],
           ),
-        ),
+        )
 
-        /*
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          icon: Image.asset(
-            'assets/images/google_icon.png', // Replace with the path to your image
-            height: 40,
-            width: 40,
-          ),
-          onPressed: () => _submit(2),
-        ),
-
-        */
-        // IconButton(
-        //   icon: Image.asset(
-        //     'assets/images/fb_icon.png', // Replace with the path to your image
-        //     height: 40,
-        //     width: 40,
-        //   ),
-        //   onPressed: () => _submit(3),
-        // ),
-        // SignInButton(
-        //   Buttons.Facebook,
-        //   onPressed: () => _submit(2),
-        // ),
-        // ElevatedButton(
-        //   onPressed: () async {
-        //     int? result = await authController.signInWithGoogle();
-        //     if(result == 200) {
-        //       Navigator.pushReplacementNamed(context, '/customMenu');
-        //       _formKey.currentState?.save();
-        //     }
-        //     else{
-        //       print("Wrong credentials");
-        //       return;
-        //     }
-        //   },
-        //   child: Text("Login with Google"),
-        // ),
-
-        // ElevatedButton(
-        //   onPressed: () async {
-        //     int? result = await authController.signInWithFacebook();
-        //     if(result == 200) {
-        //       Navigator.pushReplacementNamed(context, '/customMenu');
-        //       _formKey.currentState?.save();
-        //     }
-        //     else{
-        //       print("Wrong credentials");
-        //       return;
-        //     }
-        //   },
-        //   child: Text("Login with Facebook"),
-        // )
-      ],
     );
   }
 
-  Widget buildFooter(context) {
+  Widget buildFooter(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     bool isTablet = device.isTablet;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-            child: Column(children: [
-              OverflowBar(
-                overflowAlignment: OverflowBarAlignment.start,
-                alignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  CustomButton(
-                      key: const Key('loginButtonKey'),
-                      height: isTablet ? 30 : 20,
-                      width: isTablet ? 300 : 200,
-                      fontSize: isTablet ? 20 : 18,
-                      text: "Login",
-                      textColor: Colors.white,
-                      onPressed: () => _submit(1))
-                ],
+          //fit: FlexFit.tight,
+          flex: 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CustomButton(
+                key: const Key('loginButtonKey'),
+                height: isTablet ? 60 : 50,
+                width: isTablet ? 300 : 200,
+                fontSize: isTablet ? 20 : 18,
+                text: "Login",
+                textColor: Colors.white,
+                onPressed: () => _submit(1),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 8),
               const Text(
                 'or',
                 style: TextStyle(
-                  color: Colors.black, // Adjust the text color as needed
-                  fontSize: 15, // Adjust the font size as needed
+                  color: Colors.black,
+                  fontSize: 15,
                 ),
               ),
-              Expanded(child: buildAuthOptions(context)),
+              const SizedBox(height: 8),
+              buildAuthOptions(context),
               TextButton(
                 onPressed: () =>
                     Navigator.pushReplacementNamed(context, '/registerPage'),
@@ -535,12 +375,14 @@ class _LoginPageState extends State<LoginPage> {
                   'Create Account',
                   key: const Key('createAccountButtonKey'),
                   style: TextStyle(
-                      fontSize: isTablet ? 16 : 12,
-                      color: AppColors.text2,
-                      decoration: TextDecoration.underline),
+                    fontSize: isTablet ? 16 : 12,
+                    color: AppColors.text2,
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
               ),
-            ]),
+            ],
+          ),
         ),
       ],
     );

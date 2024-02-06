@@ -141,9 +141,8 @@ class _MapScreenState extends State<MapScreen> {
         widget.isReadonly
             ? Container()
             : CustomButton(
-                height: 5,
-                width: 20,
-                padding: 10,
+                height: 40,
+                width: 100,
                 fontSize: 12,
                 backgroundColor: AppColors.main2,
                 text: "choose",
@@ -155,9 +154,8 @@ class _MapScreenState extends State<MapScreen> {
                 },
               ),
         CustomButton(
-            height: 5,
-            width: 20,
-            padding: 10,
+            height: 40,
+            width: 100,
             fontSize: 12,
             backgroundColor: AppColors.main3,
             text: "close",

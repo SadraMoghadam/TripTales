@@ -40,11 +40,12 @@ class _CreateTalePage extends State<CreateTalePage>
   final SetPhotoScreen setPhotoScreen = SetPhotoScreen();
   final Validator _validator = Validator();
   GlobalKey<FormState> _formKey =
-      GlobalKey<FormState>(debugLabel: 'createTale');
+  GlobalKey<FormState>(debugLabel: 'createTale');
   late TaleModel taleModel;
   int selectedIndex = 0;
   bool _isPressed = false;
   late final AnimationController _controller;
+  DeviceInfo device = DeviceInfo();
 
   void _submit() async {
     final isValid = _formKey.currentState?.validate();
@@ -132,8 +133,8 @@ class _CreateTalePage extends State<CreateTalePage>
           },
         );
         Future.delayed(
-          Duration(seconds: 2),
-          () async {
+          Duration(seconds: 3),
+              () async {
             print(")))))))))))))))))))))))))))))))))))))))))${result}");
             var currentTaleId = await _taleService.getTaleId(taleData.name);
             print(")))))))))))))))))))))))))))))))))))))))))${currentTaleId}");
@@ -225,7 +226,6 @@ class _CreateTalePage extends State<CreateTalePage>
 
   @override
   Widget build(BuildContext context) {
-    DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return Scaffold(
       body: CustomAppBar(
@@ -235,93 +235,6 @@ class _CreateTalePage extends State<CreateTalePage>
       ),
     );
   }
-
-/*
-  Widget buildBody() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 15,
-            ),
-            SizedBox(
-              height: 320,
-              child: SetPhotoScreen(
-                isImage: true,
-                imagePath: widget.isEditMode ? taleModel.imagePath : '',
-                hasImage: widget.isEditMode,
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            SizedBox(
-              height: 60,
-              width: 330,
-              child: CustomTextField(
-                key: const Key('taleNameCustomTextFieldKey'),
-                controller: _taleNameController,
-                labelText: 'Tale Name',
-                hintText: 'Enter your Tale Name',
-                prefixIcon: Icons.abc,
-                obscureText: false,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                validator: _validator.nameValidator,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            //SizedBox(
-            // height: 305,
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Text(
-                    '  Choose your canvas:',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.main1,
-                      fontSize: 20,
-                    ),
-                  ),
-                  buildCanvasList(),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              height: 50,
-              child: CustomButton(
-                key: const Key('startCreatingCustomButtonKey'),
-                fontSize: 18,
-                padding: 2,
-                backgroundColor: AppColors.main2,
-                isDisabled: _isPressed,
-                textColor: Colors.white,
-                text: widget.isEditMode ? "Finish Editing" : "Start Creating",
-                onPressed: _submit,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  */
 
   Widget buildBody(context) {
     DeviceInfo device = DeviceInfo();
@@ -435,7 +348,7 @@ class _CreateTalePage extends State<CreateTalePage>
                   });
                 },
                 isSelected:
-                    selectedIndex == i, // Check if this item is selected
+                selectedIndex == i, // Check if this item is selected
               ),
           ],
         ),

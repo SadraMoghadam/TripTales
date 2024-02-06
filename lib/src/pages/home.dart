@@ -184,7 +184,7 @@ class HomePage extends StatelessWidget {
             alignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CustomButton(
-                  height: isTablet ? 30 : 20,
+                  height: isTablet ? 60 : 50,
                   width: isTablet ? 300 : 200,
                   fontSize: isTablet ? 20 : 18,
                   key: const Key('loginCustomButtonKey'),

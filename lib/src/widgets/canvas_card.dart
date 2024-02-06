@@ -7,7 +7,7 @@ class CustomCanvas extends StatefulWidget {
   final String taleName;
   final VoidCallback onTap;
   final bool
-      isSelected; // New parameter to determine if this widget is selected
+  isSelected; // New parameter to determine if this widget is selected
 
   const CustomCanvas({
     required this.talePath,

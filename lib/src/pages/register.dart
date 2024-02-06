@@ -480,7 +480,7 @@ class _RegisterPageState extends State<RegisterPage> {
             CustomButton(
               key: const Key('createAccountCustomButtonKey'),
               text: "Create Account",
-              height: isTablet ? 30 : 20,
+              height: isTablet ? 60 : 50,
               width: isTablet ? 300 : 200,
               fontSize: isTablet ? 20 : 18,
               textColor: Colors.white,

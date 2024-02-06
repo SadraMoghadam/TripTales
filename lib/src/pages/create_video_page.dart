@@ -98,15 +98,15 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
       content: buildBody(device),
       actions: <Widget>[
         CustomButton(
-            height: 5,
+            height: 40,
             width: 100,
             fontSize: 12,
             text: "Submit",
             textColor: Colors.white,
             onPressed: () => _submit()),
         CustomButton(
-            height: 5,
-            width: 30,
+            height: 40,
+            width: 100,
             fontSize: 12,
             backgroundColor: AppColors.main3,
             text: "close",
@@ -155,8 +155,7 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
                 fit: FlexFit.tight,
                 child: Center(
                     child: CustomButton(
-                        height: 20,
-                        width: 100,
+                        width: 180,
                         fontSize: 15,
                         backgroundColor: AppColors.main1,
                         icon: Icons.location_on,

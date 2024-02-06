@@ -62,8 +62,8 @@ class _ReorderPageState extends State<ReorderPage> {
       content: buildBody(device),
       actions: <Widget>[
         CustomButton(
-            height: 5,
-            width: 30,
+            height: 40,
+            width: 100,
             fontSize: 12,
             backgroundColor: AppColors.main3,
             isDisabled: !canClose,

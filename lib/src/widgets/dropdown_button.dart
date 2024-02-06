@@ -69,16 +69,19 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
                       const SizedBox(
                         width: 12,
                       ),
-                      Text(
-                        item,
-                        style: const TextStyle(
-                          color: AppColors.text1,
+                      Expanded(
+                        child: Text(
+                          item,
+                          style: const TextStyle(
+                            color: AppColors.text1,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
-                ))
+
+        ))
             .toList(),
         value: widget.selectedValue,
         // coverage:ignore-line
@@ -93,7 +96,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           // coverage:ignore-end
         },
         buttonStyleData: ButtonStyleData(
-          height: widget.isTablet ? 64 : 40,
+          height: widget.isTablet ? 64 : 50,
           width: widget.isTablet ? 450 : 300,
           padding: const EdgeInsets.only(left: 14, right: 14),
           //padding: const EdgeInsets.only(left: 10, right: 10),
