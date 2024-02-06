@@ -85,21 +85,23 @@ class CustomButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (icon != null)
-              Icon(
-                icon,
-                size: 24.0,
-              ),
+            if (icon != null) Icon(
+              icon,
+              size: 24.0,
+            ),
             if (icon != null) SizedBox(width: 8.0),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: this.fontSize,
-                fontWeight: FontWeight.bold,
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: this.fontSize,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
         ),
+
       );
     }
   }

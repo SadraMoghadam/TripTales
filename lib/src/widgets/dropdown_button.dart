@@ -69,16 +69,19 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
                       const SizedBox(
                         width: 12,
                       ),
-                      Text(
-                        item,
-                        style: const TextStyle(
-                          color: AppColors.text1,
+                      Expanded(
+                        child: Text(
+                          item,
+                          style: const TextStyle(
+                            color: AppColors.text1,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
-                ))
+
+        ))
             .toList(),
         value: widget.selectedValue,
         // coverage:ignore-line
