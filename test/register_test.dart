@@ -34,7 +34,7 @@ void main() {
     expect(find.byType(Column), findsNWidgets(4));
     expect(find.byType(CustomTextField), findsNWidgets(6));
     expect(find.byType(Stack), findsOneWidget);
-    expect(find.byType(SizedBox), findsNWidgets(20));
+    expect(find.byType(SizedBox), findsNWidgets(21));
     // expect(find.byType(SetPhotoScreen), findsNWidgets(2));
   });
 

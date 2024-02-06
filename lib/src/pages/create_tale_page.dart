@@ -257,6 +257,8 @@ class _CreateTalePage extends State<CreateTalePage>
                 isImage: true,
                 imagePath: widget.isEditMode ? taleModel.imagePath : '',
                 hasImage: widget.isEditMode,
+                height: isTablet ? 320 : 250.0,
+                width: isTablet ? 450 : 370.0,
               ),
             ),
             const SizedBox(

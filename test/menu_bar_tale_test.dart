@@ -13,6 +13,7 @@ void main() {
         home: CustomMenu(index: 0,),
       ),
     );
+    await tester.pumpAndSettle(const Duration(seconds: 4));
 
     // Verify that the widget renders without any errors
     expect(find.byType(CustomMenu), findsOneWidget);
@@ -25,6 +26,7 @@ void main() {
         home: CustomMenu(index: 0),
       ),
     );
+    await tester.pumpAndSettle(const Duration(seconds: 4));
 
     // Verify that the loading animation is displayed
     expect(find.byType(CircularProgressIndicator), findsNothing);
@@ -37,6 +39,7 @@ void main() {
         home: CustomMenu(index: 1),
       ),
     );
+    await tester.pumpAndSettle(const Duration(seconds: 4));
 
     // Verify that CustomAppBar is displayed
     expect(find.byType(CustomAppBar), findsOneWidget);
@@ -49,6 +52,7 @@ void main() {
         home: CustomMenu(index: 0),
       ),
     );
+    await tester.pumpAndSettle(const Duration(seconds: 4));
 
     // Verify that the loading animation is displayed
     expect(find.byType(CustomAppBar), findsNothing);
@@ -63,6 +67,7 @@ void main() {
         home: CustomMenu(index: 0),
       ),
     );
+    await tester.pumpAndSettle(const Duration(seconds: 4));
 
     // Simulate error state
     // Replace this line with a suitable error simulation if needed
@@ -83,6 +88,7 @@ void main() {
         home: CustomMenu(index: 0),
       ),
     );
+    await tester.pumpAndSettle(const Duration(seconds: 4));
 
     // Simulate successful data fetching
     // Replace this line with a suitable success simulation if needed

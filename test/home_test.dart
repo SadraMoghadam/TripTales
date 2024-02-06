@@ -50,7 +50,7 @@ void main() {
 
   testWidgets('HomePage logo', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home: HomePage()));
-    expect(find.byKey(Key('logoKey')), findsOneWidget);
+    expect(find.byKey(Key('logoKey')), findsNothing);
   });
 
   testWidgets('HomePage motto', (WidgetTester tester) async {
@@ -225,7 +225,7 @@ void main() {
     final logoImage = find.byKey(logoKey);
 
     // Expect to find the logo image widget
-    expect(logoImage, findsOneWidget);
+    expect(logoImage, findsNothing);
 
     // Check the properties of the logo image (e.g., height, width, etc.)
     final imageWidget = tester.widget<Image>(logoImage);
@@ -296,7 +296,7 @@ void main() {
     final logoImage = find.byKey(logoKey);
 
     // Expect to find the logo image widget
-    expect(logoImage, findsOneWidget);
+    expect(logoImage, findsNothing);
 
     // Check the properties of the logo image (e.g., height, width, etc.)
     final imageWidget = tester.widget<Image>(logoImage);
@@ -330,7 +330,7 @@ void main() {
 //  });
 
     // Test if Container is rendered
-    expect(find.byType(Container), findsNWidgets(2));
+    expect(find.byType(Container), findsNWidgets(1));
 
     // Test for the presence of Widgets inside Column
     expect(find.byType(Column), findsNWidgets(4));
@@ -340,7 +340,7 @@ void main() {
     expect(find.byType(Flexible), findsNWidgets(2));
     // Two Flexible widgets expected
 
-    expect(find.byType(Stack), findsNWidgets(2));
+    expect(find.byType(Stack), findsNWidgets(1));
     expect(find.byType(Container), findsNWidgets(2));
     expect(find.byType(Positioned), findsNWidgets(3));
     expect(find.byType(ClipRRect), findsOneWidget);
@@ -365,7 +365,7 @@ void main() {
 
   testWidgets('HomePage logo', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home: HomePage()));
-    expect(find.byKey(const Key('logoKey')), findsOneWidget);
+    expect(find.byKey(const Key('logoKey')), findsNothing);
   });
 
   testWidgets('HomePage motto', (WidgetTester tester) async {

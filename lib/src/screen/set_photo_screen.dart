@@ -16,6 +16,8 @@ class SetPhotoScreen extends StatefulWidget {
   final bool contDef;
   final String? imagePath;
   final bool hasImage;
+  final double height;
+  final double width;
 
   SetPhotoScreen({
     super.key,
@@ -23,6 +25,8 @@ class SetPhotoScreen extends StatefulWidget {
     this.contDef = false,
     this.imagePath,
     this.hasImage = false,
+    this.height = 250.0,
+    this.width = 370.0,
   });
 
   static const id = 'set_photo_screen';
@@ -173,8 +177,8 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                 // coverage:ignore-line
                     ? Container()
                     : Container(
-                  height: isTablet ? 320 : 250.0,
-                  width: isTablet ? 450 : 370.0,
+                  height: widget.height,
+                  width: widget.width,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(15),

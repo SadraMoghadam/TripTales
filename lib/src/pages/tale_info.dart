@@ -95,89 +95,74 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     bool isTablet = deviceInfo.isTablet;
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
+    print("$isTablet + $isLandscape");
     return Container(
       // padding: isTablet ? const EdgeInsets.all(20) : const EdgeInsets.all(2),
       color: AppColors.main1.shade300,
       child: isTablet && isLandscape
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // First column until buildGoogleMap(deviceInfo)
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    //mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Flexible(
-                          fit: FlexFit.tight,
-                          flex: 1,
-                          child: SizedBox(
-                            height: 5,
-                          )),
-                      Flexible(
-                        fit: FlexFit.tight,
-                        flex: 3,
-                        child: Text(
-                          _currentTale!.name,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 27,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Flexible(
-                        fit: FlexFit.tight,
-                        flex: 10,
-                        child: Container(
-                          height: isTablet ? 300 : 200,
-                          width: isTablet ? 450 : deviceInfo.width - 200,
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: AppColors.main2, width: 5),
-                            borderRadius: BorderRadius.circular(16.0),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              '$imagePath?timestamp=${DateTime.now().millisecondsSinceEpoch}',
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Flexible(
-                          fit: FlexFit.tight,
-                          flex: 1,
-                          child: SizedBox(
-                            height: 30,
-                          )),
-                    ]),
-                const SizedBox(
-                  width: 30,
-                ),
-                Column(
-                  //mainAxisAlignment: MainAxisAlignment.center,
+          ? Column(
+        children: [
+
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 15,
+            child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // First column until buildGoogleMap(deviceInfo)
+              Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Flexible(
-                      fit: FlexFit.tight,
-                      flex: 14,
-                      child: buildGoogleMap(deviceInfo),
-                    ),
+                    const Flexible(
+                        fit: FlexFit.tight,
+                        flex: 2,
+                        child: SizedBox(
+                          height: 5,
+                        )),
                     Flexible(
                       fit: FlexFit.tight,
                       flex: 3,
+                      child: Text(
+                        _currentTale!.name,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 27,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 15,
+                      child: Container(
+                        height: isTablet ? 300 : 200,
+                        width: isTablet ? 450 : deviceInfo.width - 200,
+                        decoration: BoxDecoration(
+                          border:
+                          Border.all(color: AppColors.main2, width: 5),
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            '$imagePath?timestamp=${DateTime.now().millisecondsSinceEpoch}',
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 5,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(
-                            height: 40,
-                            width: 150,
+                            height: 50,
+                            width: 200,
                             child: CustomButton(
                               isTablet: isTablet,
                               // key: const Key('editTaleCustomButtonKey'),
@@ -190,11 +175,11 @@ class _TaleInfoPage extends State<TaleInfoPage> {
                             ),
                           ),
                           const SizedBox(
-                            width: 10,
+                            width: 20,
                           ),
                           SizedBox(
-                            height: 40,
-                            width: 150,
+                            height: 50,
+                            width: 200,
                             child: CustomButton(
                               isTablet: isTablet,
                               // key: const Key('deleteTaleCustomButtonKey'),
@@ -209,10 +194,32 @@ class _TaleInfoPage extends State<TaleInfoPage> {
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ],
-            )
+                  ]),
+              const SizedBox(
+                width: 30,
+              ),
+              Column(
+                //mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 14,
+                    child: buildGoogleMap(deviceInfo),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                ],
+              ),
+            ],
+          ),),
+
+        ],
+      )
           // smartphone mode
           : Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -239,7 +246,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
                   flex: 10,
                   child: Container(
                     height: isTablet ? 300 : 200,
-                    width: deviceInfo.isTablet ? deviceInfo.width - 200 : 400,
+                    width: deviceInfo.isTablet ? 400 : deviceInfo.width - 200,
                     decoration: BoxDecoration(
                       border: Border.all(color: AppColors.main2, width: 5),
                       borderRadius: BorderRadius.circular(16.0),
@@ -468,7 +475,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
     print(_markers);
     return Container(
       height: 350,
-      width: deviceInfo.isTablet ? deviceInfo.width - 200 : 400,
+      width: deviceInfo.isTablet ? deviceInfo.width * 10 / 14 - 200  : 400,
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.main2, width: 5),
         borderRadius: BorderRadius.circular(16.0),

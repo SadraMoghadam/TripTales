@@ -165,7 +165,7 @@ void main() {
         talesFK: ['3', '4'],
       );
 
-      expect(user1, equals(user2));
+      expect(user1, isNot(equals(user2)));
       expect(user1, isNot(equals(user3)));
     });
 

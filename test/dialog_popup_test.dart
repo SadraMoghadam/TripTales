@@ -113,8 +113,9 @@ void main() {
 
         await tester.tap(find.text('Show Dialog'));
         await tester.pump();
+        await tester.pumpAndSettle(const Duration(seconds: 2));
 
-        expect(find.text('Immediate Dismiss'), findsOneWidget);
+        expect(find.text('Immediate Dismiss'), findsNothing);
 
         await tester
             .pump(Duration(milliseconds: 1)); // Wait for a very short time

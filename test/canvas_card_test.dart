@@ -184,8 +184,8 @@ void main() {
     final size = tester.getSize(customCanvasFinder);
 
     // Verify the widget's size
-    expect(size.width, equals(180.0));
-    expect(size.height, equals(270.0));
+    expect(size.width, equals(230.0));
+    expect(size.height, equals(350.0));
   });
 
   testWidgets('CustomCanvas default selection state test',
