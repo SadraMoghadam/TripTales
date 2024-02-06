@@ -229,13 +229,14 @@ class _CreateTalePage extends State<CreateTalePage>
     device.computeDeviceInfo(context);
     return Scaffold(
       body: CustomAppBar(
-        bodyTale: buildBody(),
+        bodyTale: buildBody(context),
         showIcon: true,
         navigationPath: widget.isEditMode ? '/pop' : '/customMenu',
       ),
     );
   }
 
+/*
   Widget buildBody() {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -320,10 +321,106 @@ class _CreateTalePage extends State<CreateTalePage>
       ),
     );
   }
+  */
 
-  Widget buildCanvasList() {
+  Widget buildBody(context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 15,
+            ),
+            SizedBox(
+              height: isTablet ? 400 : 320,
+              child: SetPhotoScreen(
+                isImage: true,
+                imagePath: widget.isEditMode ? taleModel.imagePath : '',
+                hasImage: widget.isEditMode,
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            SizedBox(
+              height: 80,
+              width: isTablet ? 500 : 400,
+              child: CustomTextField(
+                isTablet: isTablet,
+                key: const Key('taleNameCustomTextFieldKey'),
+                controller: _taleNameController,
+                labelText: 'Tale Name',
+                hintText: 'Enter your Tale Name',
+                prefixIcon: Icons.abc,
+                obscureText: false,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                validator: _validator.nameValidator,
+                //fontSize: isTablet ? 24 : 18,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '  Choose your canvas:',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.main1,
+                      fontSize: isTablet ? 24 : 20,
+                    ),
+                  ),
+                  buildCanvasList(context),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height: 60,
+              child: CustomButton(
+                isTablet: isTablet,
+                key: const Key('startCreatingCustomButtonKey'),
+                height: isTablet ? 30 : 20,
+                width: isTablet ? 300 : 200,
+                fontSize: isTablet ? 20 : 18,
+                padding: 2,
+                backgroundColor: AppColors.main2,
+                isDisabled: _isPressed,
+                textColor: Colors.white,
+                text: widget.isEditMode ? "Finish Editing" : "Start Creating",
+                onPressed: _submit,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildCanvasList(context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return SizedBox(
-      height: 280,
+      height: isTablet ? 360 : 280,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(

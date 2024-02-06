@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trip_tales/src/utils/device_info.dart';
 import '../constants/color.dart';
 
 class CustomCanvas extends StatefulWidget {
@@ -22,14 +23,16 @@ class CustomCanvas extends StatefulWidget {
 class _CustomCanvasState extends State<CustomCanvas> {
   @override
   Widget build(BuildContext context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return GestureDetector(
       onTap: widget.onTap,
       child: SizedBox(
-        width: 180,
-        height: 270,
+        width: isTablet ? 230 : 180,
+        height: isTablet ? 350 : 270,
         child: AnimatedContainer(
-          duration:
-              const Duration(milliseconds: 15),
+          duration: const Duration(milliseconds: 15),
           margin: const EdgeInsets.all(5.0),
           decoration: BoxDecoration(
             // borderRadius: const BorderRadius.all(Radius.circular(20.0)),
@@ -40,12 +43,8 @@ class _CustomCanvasState extends State<CustomCanvas> {
               ),
             ),
             border: Border.all(
-              color: widget.isSelected
-                  ? AppColors.main2
-                  : AppColors.main1,
-              width: widget.isSelected
-                  ? 3.0
-                  : 2.0,
+              color: widget.isSelected ? AppColors.main2 : AppColors.main1,
+              width: widget.isSelected ? 3.0 : 2.0,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(20.0)),
           ),

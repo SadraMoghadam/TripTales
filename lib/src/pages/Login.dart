@@ -132,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Flexible(
                           fit: FlexFit.tight,
-                          flex: 6,
+                          flex: 4,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -149,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               Flexible(
                                 fit: FlexFit.tight,
-                                flex: 2,
+                                flex: 3,
                                 child: buildFooter(context),
                               ),
                             ],
@@ -366,7 +366,7 @@ class _LoginPageState extends State<LoginPage> {
             )),
         Flexible(
           fit: FlexFit.tight,
-          flex: 4,
+          flex: 2,
           child: Wrap(
             alignment: WrapAlignment.center,
             children: [
@@ -403,7 +403,41 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildAuthOptions() {
+  Widget buildAuthOptions(context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        //const SizedBox(height: 10),
+        TextButton(
+          onPressed: () => _submit(2),
+          style: ButtonStyle(
+            side:
+                MaterialStateProperty.all(const BorderSide(color: Colors.grey)),
+          ),
+          child: Row(
+            children: [
+              Image.asset(
+                'assets/images/google_icon.png', // Replace with the path to your image
+                height: 40,
+                width: 40,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Sign up with Google',
+                style: TextStyle(
+                  color: AppColors.text2, // Adjust the text color as needed
+                  fontSize:
+                      isTablet ? 18 : 16, // Adjust the font size as needed
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        /*
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -415,6 +449,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
           onPressed: () => _submit(2),
         ),
+
+        */
         // IconButton(
         //   icon: Image.asset(
         //     'assets/images/fb_icon.png', // Replace with the path to your image
@@ -482,7 +518,15 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () => _submit(1))
             ],
           ),
-          buildAuthOptions(),
+          const SizedBox(height: 10),
+          const Text(
+            'or',
+            style: TextStyle(
+              color: Colors.black, // Adjust the text color as needed
+              fontSize: 15, // Adjust the font size as needed
+            ),
+          ),
+          buildAuthOptions(context),
           TextButton(
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, '/registerPage'),

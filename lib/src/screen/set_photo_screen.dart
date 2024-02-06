@@ -6,6 +6,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trip_tales/src/constants/color.dart';
 import 'package:trip_tales/src/controllers/media_controller.dart';
+import 'package:trip_tales/src/utils/device_info.dart';
 import 'package:trip_tales/src/widgets/button.dart';
 import 'package:video_player/video_player.dart';
 import 'select_photo_options_screen.dart';
@@ -148,6 +149,9 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    DeviceInfo device = DeviceInfo();
+    device.computeDeviceInfo(context);
+    bool isTablet = device.isTablet;
     return SizedBox(
       height: 320,
       child: Column(
@@ -169,8 +173,8 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
                     // coverage:ignore-line
                     ? Container()
                     : Container(
-                        height: 250.0,
-                        width: 370.0,
+                        height: isTablet ? 320 : 250.0,
+                        width: isTablet ? 450 : 370.0,
                         decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.circular(15),
@@ -239,6 +243,10 @@ class _SetPhotoScreenState extends State<SetPhotoScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomButton(
+                isTablet: isTablet,
+                height: isTablet ? 30 : 20,
+                width: isTablet ? 300 : 200,
+                fontSize: isTablet ? 20 : 18,
                 padding: 10,
                 onPressed: () => widget.isImage
                     ? _showSelectPhotoOptions(context)

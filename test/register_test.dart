@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:mockito/mockito.dart';
+import 'package:trip_tales/src/controllers/auth_controller.dart';
 import 'package:trip_tales/src/pages/register.dart';
 import 'package:trip_tales/src/widgets/text_field.dart';
 
+class MockAuthController extends GetxController
+    with Mock
+    implements AuthController {}
+
 void main() {
+  late MockAuthController authController;
+
+  setUp(() {
+    authController = MockAuthController();
+    Get.put<AuthController>(authController);
+  });
+
   testWidgets('Register Page layout', (WidgetTester tester) async {
     // Build the widget
     await tester.pumpWidget(MaterialApp(home: RegisterPage()));
 
     // Test if the Scaffold is rendered
-    expect(find.byType(Scaffold), findsNothing);
+    expect(find.byType(Scaffold), findsOneWidget);
 
     // Test if the SingleChildScrollView is rendered
-    expect(find.byType(SingleChildScrollView), findsNothing);
+    expect(find.byType(SingleChildScrollView), findsOneWidget);
 
     // Check if main widgets are present
     expect(find.byType(Container), findsNWidgets(5));

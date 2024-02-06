@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -93,6 +92,232 @@ class _TaleInfoPage extends State<TaleInfoPage> {
   Widget buildBody(context) {
     DeviceInfo deviceInfo = DeviceInfo();
     deviceInfo.computeDeviceInfo(context);
+    bool isTablet = deviceInfo.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    return Container(
+      // padding: isTablet ? const EdgeInsets.all(20) : const EdgeInsets.all(2),
+      color: AppColors.main1.shade300,
+      child: isTablet && isLandscape
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // First column until buildGoogleMap(deviceInfo)
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Flexible(
+                          fit: FlexFit.tight,
+                          flex: 1,
+                          child: SizedBox(
+                            height: 5,
+                          )),
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 3,
+                        child: Text(
+                          _currentTale!.name,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 27,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 10,
+                        child: Container(
+                          height: isTablet ? 300 : 200,
+                          width: isTablet ? 450 : deviceInfo.width - 200,
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: AppColors.main2, width: 5),
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              '$imagePath?timestamp=${DateTime.now().millisecondsSinceEpoch}',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Flexible(
+                          fit: FlexFit.tight,
+                          flex: 1,
+                          child: SizedBox(
+                            height: 30,
+                          )),
+                    ]),
+                const SizedBox(
+                  width: 30,
+                ),
+                Column(
+                  //mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 14,
+                      child: buildGoogleMap(deviceInfo),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 3,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            width: 150,
+                            child: CustomButton(
+                              isTablet: isTablet,
+                              // key: const Key('editTaleCustomButtonKey'),
+                              fontSize: 18,
+                              padding: 2,
+                              backgroundColor: AppColors.main2,
+                              textColor: Colors.white,
+                              text: "Edit",
+                              onPressed: _onEditButtonClick,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          SizedBox(
+                            height: 40,
+                            width: 150,
+                            child: CustomButton(
+                              isTablet: isTablet,
+                              // key: const Key('deleteTaleCustomButtonKey'),
+                              fontSize: 18,
+                              padding: 2,
+                              backgroundColor: AppColors.main3,
+                              textColor: Colors.white,
+                              text: "Delete",
+                              onPressed: _onDeleteButtonClick,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          // smartphone mode
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Flexible(
+                    fit: FlexFit.tight,
+                    flex: 1,
+                    child: SizedBox(
+                      height: 5,
+                    )),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 3,
+                  child: Text(
+                    _currentTale!.name,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 27,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 10,
+                  child: Container(
+                    height: isTablet ? 300 : 200,
+                    width: isTablet ? 400 : deviceInfo.width - 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.main2, width: 5),
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        '$imagePath?timestamp=${DateTime.now().millisecondsSinceEpoch}',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    ),
+                  ),
+                ),
+                const Flexible(
+                    fit: FlexFit.tight,
+                    flex: 1,
+                    child: SizedBox(
+                      height: 10,
+                    )),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 14,
+                  child: buildGoogleMap(deviceInfo),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 3,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 40,
+                        width: 150,
+                        child: CustomButton(
+                          isTablet: isTablet,
+                          // key: const Key('editTaleCustomButtonKey'),
+                          fontSize: 18,
+                          padding: 2,
+                          backgroundColor: AppColors.main2,
+                          textColor: Colors.white,
+                          text: "Edit",
+                          onPressed: _onEditButtonClick,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      SizedBox(
+                        height: 40,
+                        width: 150,
+                        child: CustomButton(
+                          isTablet: isTablet,
+                          // key: const Key('deleteTaleCustomButtonKey'),
+                          fontSize: 18,
+                          padding: 2,
+                          backgroundColor: AppColors.main3,
+                          textColor: Colors.white,
+                          text: "Delete",
+                          onPressed: _onDeleteButtonClick,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+
+/*
+  Widget buildBody(context) {
+    DeviceInfo deviceInfo = DeviceInfo();
+    deviceInfo.computeDeviceInfo(context);
+    bool isTablet = deviceInfo.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return Container(
       color: AppColors.main1.shade300,
       child: Column(
@@ -157,6 +382,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
                   height: 40,
                   width: 150,
                   child: CustomButton(
+                    isTablet: isTablet,
                     // key: const Key('editTaleCustomButtonKey'),
                     fontSize: 18,
                     padding: 2,
@@ -173,6 +399,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
                   height: 40,
                   width: 150,
                   child: CustomButton(
+                    isTablet: isTablet,
                     // key: const Key('deleteTaleCustomButtonKey'),
                     fontSize: 18,
                     padding: 2,
@@ -189,6 +416,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
       ),
     );
   }
+  */
 
   void _onEditButtonClick() async {
     final result = await Navigator.push(
@@ -236,10 +464,11 @@ class _TaleInfoPage extends State<TaleInfoPage> {
   }
 
   Widget buildGoogleMap(deviceInfo) {
+    bool isTablet = deviceInfo.isTablet;
     print(_markers);
     return Container(
-      height: 350,
-      width: deviceInfo.width - 200,
+      height: isTablet ? 100 : 350,
+      width: isTablet ? 600 : deviceInfo.width - 200,
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.main2, width: 5),
         borderRadius: BorderRadius.circular(16.0),
