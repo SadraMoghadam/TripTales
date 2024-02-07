@@ -117,7 +117,6 @@ class _MemoryCardState extends State<MemoryCard> {
     //   loadImageInfo(widget.videoPath);
     // }
     super.initState();
-    widget.size = _appManager.getIsTablet() ? widget.size * 1.5 : widget.size;
     // widget.initTransform.setEntry(0, 0, widget.initTransform.entry(0, 0) * 2);
     // widget.initTransform.setEntry(1, 1, widget.initTransform.entry(1, 1) * 2);
     transform = widget.initTransform;
@@ -133,7 +132,7 @@ class _MemoryCardState extends State<MemoryCard> {
 
   Future<bool> checkTextNotEmpty() async {
     // Simulate an asynchronous check for non-empty text.
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 300));
 
     return widget.text.isNotEmpty;
   }

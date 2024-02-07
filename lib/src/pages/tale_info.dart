@@ -246,7 +246,7 @@ class _TaleInfoPage extends State<TaleInfoPage> {
                   flex: 10,
                   child: Container(
                     height: isTablet ? 300 : 200,
-                    width: deviceInfo.isTablet ? 400 : deviceInfo.width - 200,
+                    width: deviceInfo.isTablet ? deviceInfo.width - 200 : 350,
                     decoration: BoxDecoration(
                       border: Border.all(color: AppColors.main2, width: 5),
                       borderRadius: BorderRadius.circular(16.0),
@@ -472,10 +472,12 @@ class _TaleInfoPage extends State<TaleInfoPage> {
 
   Widget buildGoogleMap(deviceInfo) {
     bool isTablet = deviceInfo.isTablet;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     print(_markers);
     return Container(
       height: 350,
-      width: deviceInfo.isTablet ? deviceInfo.width * 10 / 14 - 200  : 400,
+      width: isTablet ? isLandscape ? deviceInfo.width * 10 / 14 - 200 : deviceInfo.width - 200 : 350,
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.main2, width: 5),
         borderRadius: BorderRadius.circular(16.0),

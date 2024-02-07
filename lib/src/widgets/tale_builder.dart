@@ -126,6 +126,8 @@ class _TaleBuilderState extends State<TaleBuilder>
     }
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return FutureBuilder<List<CardModel?>>(
       key: widget.taleKey,
       future: cards,
@@ -133,9 +135,7 @@ class _TaleBuilderState extends State<TaleBuilder>
           (BuildContext context, AsyncSnapshot<List<CardModel?>> snapshot) {
         if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
           List<CardModel?> data = [];
-          // print("###########");
           data = snapshot.data!;
-          // print(data[0]!.transform);
           _appManager.setCards(data);
           numOfCards = data.length;
           print("###########${numOfCards}");
@@ -158,11 +158,6 @@ class _TaleBuilderState extends State<TaleBuilder>
                         (previousValue, element) =>
                     previousValue * 256 + element)));
           }
-          // Set<ValueKey<State<StatefulWidget>>> uniqueSet = _widgetKeyList
-          //     .whereType<ValueKey<State<StatefulWidget>>>()
-          //     .toSet();
-          // _widgetSuperKeyList = uniqueSet.toList();
-          print(_widgetKeyList);
 
           return Container(
             height: device.height * 10,
@@ -180,6 +175,7 @@ class _TaleBuilderState extends State<TaleBuilder>
                         },
                         name: data[i]!.name,
                         // cardKey: _widgetKeyList[i],
+                        size: device.isTablet ? isLandscape ? containersSize * 1.4 : containersSize * 1.2 : containersSize,
                         order: data[i]!.order,
                         type: MemoryCardType.image,
                         initTransform: data[i]!.transform,
@@ -194,6 +190,7 @@ class _TaleBuilderState extends State<TaleBuilder>
                         },
                         name: data[i]!.name,
                         // cardKey: _widgetKeyList[i],
+                        size: device.isTablet ? isLandscape ? containersSize * 1.4 : containersSize * 1.2 : containersSize,
                         order: data[i]!.order,
                         type: MemoryCardType.video,
                         initTransform: data[i]!.transform,
@@ -208,6 +205,7 @@ class _TaleBuilderState extends State<TaleBuilder>
                         },
                         name: data[i]!.name,
                         // cardKey: _widgetKeyList[i],
+                        size: device.isTablet ? isLandscape ? containersSize * 1.4 : containersSize * 1.2 : containersSize,
                         order: data[i]!.order,
                         type: MemoryCardType.text,
                         initTransform: data[i]!.transform,

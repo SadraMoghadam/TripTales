@@ -266,6 +266,7 @@ class _ProfilePageState extends State<ProfilePage>
                           builder: (context) {
                             _controller.reset();
                             _controller.forward();
+                            _controller.repeat();
                             return AlertDialog(
                               content: Lottie.asset(
                                 "assets/animations/loading.json",

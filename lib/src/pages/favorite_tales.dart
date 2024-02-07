@@ -35,6 +35,13 @@ class _FavoriteTalesPage extends State<FavoriteTalesPage> with TickerProviderSta
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);

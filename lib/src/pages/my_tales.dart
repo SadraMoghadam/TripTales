@@ -83,6 +83,7 @@ class _MyTalesPage extends State<MyTalesPage> {
           (BuildContext context, AsyncSnapshot<List<TaleModel?>> snapshot) {
         if (snapshot.hasData) {
           List<TaleModel?> data = snapshot.data!;
+          data = List.from(data.reversed);
           numOfTales = data.length;
           for (int i = 0; i < numOfTales; i++) {
             _widgetKeyList.add(ValueKey(i +

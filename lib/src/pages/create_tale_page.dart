@@ -78,21 +78,7 @@ class _CreateTalePage extends State<CreateTalePage>
         );
 
         result = await _taleService.updateTale(taleData, imageFile!);
-        showDialog(
-          context: context,
-          builder: (context) {
-            _controller.reset();
-            _controller.forward();
-            return AlertDialog(
-              content: Lottie.asset(
-                "assets/animations/loading.json",
-                width: 400,
-                height: 400,
-                controller: _controller,
-              ),
-            );
-          },
-        );
+        showAnimatedPopUp();
         Future.delayed(Duration(seconds: 2), () async {
           if (result == 200) {
             _formKey.currentState?.save();
@@ -117,23 +103,9 @@ class _CreateTalePage extends State<CreateTalePage>
         });
       } else {
         result = await _taleService.addTale(taleData, imageFile!);
-        showDialog(
-          context: context,
-          builder: (context) {
-            _controller.reset();
-            _controller.forward();
-            return AlertDialog(
-              content: Lottie.asset(
-                "assets/animations/loading.json",
-                width: 400,
-                height: 400,
-                controller: _controller,
-              ),
-            );
-          },
-        );
+        showAnimatedPopUp();
         Future.delayed(
-          Duration(seconds: 3),
+          Duration(seconds: 4),
               () async {
             print(")))))))))))))))))))))))))))))))))))))))))${result}");
             var currentTaleId = await _taleService.getTaleId(taleData.name);
@@ -193,6 +165,25 @@ class _CreateTalePage extends State<CreateTalePage>
     //   ErrorController.showSnackBarError(ErrorController.createTale);
     //   return;
     // }
+  }
+
+  void showAnimatedPopUp() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        _controller.reset();
+        _controller.forward();
+        _controller.repeat();
+        return AlertDialog(
+          content: Lottie.asset(
+            "assets/animations/loading.json",
+            width: 400,
+            height: 400,
+            controller: _controller,
+          ),
+        );
+      },
+    );
   }
 
   @override

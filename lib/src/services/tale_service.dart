@@ -25,10 +25,12 @@ class TaleService extends GetxService {
 
   Future<int> addTale(TaleModel taleData, File imageFile) async {
     try {
-      List<TaleModel?> currentTales = await getTales(_appManager.getCurrentUser());
-      var contain = currentTales.where((element) => element!.name == taleData.name);
-      if (!contain.isEmpty) {
-        return 400;
+      List<TaleModel?>? currentTales = await getTales(_appManager.getCurrentUser());
+      if(currentTales != null && currentTales.isNotEmpty){
+        var contain = currentTales.where((element) => element!.name == taleData.name);
+        if (!contain.isEmpty) {
+          return 400;
+        }
       }
       DocumentReference taleReference = await _talesCollection.add(taleData.toJson());
 
@@ -196,7 +198,7 @@ class TaleService extends GetxService {
       return tales;
     } catch (e) {
       // Get.snackbar('Error', e.toString());
-      return List.empty();
+      return [];
     }
   }
 

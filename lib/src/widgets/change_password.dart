@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:trip_tales/src/constants/error_messages.dart';
 import 'package:trip_tales/src/constants/memory_card_type.dart';
-import 'package:trip_tales/src/controllers/card_controller.dart';
 import 'package:trip_tales/src/models/card_model.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/services/auth_service.dart';

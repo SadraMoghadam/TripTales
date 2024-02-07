@@ -160,6 +160,9 @@ class CardService extends GetxService {
         CardModel newCard;
         CardModel currentCard = contain.first!;
         String cardId = await getCardId(taleId, currentCard.name);
+        // if(transform.getTranslation().x > 1){
+        //   transform.setEntry(0, 3, 0.99);
+        // }
         if(currentCard.type == MemoryCardType.text){
           newCard = CardModel(
             // id: currentCard.id,
