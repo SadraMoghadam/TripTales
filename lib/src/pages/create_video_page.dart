@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:lottie/lottie.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/utils/validator.dart';
 import '../constants/color.dart';
@@ -24,7 +25,7 @@ class CreateVideoPage extends StatefulWidget {
   _CreateVideoPageState createState() => _CreateVideoPageState();
 }
 
-class _CreateVideoPageState extends State<CreateVideoPage> {
+class _CreateVideoPageState extends State<CreateVideoPage> with TickerProviderStateMixin {
   final Validator _validator = Validator();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
@@ -32,6 +33,7 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
   final AppManager _appManager = Get.put(AppManager());
   final CardService _cardService = Get.find<CardService>();
   final TaleService _taleService = Get.find<TaleService>();
+  late final AnimationController _controller;
 
   // late final TextEditingController _passwordController;
 
@@ -54,15 +56,37 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
     int result = await _cardService.addVideoCard(taleId,
         videoCardData, mediaController.getVideo()!);
     _appManager.setCurrentTaleLocations(await _taleService.getTaleLocations(taleId));
-    if (result == 200) {
-      Timer(Duration(seconds: 2), () {
+    showAnimatedPopUp();
+    Future.delayed(Duration(seconds: 3), () async {
+      Navigator.of(context).pop();
+    });
+    Future.delayed(Duration(seconds: 4), () async {
+      if (result == 200) {
         _formKey.currentState?.save();
         Navigator.of(context).pop(true);
-      });
     } else {
-      ErrorController.showSnackBarError(ErrorController.createVideo);
-      return;
-    }
+        ErrorController.showSnackBarError(ErrorController.createVideo);
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
+  showAnimatedPopUp() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          _controller.reset();
+          _controller.forward();
+          _controller.repeat();
+          return AlertDialog(
+            content: Lottie.asset(
+              "assets/animations/loading2.json",
+              width: 400,
+              height: 400,
+              controller: _controller,
+            ),
+          );
+        });
   }
 
   @override
@@ -71,11 +95,14 @@ class _CreateVideoPageState extends State<CreateVideoPage> {
       ..addListener(() {
         setState(() {});
       });
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 4));
     super.initState();
   }
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 

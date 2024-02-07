@@ -22,6 +22,7 @@ class CardService extends GetxService {
   final CollectionReference _cardsCollection =
       FirebaseFirestore.instance.collection('cards');
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   // final List<CardModel> cards = [];
   // Rx<CardModel?> card = Rx<CardModel?>(null);
 
@@ -30,7 +31,8 @@ class CardService extends GetxService {
     super.onInit();
   }
 
-  Future<int> addImageCard(String taleId, CardModel cardData, File imageFile) async {
+  Future<int> addImageCard(
+      String taleId, CardModel cardData, File imageFile) async {
     try {
       // String? currentUserId = _authService.currentUserId;
       List<CardModel?> currentCards = await getCards(taleId);
@@ -41,9 +43,8 @@ class CardService extends GetxService {
       }
       // cardData.order = currentCards.length;
       Future<bool> isUploaded = _uploadImage(imageFile, cardData.name);
-      DocumentReference cardReference = await _cardsCollection.add(
-          cardData.toJson()
-      );
+      DocumentReference cardReference =
+          await _cardsCollection.add(cardData.toJson());
 
       await _firestore.collection('tales').doc(taleId).update({
         'cardsFK': FieldValue.arrayUnion([cardReference.id]),
@@ -57,7 +58,8 @@ class CardService extends GetxService {
     }
   }
 
-  Future<int> addVideoCard(String taleId, CardModel cardData, XFile videoFile) async {
+  Future<int> addVideoCard(
+      String taleId, CardModel cardData, XFile videoFile) async {
     try {
       // String? currentUserId = _authService.currentUserId;
       List<CardModel?> currentCards = await getCards(taleId);
@@ -68,9 +70,8 @@ class CardService extends GetxService {
       }
       // cardData.order = currentCards.length;
       Future<bool> isUploaded = _uploadVideo(videoFile, cardData.name);
-      DocumentReference cardReference = await _cardsCollection.add(
-          cardData.toJson()
-      );
+      DocumentReference cardReference =
+          await _cardsCollection.add(cardData.toJson());
 
       await _firestore.collection('tales').doc(taleId).update({
         'cardsFK': FieldValue.arrayUnion([cardReference.id]),
@@ -94,9 +95,8 @@ class CardService extends GetxService {
         return 400;
       }
       print("__________________${cardData.toJsonTextCard()}");
-      DocumentReference cardReference = await _cardsCollection.add(
-        cardData.toJsonTextCard()
-      );
+      DocumentReference cardReference =
+          await _cardsCollection.add(cardData.toJsonTextCard());
       // print("__________________$cardReference");
       await _firestore.collection('tales').doc(taleId).update({
         'cardsFK': FieldValue.arrayUnion([cardReference.id]),
@@ -114,7 +114,7 @@ class CardService extends GetxService {
       // String? currentUserId = _authService.currentUserId;
       List<CardModel?> currentCards = await getCards(taleId);
       final DocumentSnapshot<Map<String, dynamic>> taleDoc =
-      await _firestore.collection('tales').doc(taleId).get();
+          await _firestore.collection('tales').doc(taleId).get();
       final taleData = taleDoc.data();
       print(taleData);
       var contain =
@@ -122,16 +122,18 @@ class CardService extends GetxService {
       if (!contain.isEmpty) {
         String cardId = await getCardId(taleId, contain.first!.name);
         // print('(((((((((((((${cardId}');
-        if(contain.first!.type == MemoryCardType.image || contain.first!.type == MemoryCardType.video){
-          await _firestore.collection('cards').doc(cardId).update(
-              cardData.toJson()
-          );
+        if (contain.first!.type == MemoryCardType.image ||
+            contain.first!.type == MemoryCardType.video) {
+          await _firestore
+              .collection('cards')
+              .doc(cardId)
+              .update(cardData.toJson());
           // print('+++++++++++++++${cardId}');
-        }
-        else if(contain.first!.type == MemoryCardType.text){
-          await _firestore.collection('cards').doc(cardId).update(
-              cardData.toJsonTextCard()
-          );
+        } else if (contain.first!.type == MemoryCardType.text) {
+          await _firestore
+              .collection('cards')
+              .doc(cardId)
+              .update(cardData.toJsonTextCard());
           // print('=====================${cardId}');
         }
 
@@ -147,7 +149,37 @@ class CardService extends GetxService {
     }
   }
 
-  Future<int> updateCardTransform(String taleId, String name, Matrix4 transform) async {
+  Future<int> updateCardOrder(String taleId, String name, int order) async {
+    try {
+      // String? currentUserId = _authService.currentUserId;
+      List<CardModel?> currentCards = await getCards(taleId);
+      final DocumentSnapshot<Map<String, dynamic>> taleDoc =
+          await _firestore.collection('tales').doc(taleId).get();
+      final taleData = taleDoc.data();
+      print(taleData);
+      var contain = currentCards.where((element) => element!.name == name);
+      if (!contain.isEmpty) {
+        String cardId = await getCardId(taleId, contain.first!.name);
+        // print('(((((((((((((${cardId}');
+        await _firestore.collection('cards').doc(cardId).update({
+          'order': order,
+        });
+        // print('+++++++++++++++${cardId}');
+
+        print('Card updated successfully.');
+        return 200;
+      }
+      return 401;
+    }
+    // print("__________________${cardData.toJsonTextCard()}");
+    catch (e) {
+      print('Error updated card: $e');
+      return 401;
+    }
+  }
+
+  Future<int> updateCardTransform(
+      String taleId, String name, Matrix4 transform) async {
     try {
       // String? currenttaleId = _authService.currenttaleId;
       List<CardModel?> currentCards = await getCards(taleId);
@@ -163,7 +195,7 @@ class CardService extends GetxService {
         // if(transform.getTranslation().x > 1){
         //   transform.setEntry(0, 3, 0.99);
         // }
-        if(currentCard.type == MemoryCardType.text){
+        if (currentCard.type == MemoryCardType.text) {
           newCard = CardModel(
             // id: currentCard.id,
             order: currentCard.order,
@@ -181,12 +213,13 @@ class CardService extends GetxService {
             locationLatitude: currentCard.locationLatitude,
             locationLongitude: currentCard.locationLongitude,
           );
-          await _firestore.collection('cards').doc(cardId).update(
-              newCard.toJsonTextCard()
-          );
+          await _firestore
+              .collection('cards')
+              .doc(cardId)
+              .update(newCard.toJsonTextCard());
         }
         // else if(currentCard.type == MemoryCardType.text){
-        else{
+        else {
           newCard = CardModel(
             // id: currentCard.id,
             order: currentCard.order,
@@ -204,9 +237,10 @@ class CardService extends GetxService {
             // fontWeight: currentCard.fontWeight,
             // fontSize: currentCard.fontSize,
           );
-          await _firestore.collection('cards').doc(cardId).update(
-              newCard.toJson()
-          );
+          await _firestore
+              .collection('cards')
+              .doc(cardId)
+              .update(newCard.toJson());
         }
         // _appManager.setCardByName(newCard);
 
@@ -226,18 +260,17 @@ class CardService extends GetxService {
     try {
       List<CardModel?> currentCards = await getCards(taleId);
       final DocumentSnapshot<Map<String, dynamic>> taleDoc =
-      await _firestore.collection('tales').doc(taleId).get();
+          await _firestore.collection('tales').doc(taleId).get();
 
       final taleData = taleDoc.data();
-      var contain =
-      currentCards.where((element) => element!.name == name);
+      var contain = currentCards.where((element) => element!.name == name);
       if (!contain.isEmpty) {
         String cardId = await getCardId(taleId, contain.first!.name);
         await _firestore.collection('cards').doc(cardId).delete();
         await _firestore.collection('tales').doc(taleId).update({
           'cardsFK': FieldValue.arrayRemove([cardId]),
         });
-        if(contain.first!.type != MemoryCardType.text){
+        if (contain.first!.type != MemoryCardType.text) {
           print("))))))))))))))))))))${contain.first!.path}");
           await _storage.refFromURL(contain.first!.path).delete();
         }
@@ -256,7 +289,6 @@ class CardService extends GetxService {
 
   Future<List<CardModel?>> getCards(String taleId) async {
     try {
-
       // print("+=+=+=+=${0}");
       List<CardModel> cards = [];
       final DocumentSnapshot<Map<String, dynamic>> taleDoc =
@@ -355,8 +387,8 @@ class CardService extends GetxService {
         await _firestore.collection('tales').doc(taleId).get();
     final taleData = taleDoc.data();
     print(taleData);
-    for (int i = 0; i < currentCards.length; i++){
-      if(name == currentCards[i]!.name){
+    for (int i = 0; i < currentCards.length; i++) {
+      if (name == currentCards[i]!.name) {
         return taleData!['cardsFK'][i];
       }
     }

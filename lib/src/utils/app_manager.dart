@@ -44,6 +44,10 @@ class AppManager extends GetxController {
     setCurrentTale(TaleModel(name: '', imagePath: '', canvas: '0'));
   }
 
+  void clearCardTransform() {
+    cardsTransform = Rx<List<Tuple<String, Matrix4>>?>(List.empty(growable: true));
+  }
+
   void setChosenLocation(LatLng loc) {
     if (loc == null) {
       chosenLocation.value = null;
@@ -69,9 +73,9 @@ class AppManager extends GetxController {
       // "transform1" doesn't exist, add it to the list
       cardsTransform.value!.add(Tuple(name, transform));
     }
-    var card = userCards.value!.firstWhere((element) => element!.name == name);
-    card!.transform = transform;
-    userCards.value![userCards.value!.indexOf(card)] = card;
+    // var card = userCards.value!.firstWhere((element) => element!.name == name);
+    // card!.transform.setFrom(transform);
+    // userCards.value![userCards.value!.indexOf(card)] = card;
   }
 
   void setIsCardsTransformChanged(bool isChanged) {

@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:trip_tales/src/constants/error_messages.dart';
 import 'package:trip_tales/src/constants/memory_card_type.dart';
-import 'package:trip_tales/src/controllers/card_controller.dart';
 import 'package:trip_tales/src/models/card_model.dart';
 import 'package:trip_tales/src/screen/set_photo_screen.dart';
 import 'package:trip_tales/src/services/card_service.dart';
@@ -31,6 +30,7 @@ class _ReorderPageState extends State<ReorderPage> {
   List<CardModel?> cardsOrder = [];
   List<CardModel?> newCardsOrder = [];
   bool canClose = true;
+  DeviceInfo device = DeviceInfo();
 
   @override
   void initState() {
@@ -45,7 +45,6 @@ class _ReorderPageState extends State<ReorderPage> {
 
   @override
   Widget build(BuildContext context) {
-    DeviceInfo device = DeviceInfo();
     device.computeDeviceInfo(context);
     return AlertDialog(
       elevation: 10,
@@ -178,6 +177,7 @@ class _ReorderPageState extends State<ReorderPage> {
     canClose = false;
     newCardsOrder = [];
     for (int i = 0; i < cardsOrder.length!; i++) {
+      // cardsOrder[i]!.transform.setEntry(0, 3, cardsOrder[i]!.transform.getTranslation().x / device.width);
       // print('------------__________${cardsOrder[i]!.name} ===== ${cardsOrder[i]!.order}');
       if (cardsOrder[i]!.type == MemoryCardType.image ||
           cardsOrder[i]!.type == MemoryCardType.video) {
@@ -222,7 +222,7 @@ class _ReorderPageState extends State<ReorderPage> {
     }
     for (int i = 0; i < newCardsOrder.length!; i++) {
       _cardService
-          .updateCard(_appManager.getCurrentTaleId(), newCardsOrder[i]!)
+          .updateCardOrder(_appManager.getCurrentTaleId(), newCardsOrder[i]!.name, newCardsOrder[i]!.order)
           .then((value) {
         if (i == newCardsOrder.length! - 1) {
           setState(() {

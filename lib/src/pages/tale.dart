@@ -348,18 +348,33 @@ class _TalePageState extends State<TalePage> with TickerProviderStateMixin {
   }
 
   void onSaveButtonClick() {
-    String currentTale = _appManager.getCurrentTaleId();
-    // var taleCards = await _cardService.getCards(currentTale);
-    var cardsNewTransform = _appManager.getCardsTransform();
-    if (cardsNewTransform != null) {
-      int numOfCards = cardsNewTransform.length;
-      for (int i = 0; i < numOfCards; i++) {
-        _cardService.updateCardTransform(currentTale,
-            cardsNewTransform[i].item1, cardsNewTransform[i].item2);
+    if (_appManager.getIsCardsTransformChanged()) {
+      String currentTale = _appManager.getCurrentTaleId();
+      // var taleCards = await _cardService.getCards(currentTale);
+      var cardsNewTransform = _appManager.getCardsTransform();
+      var userCards = _appManager.getCards();
+      if (cardsNewTransform != null) {
+        int numOfCards = cardsNewTransform.length;
+        for (int i = 0; i < numOfCards; i++) {
+          // var translation = cardsNewTransform[i].item2.getTranslation();
+          // cardsNewTransform[i].item2.setTranslationRaw(
+          //     translation.x / device.width > 1 ? 1 : translation.x / device.width,
+          //     translation.y,
+          //     translation.z);
+          // _appManager.setCardTransform(cardsNewTransform[i].item1, cardsNewTransform[i].item2);
+
+          var card = userCards!.firstWhere((element) =>
+          element!.name == cardsNewTransform[i].item1);
+          card!.transform.setFrom(cardsNewTransform[i].item2);
+          userCards![userCards!.indexOf(card)] = card;
+          _cardService.updateCardTransform(currentTale,
+              cardsNewTransform[i].item1, cardsNewTransform[i].item2);
+        }
       }
+      showSaveDialog();
+      _appManager.clearCardTransform();
+      _appManager.setIsCardsTransformChanged(false);
     }
-    showSaveDialog();
-    _appManager.setIsCardsTransformChanged(false);
   }
 
   void showSaveDialog() {
