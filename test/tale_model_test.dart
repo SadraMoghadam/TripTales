@@ -173,17 +173,6 @@ void main() {
           'A very long tale name that exceeds the normal limit for a tale');
     });
 
-    // test('Create TaleModel instance with invalid image path', () {
-    //   expect(
-    //     () => TaleModel(
-    //       name: 'Invalid Image Path Tale',
-    //       imagePath: 'invalid_path.jpg', // Invalid path
-    //       canvas: 'Invalid Image Path Canvas',
-    //     ),
-    //     throwsAssertionError,
-    //   );
-    // });
-
     test('Equality Test with null cardsFK', () {
       final tale1 = TaleModel(
         name: 'Tale with Null CardsFK',

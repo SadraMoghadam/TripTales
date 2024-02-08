@@ -487,9 +487,6 @@ void main() {
         ),
       ),
     );
-
-    // Verify specific customization properties or appearance
-    // Add relevant expectations for customized appearance or behavior
   });
 
   testWidgets('CustomCanvas widget onTap callback execution test',
@@ -580,12 +577,6 @@ void main() {
         ),
       ),
     );
-
-    // Verify the initial border color
-
-    // Trigger state change or update
-
-    // Verify the updated border color
   });
 
   testWidgets('CustomCanvas widget responsiveness test',

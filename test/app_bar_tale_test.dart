@@ -196,8 +196,7 @@ void main() {
 
     // Verify the height of the app bar
     final appBar = tester.widget<AppBar>(find.byType(AppBar));
-    expect(appBar.preferredSize.height,
-        equals(60)); // Verify appBar height
+    expect(appBar.preferredSize.height, equals(60)); // Verify appBar height
   });
 
   testWidgets('CustomAppBar device size test', (WidgetTester tester) async {
@@ -228,31 +227,4 @@ void main() {
     // Verify the presence of the back button icon
     expect(find.byIcon(Icons.arrow_back_rounded), findsOneWidget);
   });
-
-  // testWidgets('CustomAppBar back button behavior test',
-  //     (WidgetTester tester) async {
-  //   final mockNavigatorKey = GlobalKey<NavigatorState>();
-  //   final scaffoldKey = GlobalKey<ScaffoldState>();
-  //
-  //   // Build the CustomAppBar widget
-  //   await tester.pumpWidget(
-  //     MaterialApp(
-  //       navigatorKey: mockNavigatorKey,
-  //       home: Scaffold(
-  //         key: scaffoldKey,
-  //         body: CustomAppBar(
-  //           bodyTale: Container(), // Mock body
-  //           showIcon: true, // Back button icon present
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  //
-  //   // Tap the back button
-  //   await tester.tap(find.byIcon(Icons.arrow_back_rounded));
-  //   await tester.pumpAndSettle();
-  //
-  //   // Verify navigation back to previous route
-  //   expect(mockNavigatorKey.currentState!.canPop(), isFalse);
-  // });
 }

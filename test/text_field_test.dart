@@ -38,38 +38,6 @@ void main() {
     expect(controller.text, 'test');
   });
 
-/*
-  testWidgets('Password visibility toggle in CustomTextField',
-      (WidgetTester tester) async {
-    final TextEditingController controller = TextEditingController();
-    bool isVisible = false;
-
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: CustomTextField(
-          controller: controller,
-          labelText: 'Password',
-          isPassword: true,
-          isPasswordVisible: isVisible,
-          onVisibilityPressed: () {
-            setState(() {
-              isVisible = !isVisible;
-            });
-          },
-        ),
-      ),
-    ));
-
-    final visibilityIconFinder = find.byIcon(Icons.visibility_off);
-    expect(visibilityIconFinder, findsOneWidget);
-
-    await tester.tap(visibilityIconFinder);
-    await tester.pump();
-
-    final updatedVisibilityIconFinder = find.byIcon(Icons.visibility);
-    expect(updatedVisibilityIconFinder, findsOneWidget);
-  });
-  */
   testWidgets('CustomTextField validation', (WidgetTester tester) async {
     final TextEditingController controller = TextEditingController();
     GlobalKey<FormState> formKey = GlobalKey<FormState>();

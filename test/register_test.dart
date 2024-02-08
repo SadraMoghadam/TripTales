@@ -117,23 +117,6 @@ void main() {
     expect(find.text('Enter your email'), findsOneWidget);
   });
 
-/*
-  testWidgets('Register Page birth date', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: RegisterPage()));
-
-    final dateBirthTextFieldFinder =
-        find.byKey(const Key('dateBirthCustomTextFieldKey'));
-    expect(dateBirthTextFieldFinder, findsOneWidget);
-
-    // Simulate tapping on the birth date text field
-    await tester.tap(dateBirthTextFieldFinder);
-    await tester.pumpAndSettle(); // Wait for any subsequent widgets to load
-
-    // Check for any widget that appears after tapping the date field
-    expect(find.byType(_selectDate(context)), findsOneWidget);
-  });
-  */
-
   testWidgets('Register Page password', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: RegisterPage()));
 

@@ -200,10 +200,6 @@ void main() {
 
     await tester.tap(find.text('Add Image'));
     await tester.pump();
-
-    // Simulate picking an image (e.g., from gallery)
-    // Ensure image is added correctly
-    // Validate the updated UI based on the selected image
   });
 
   testWidgets(
@@ -282,10 +278,6 @@ void main() {
 
     await tester.tap(find.text('Add Video'));
     await tester.pump();
-
-    // Simulate picking a video from camera
-    // Ensure video is added correctly
-    // Validate the updated UI based on the selected video
   });
 
   testWidgets(
@@ -318,10 +310,6 @@ void main() {
 
     await tester.tap(find.text('Add Image'));
     await tester.pump();
-
-    // Simulate picking an image from the gallery
-    // Ensure image is added correctly
-    // Validate the updated UI based on the selected image
   });
 
   testWidgets('SelectPhotoOptionsScreen displays gallery and camera options',
@@ -351,10 +339,6 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: SetPhotoScreen(isImage: false),
     ));
-
-    // Trigger the video selection process
-    // Validate that the video is added and displayed
-    // Confirm that the video can be played
   });
 
   testWidgets('SelectPhotoOptionsScreen Layout Test 1 ',
